@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview Marketplace Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Transisi halus saat warna/font dimuat */
+        body {
+            transition: background-color 0.3s ease, font-family 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loading" class="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4"></div>
+        <p class="text-gray-600 text-lg font-medium">Menarik data dari Google Sheets...</p>
+    </div>
+
+    <!-- App Container (Disembunyikan sampai data dimuat) -->
+    <div id="app" class="hidden min-h-screen">
+        
+        <header id="header" class="text-white shadow-lg transition-colors duration-300 sticky top-0 z-50">
+            <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+                <!-- Logo & Brand -->
+                <div class="flex items-center gap-3">
+                    <img id="logo-image" src="" alt="Logo" class="h-10 w-auto hidden rounded">
+                    <h1 id="brand-name" class="text-2xl font-bold tracking-wide">Nama Toko</h1>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex space-x-8 font-medium">
+                    <a href="#" class="hover:text-gray-200 transition">Beranda</a>
+                    <a href="#product-list" class="hover:text-gray-200 transition">Katalog</a>
+                    <a href="#promo-section" class="hover:text-gray-200 transition">Promo</a>
+                    <a href="#blog-section" id="nav-blog" class="hover:text-gray-200 transition hidden">Artikel</a>
+                </nav>
+
+                <!-- Mobile Menu Button (Opsional untuk pengembangan selanjutnya) -->
+                <button class="md:hidden text-white focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </header>
+
+        <section class="bg-white py-20 px-6 text-center shadow-sm">
+            <div class="max-w-3xl mx-auto">
+                <h2 id="hero-title" class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
+                    Judul Utama
+                </h2>
+                <p id="hero-subtitle" class="text-lg md:text-xl text-gray-500 mb-8">
+                    Subjudul deskripsi singkat.
+                </p>
+            </div>
+        </section>
+
+        <section class="container mx-auto px-6 py-8 max-w-7xl">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+                <!-- Search Bar -->
+                <div class="w-full md:w-1/2 relative">
+                    <input type="text" id="searchInput" placeholder="Cari produk..." class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm">
+                    <div class="absolute left-3 top-3.5 text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Category Filter -->
+                <div id="category-filter" class="w-full md:w-auto flex flex-wrap gap-2 justify-center md:justify-end">
+                    <!-- Tombol kategori akan di-inject di sini -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Promo (Hanya muncul jika ada produk promo) -->
+        <section id="promo-section" class="bg-indigo-50 py-12 px-6 hidden">
+            <div class="container mx-auto max-w-7xl">
+                <div class="flex items-center gap-2 mb-8">
+                    <span class="text-2xl">🔥</span>
+                    <h2 class="text-2xl font-bold text-gray-900">Produk Pilihan / Promo</h2>
+                </div>
+                <div id="promo-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    <!-- Produk promo di-inject di sini -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Banner Khusus -->
+        <section id="banner-section" class="container mx-auto px-6 py-12 max-w-7xl hidden">
+            <a href="#" id="banner-link" target="_blank" class="block w-full overflow-hidden rounded-2xl shadow-md hover:shadow-xl transition-shadow group">
+                <img id="banner-image" src="" alt="Promo Banner" class="w-full h-auto object-cover transform group-hover:scale-[1.01] transition-transform duration-500">
+            </a>
+        </section>
+
+        <section class="container mx-auto px-6 py-12 max-w-7xl">
+            <h2 class="text-2xl font-bold text-gray-900 mb-8 border-b pb-4">Semua Produk</h2>
+            <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Produk akan di-inject ke sini via JavaScript -->
+            </div>
+            
+            <!-- Pesan jika produk tidak ditemukan saat pencarian -->
+            <div id="no-results" class="hidden text-center py-12">
+                <p class="text-gray-500 text-lg">Maaf, tidak ada produk yang cocok dengan pencarian atau kategori ini.</p>
+            </div>
+
+            <!-- Pagination Container -->
+            <div id="pagination" class="flex justify-center gap-2 mt-12">
+                <!-- Tombol pagination -->
+            </div>
+        </section>
+        
+        <!-- Section Banner Promosi Bawah -->
+        <section id="bottom-banner-section" class="container mx-auto px-6 py-8 max-w-7xl hidden">
+            <a href="#" id="bottom-banner-link" target="_blank" class="block w-full overflow-hidden rounded-2xl shadow-md hover:shadow-xl transition-shadow group">
+                <img id="bottom-banner-image" src="" alt="Promo Banner 2" class="w-full h-auto object-cover transform group-hover:scale-[1.01] transition-transform duration-500">
+            </a>
+        </section>
+
+        <!-- Section Blog / Artikel (Opsional) -->
+        <section id="blog-section" class="bg-indigo-50 py-16 px-6 hidden">
+            <div class="container mx-auto max-w-7xl">
+                <div class="flex justify-between items-center mb-10">
+                    <h2 class="text-3xl font-bold text-gray-900">Artikel & Panduan Terbaru</h2>
+                    <a href="#" class="text-indigo-600 font-semibold hover:underline">Lihat Semua &rarr;</a>
+                </div>
+                <div id="blog-list" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Artikel di-inject di sini -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Lengkap -->
+        <footer class="bg-gray-900 text-gray-300 py-12 mt-auto border-t border-gray-800">
+            <div class="container mx-auto px-6 max-w-7xl grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-3 mb-4">
+                        <img id="footer-logo" src="" alt="Logo" class="h-8 hidden rounded">
+                        <h3 id="footer-brand" class="text-2xl font-bold text-white tracking-wide">Toko</h3>
+                    </div>
+                    <p class="text-gray-400 mb-6 max-w-md">Menyediakan berbagai macam tools digital, template, dan panduan untuk membantu meningkatkan produktivitas dan bisnis Anda ke level selanjutnya.</p>
+                    <div class="flex gap-4">
+                        <!-- Social Icons -->
+                        <a href="#" class="text-gray-400 hover:text-white transition"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Navigasi</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Beranda</a></li>
+                        <li><a href="#product-list" class="text-gray-400 hover:text-white transition">Katalog Produk</a></li>
+                        <li><a href="#promo-section" class="text-gray-400 hover:text-white transition">Promo Spesial</a></li>
+                        <li><a href="#blog-section" class="text-gray-400 hover:text-white transition">Blog & Artikel</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Syarat & Ketentuan</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Kebijakan Privasi</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Disclaimer Affiliate</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center pt-8 border-t border-gray-800 text-sm">
+                <p>&copy; 2026 <span id="footer-copyright-brand">Toko</span>. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // ==========================================
+        // FETCH DATA DARI GOOGLE APPS SCRIPT API
+        // ==========================================
+        
+        // GANTI URL INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA!
+        const SCRIPT_URL = 'URL_APPS_SCRIPT_ANDA_DISINI'; 
+
+        // Variable global
+        let allProducts = [];
+        let currentCategory = 'Semua';
+        let searchQuery = '';
+        let globalSettings = {};
+        let currentPage = 1;
+
+        // Data dummy untuk Preview jika URL belum diganti
+        const mockData = {
+            settings: {
+                namaToko: "DigiStore Affiliate",
+                heroTitle: "Temukan Tools Digital Terbaik",
+                heroSubtitle: "Kumpulan template, ebook, dan tools premium untuk boost produktivitasmu.",
+                warnaUtama: "#4F46E5",
+                warnaBackground: "#F9FAFB",
+                fontFamily: "Inter",
+                logoUrl: "https://placehold.co/150x50/4F46E5/FFFFFF?text=DigiStore",
+                bannerImage: "https://placehold.co/1200x300/4F46E5/FFFFFF?text=PROMO+BESAR+BULAN+INI",
+                bannerUrl: "#",
+                bottomBannerImage: "https://placehold.co/1200x200/EC4899/FFFFFF?text=JOIN+GRUP+TELEGRAM+KAMI",
+                bottomBannerUrl: "#",
+                tampilkanBlog: "Ya",
+                itemsPerPage: 4
+            },
+            products: [
+                { judul: "Template Notion Pro", deskripsi: "Sistem manajemen hidup lengkap dan terstruktur.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Notion", harga: "Rp 150.000", linkSales: "#", linkCheckout: "#", kategori: "Template", promo: "Ya" },
+                { judul: "Ebook Copywriting", deskripsi: "Teknik nulis iklan jagoan bikin closingan melesat.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Ebook", harga: "Rp 99.000", linkSales: "#", linkCheckout: "#", kategori: "Ebook", promo: "" },
+                { judul: "Canva Pro Assets", deskripsi: "Ribuan elemen canva premium untuk desain sosmed.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Canva", harga: "Rp 120.000", linkSales: "#", linkCheckout: "#", kategori: "Design", promo: "Ya" },
+                { judul: "Kursus FB Ads", deskripsi: "Mastering Facebook Ads 2026. Dari pemula jadi pro.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=FB+Ads", harga: "Rp 450.000", linkSales: "#", linkCheckout: "#", kategori: "Kursus", promo: "" },
+                { judul: "UI/UX Starter Kit", deskripsi: "Wireframe & komponen Figma lengkap untuk project Anda.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Figma", harga: "Rp 200.000", linkSales: "#", linkCheckout: "#", kategori: "Design", promo: "" },
+                { judul: "Plugin AutoPost SEO", deskripsi: "Otomatisasi blog WordPress dengan AI dan SEO Friendly.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Plugin", harga: "Rp 350.000", linkSales: "#", linkCheckout: "#", kategori: "Tools", promo: "" }
+            ],
+            articles: [
+                { judul: "Cara Memaksimalkan Penjualan Affiliate di 2026", ringkasan: "Strategi ampuh untuk meningkatkan konversi link affiliate Anda tahun ini. Pelajari metodenya sekarang...", gambar: "https://placehold.co/600x400/4F46E5/FFFFFF?text=Blog+1", tanggal: "05 Agustus 2026", link: "#" },
+                { judul: "Tools Wajib Untuk Digital Marketer", ringkasan: "Daftar 10 tools gratis dan berbayar yang wajib dimiliki oleh digital marketer untuk scale up bisnis...", gambar: "https://placehold.co/600x400/4F46E5/FFFFFF?text=Blog+2", tanggal: "01 Agustus 2026", link: "#" },
+                { judul: "Panduan Memulai Karir Freelance", ringkasan: "Langkah demi langkah mendapatkan klien pertama dari platform freelance internasional secara efektif...", gambar: "https://placehold.co/600x400/4F46E5/FFFFFF?text=Blog+3", tanggal: "28 Juli 2026", link: "#" }
+            ]
+        };
+
+        // Cek apakah sedang mode Preview (URL belum diganti)
+        if (SCRIPT_URL === 'URL_APPS_SCRIPT_ANDA_DISINI') {
+            console.log("Menjalankan mode preview dengan data dummy...");
+            // Beri jeda 1 detik untuk mensimulasikan waktu loading (opsional)
+            setTimeout(() => {
+                renderApp(mockData);
+            }, 1000);
+        } else {
+            // Fetch data asli dari Apps Script
+            fetch(SCRIPT_URL)
+                .then(response => response.json())
+                .then(data => {
+                    renderApp(data);
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                    document.getElementById('loading').innerHTML = `
+                        <div class="text-red-500 text-center">
+                            <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <p class="text-lg font-medium">Gagal memuat data dari server.</p>
+                            <p class="text-sm text-gray-500 mt-2">Pastikan URL Apps Script sudah benar.</p>
+                        </div>
+                    `;
+                });
+        }
+
+        function renderApp(data) {
+            globalSettings = data.settings;
+            allProducts = data.products;
+
+            setupDesign(globalSettings);
+            setupHomepage(globalSettings);
+            renderPromoSection();
+            setupFilters();
+            renderCatalog();
+            
+            // Render blog jika data artikel ada
+            if(data.articles) {
+                setupBlogSection(data.articles, globalSettings);
+            } else {
+                setupBlogSection([], globalSettings);
+            }
+
+            // Tampilkan UI
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('app').classList.remove('hidden');
+        }
+
+        function setupDesign(settings) {
+            const fontName = settings.fontFamily || 'Inter';
+            const fontUrl = `https://fonts.googleapis.com/css2?family=${fontName.replace(/ /g, '+')}:wght@400;500;600;700;800&display=swap`;
+            const link = document.createElement('link');
+            link.href = fontUrl;
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+            document.body.style.fontFamily = `'${fontName}', sans-serif`;
+
+            document.getElementById('header').style.backgroundColor = settings.warnaUtama;
+            document.getElementById('app').style.backgroundColor = settings.warnaBackground;
+            
+            // Set warna section blog dengan opacity tipis (Tailwind cara manual)
+            document.getElementById('blog-section').style.backgroundColor = settings.warnaUtama + "10"; 
+
+            const style = document.createElement('style');
+            style.innerHTML = `
+                #searchInput:focus { border-color: ${settings.warnaUtama} !important; outline-color: ${settings.warnaUtama}; box-shadow: 0 0 0 2px ${settings.warnaUtama}40; }
+                .cat-btn.active { background-color: ${settings.warnaUtama} !important; color: white !important; border-color: ${settings.warnaUtama} !important;}
+                .page-btn.active { background-color: ${settings.warnaUtama} !important; color: white !important; border-color: ${settings.warnaUtama} !important;}
+            `;
+            document.head.appendChild(style);
+        }
+
+        function setupHomepage(settings) {
+            // Header & Logo
+            document.getElementById('brand-name').innerText = settings.namaToko;
+            if(settings.logoUrl) {
+                const logoImg = document.getElementById('logo-image');
+                logoImg.src = settings.logoUrl;
+                logoImg.classList.remove('hidden');
+            }
+
+            // Footer
+            document.getElementById('footer-brand').innerText = settings.namaToko;
+            document.getElementById('footer-copyright-brand').innerText = settings.namaToko;
+            if(settings.logoUrl) {
+                const footerLogo = document.getElementById('footer-logo');
+                footerLogo.src = settings.logoUrl;
+                footerLogo.classList.remove('hidden');
+            }
+
+            document.getElementById('hero-title').innerText = settings.heroTitle;
+            document.getElementById('hero-subtitle').innerText = settings.heroSubtitle;
+
+            // Top Banner
+            if(settings.bannerImage) {
+                document.getElementById('banner-image').src = settings.bannerImage;
+                if(settings.bannerUrl) document.getElementById('banner-link').href = settings.bannerUrl;
+                document.getElementById('banner-section').classList.remove('hidden');
+            }
+
+            // Bottom Banner
+            if(settings.bottomBannerImage) {
+                document.getElementById('bottom-banner-image').src = settings.bottomBannerImage;
+                if(settings.bottomBannerUrl) document.getElementById('bottom-banner-link').href = settings.bottomBannerUrl;
+                document.getElementById('bottom-banner-section').classList.remove('hidden');
+            }
+        }
+
+        function createProductCardHTML(p, settings) {
+            return `
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group border border-gray-100">
+                    <div class="relative overflow-hidden">
+                        <img src="${p.gambar}" alt="${p.judul}" class="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/cccccc/ffffff?text=No+Image'">
+                        <div class="absolute top-3 right-3 bg-white/90 backdrop-blur text-xs font-bold px-2 py-1 rounded-md text-gray-700 shadow-sm">${p.kategori || 'Lainnya'}</div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2 leading-tight">${p.judul}</h3>
+                        <p class="text-gray-500 text-sm mb-6 flex-grow line-clamp-3">${p.deskripsi}</p>
+                        
+                        <div class="mt-auto">
+                            <div class="text-2xl font-black mb-4" style="color: ${settings.warnaUtama}">${p.harga}</div>
+                            
+                            <div class="space-y-2">
+                                <a href="${p.linkCheckout}" target="_blank" class="block w-full text-center text-white font-semibold py-3 px-4 rounded-xl transition-opacity hover:opacity-90 shadow-md flex items-center justify-center space-x-2" style="background-color: ${settings.warnaUtama}">
+                                    <span>⚡ Checkout Kilat</span>
+                                </a>
+                                <a href="${p.linkSales}" target="_blank" class="block w-full text-center font-semibold py-2.5 px-4 rounded-xl transition-colors bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm">
+                                    📖 Lihat Sales Page
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPromoSection() {
+            const promoList = document.getElementById('promo-list');
+            const promoSection = document.getElementById('promo-section');
+            
+            // Filter produk yang ada string 'ya' di kolom promo (case insensitive)
+            const promos = allProducts.filter(p => p.promo && p.promo.toLowerCase().includes('ya'));
+            
+            if(promos.length > 0) {
+                promoSection.classList.remove('hidden');
+                promoList.innerHTML = promos.map(p => createProductCardHTML(p, globalSettings)).join('');
+            }
+        }
+
+        function setupFilters() {
+            const categories = ['Semua'];
+            allProducts.forEach(p => {
+                if(p.kategori && !categories.includes(p.kategori)) {
+                    categories.push(p.kategori);
+                }
+            });
+
+            const filterContainer = document.getElementById('category-filter');
+            filterContainer.innerHTML = categories.map(cat => 
+                `<button class="cat-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 text-gray-600 bg-white hover:bg-gray-50 transition-colors ${cat === 'Semua' ? 'active' : ''}" data-cat="${cat}">
+                    ${cat}
+                </button>`
+            ).join('');
+
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentCategory = e.target.getAttribute('data-cat');
+                    currentPage = 1; // Reset halaman ke-1 saat ganti kategori
+                    renderCatalog();
+                });
+            });
+
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value.toLowerCase();
+                currentPage = 1; // Reset halaman ke-1 saat ngetik search
+                renderCatalog();
+            });
+        }
+
+        function renderCatalog() {
+            const productList = document.getElementById('product-list');
+            const noResults = document.getElementById('no-results');
+            
+            // 1. Logika Filter (Kategori & Search)
+            const filteredProducts = allProducts.filter(p => {
+                const matchCategory = currentCategory === 'Semua' || p.kategori === currentCategory;
+                const matchSearch = p.judul.toLowerCase().includes(searchQuery) || p.deskripsi.toLowerCase().includes(searchQuery);
+                return matchCategory && matchSearch;
+            });
+
+            // 2. Logika Pagination
+            const itemsPerPage = parseInt(globalSettings.itemsPerPage) || 8;
+            const totalItems = filteredProducts.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            
+            if(currentPage > totalPages) currentPage = totalPages;
+            if(currentPage < 1) currentPage = 1;
+
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            
+            // Potong array sesuai halaman yang sedang aktif
+            const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
+            // 3. Render ke HTML
+            if (paginatedProducts.length > 0) {
+                productList.innerHTML = paginatedProducts.map(p => createProductCardHTML(p, globalSettings)).join('');
+                productList.style.display = 'grid';
+                noResults.classList.add('hidden');
+                
+                // Munculkan tombol halaman
+                renderPagination(totalPages);
+            } else {
+                productList.style.display = 'none';
+                noResults.classList.remove('hidden');
+                document.getElementById('pagination').innerHTML = ''; 
+            }
+        }
+
+        function renderPagination(totalPages) {
+            const paginationContainer = document.getElementById('pagination');
+            
+            // Kalau cuma 1 halaman, gak usah tampilkan tombol
+            if(totalPages <= 1) {
+                paginationContainer.innerHTML = '';
+                return;
+            }
+
+            let paginationHTML = '';
+            for(let i = 1; i <= totalPages; i++) {
+                paginationHTML += `<button class="page-btn px-4 py-2 border rounded-md font-medium transition-colors ${i === currentPage ? 'active' : 'bg-white text-gray-700 hover:bg-gray-100'}" data-page="${i}">${i}</button>`;
+            }
+            
+            paginationContainer.innerHTML = paginationHTML;
+
+            // Pasang listener klik
+            document.querySelectorAll('.page-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    currentPage = parseInt(e.target.getAttribute('data-page'));
+                    renderCatalog();
+                    // Scroll smooth ke atas produk biar user gak nyasar
+                    document.getElementById('product-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+        }
+
+        function setupBlogSection(articles, settings) {
+            const showBlog = settings.tampilkanBlog && settings.tampilkanBlog.toLowerCase() === 'ya';
+            const blogSection = document.getElementById('blog-section');
+            const blogList = document.getElementById('blog-list');
+            const navBlog = document.getElementById('nav-blog');
+
+            if(showBlog && articles && articles.length > 0) {
+                blogSection.classList.remove('hidden');
+                navBlog.classList.remove('hidden'); // Munculkan link artikel di navbar atas
+                
+                blogList.innerHTML = articles.map(art => `
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-gray-100 flex flex-col">
+                        <a href="${art.link}" class="block overflow-hidden relative">
+                            <img src="${art.gambar}" alt="${art.judul}" class="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                        </a>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <span class="text-xs font-semibold text-gray-500 mb-2">${art.tanggal}</span>
+                            <a href="${art.link}" class="block group-hover:text-indigo-600 transition-colors">
+                                <h3 class="text-lg font-bold text-gray-900 mb-3 leading-snug">${art.judul}</h3>
+                            </a>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-3">${art.ringkasan}</p>
+                            <a href="${art.link}" class="mt-auto text-sm font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">Baca Selengkapnya <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                blogSection.classList.add('hidden');
+                navBlog.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
