@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen text-gray-800 font-sans">
+
+    <!-- Screen Login Admin -->
+    <div id="login-screen" class="min-h-screen flex items-center justify-center">
+        <div class="bg-white p-8 rounded-2xl shadow-xl w-96 max-w-full">
+            <div class="text-center mb-6">
+                <span class="text-4xl">🔒</span>
+                <h2 class="text-2xl font-bold mt-2">Area Admin</h2>
+                <p class="text-gray-500 text-sm">Masukkan PIN Rahasia Anda</p>
+            </div>
+            <input type="password" id="pin-input" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none mb-4" placeholder="••••••••">
+            <button onclick="checkLogin()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition">Masuk Dashboard</button>
+            <p id="login-error" class="text-red-500 text-sm text-center mt-3 hidden">PIN Salah!</p>
+        </div>
+    </div>
+
+    <!-- Dashboard Admin (Disembunyikan sebelum login) -->
+    <div id="dashboard" class="hidden min-h-screen pb-12">
+        <nav class="bg-indigo-600 text-white p-4 shadow-md sticky top-0 z-50">
+            <div class="container mx-auto flex justify-between items-center max-w-5xl">
+                <h1 class="text-xl font-bold">⚙️ Dashboard Admin</h1>
+                <button onclick="location.reload()" class="bg-indigo-800 px-4 py-2 rounded-lg hover:bg-indigo-900 text-sm font-semibold">Keluar</button>
+            </div>
+        </nav>
+
+        <div class="container mx-auto mt-8 px-4 max-w-5xl">
+            <!-- Tabs -->
+            <div class="flex space-x-2 mb-6 border-b border-gray-200">
+                <button onclick="switchTab('produk')" id="tab-produk" class="px-6 py-3 font-semibold border-b-2 border-indigo-600 text-indigo-600 transition-colors">📦 Tambah Produk</button>
+                <button onclick="switchTab('artikel')" id="tab-artikel" class="px-6 py-3 font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors">📝 Tambah Artikel</button>
+            </div>
+
+            <div id="status-message" class="hidden mb-6 p-4 rounded-lg font-medium text-center"></div>
+
+            <!-- Form Tambah Produk -->
+            <form id="form-produk" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100" onsubmit="submitForm(event, 'produk')">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800">Tambah Produk Baru</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Judul Produk</label>
+                        <input type="text" id="p-judul" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                        <input type="text" id="p-kategori" required placeholder="Contoh: Ebook, Template" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Singkat</label>
+                    <textarea id="p-deskripsi" required rows="3" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">URL Gambar Gambar (Cover)</label>
+                        <input type="url" id="p-gambar" required placeholder="https://..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Harga (Format Bebas)</label>
+                        <input type="text" id="p-harga" required placeholder="Rp 150.000" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Link Sales Page</label>
+                        <input type="url" id="p-sales" required placeholder="https://..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Link Checkout Kilat</label>
+                        <input type="url" id="p-checkout" required placeholder="https://..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                        <input type="checkbox" id="p-promo" class="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500">
+                        <span class="text-gray-700 font-medium">Jadikan Produk Promo / Pilihan di Halaman Depan</span>
+                    </label>
+                </div>
+
+                <button type="submit" id="btn-submit-produk" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transition flex justify-center items-center gap-2">
+                    <span>💾 Simpan Produk ke Database</span>
+                </button>
+            </form>
+
+            <!-- Form Tambah Artikel -->
+            <form id="form-artikel" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hidden" onsubmit="submitForm(event, 'artikel')">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800">Tulis Artikel Baru</h2>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Judul Artikel</label>
+                    <input type="text" id="a-judul" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">URL Gambar Thumbnail</label>
+                    <input type="url" id="a-gambar" required placeholder="https://..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Ringkasan (Tampil di Card Depan)</label>
+                    <textarea id="a-ringkasan" required rows="2" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
+                </div>
+
+                <div class="mb-8">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Isi Artikel Lengkap</label>
+                    <textarea id="a-isi" required rows="10" placeholder="Tulis paragraf panjang di sini..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
+                </div>
+
+                <button type="submit" id="btn-submit-artikel" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transition flex justify-center items-center gap-2">
+                    <span>📢 Terbitkan Artikel ke Database</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // MASUKKAN URL APP SCRIPT ANDA DI SINI! (Harus sama dengan yang di index.html)
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNwl9USTq7SywZbFh0P1zHEOLaA9ewgl53AliV6-BAOVlK3rvEqmXbVKa0IMad8KaT/exec';
+        
+        // PIN Rahasia (Bisa Anda ganti)
+        const SECRET_PIN = "admin123";
+
+        function checkLogin() {
+            const input = document.getElementById('pin-input').value;
+            if(input === SECRET_PIN) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
+            }
+        }
+
+        // Jalankan login pakai Enter
+        document.getElementById('pin-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') checkLogin();
+        });
+
+        function switchTab(tab) {
+            const formProduk = document.getElementById('form-produk');
+            const formArtikel = document.getElementById('form-artikel');
+            const btnProduk = document.getElementById('tab-produk');
+            const btnArtikel = document.getElementById('tab-artikel');
+
+            if(tab === 'produk') {
+                formProduk.classList.remove('hidden');
+                formArtikel.classList.add('hidden');
+                btnProduk.classList.replace('border-transparent', 'border-indigo-600');
+                btnProduk.classList.replace('text-gray-500', 'text-indigo-600');
+                btnArtikel.classList.replace('border-indigo-600', 'border-transparent');
+                btnArtikel.classList.replace('text-indigo-600', 'text-gray-500');
+            } else {
+                formProduk.classList.add('hidden');
+                formArtikel.classList.remove('hidden');
+                btnArtikel.classList.replace('border-transparent', 'border-indigo-600');
+                btnArtikel.classList.replace('text-gray-500', 'text-indigo-600');
+                btnProduk.classList.replace('border-indigo-600', 'border-transparent');
+                btnProduk.classList.replace('text-indigo-600', 'text-gray-500');
+            }
+            
+            // Sembunyikan pesan sukses/error saat pindah tab
+            document.getElementById('status-message').classList.add('hidden');
+        }
+
+        function showMessage(msg, isError = false) {
+            const el = document.getElementById('status-message');
+            el.innerText = msg;
+            el.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+            
+            if(isError) {
+                el.classList.add('bg-red-100', 'text-red-800');
+            } else {
+                el.classList.add('bg-green-100', 'text-green-800');
+            }
+            
+            // Hilang otomatis setelah 5 detik
+            setTimeout(() => { el.classList.add('hidden'); }, 5000);
+        }
+
+        function submitForm(event, type) {
+            event.preventDefault(); // Mencegah reload halaman
+            
+            const btn = document.getElementById(`btn-submit-${type}`);
+            const oriText = btn.innerHTML;
+            btn.innerHTML = `<span>⏳ Sedang menyimpan...</span>`;
+            btn.disabled = true;
+
+            let payload = { action: 'tambah_' + type };
+
+            if(type === 'produk') {
+                payload.data = {
+                    judul: document.getElementById('p-judul').value,
+                    deskripsi: document.getElementById('p-deskripsi').value,
+                    gambar: document.getElementById('p-gambar').value,
+                    harga: document.getElementById('p-harga').value,
+                    linkSales: document.getElementById('p-sales').value,
+                    linkCheckout: document.getElementById('p-checkout').value,
+                    kategori: document.getElementById('p-kategori').value,
+                    promo: document.getElementById('p-promo').checked ? 'Ya' : ''
+                };
+            } else if (type === 'artikel') {
+                // Auto generate tanggal hari ini (Format Indo)
+                const today = new Date();
+                const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                const tglIndo = today.toLocaleDateString('id-ID', options);
+
+                payload.data = {
+                    judul: document.getElementById('a-judul').value,
+                    ringkasan: document.getElementById('a-ringkasan').value,
+                    gambar: document.getElementById('a-gambar').value,
+                    tanggal: tglIndo,
+                    isiLengkap: document.getElementById('a-isi').value
+                };
+            }
+
+            // Kirim data ke Apps Script menggunakan POST
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                // Mode no-cors wajib dipakai karena Google Script meredirect POST
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                // Karena no-cors, kita tidak bisa membaca response JSON dengan baik.
+                // Tapi jika sampai di sini, artinya request terkirim.
+                btn.innerHTML = oriText;
+                btn.disabled = false;
+                showMessage(`✅ ${type === 'produk' ? 'Produk' : 'Artikel'} berhasil ditambahkan ke Database!`);
+                event.target.reset(); // Kosongkan form
+            })
+            .catch(error => {
+                btn.innerHTML = oriText;
+                btn.disabled = false;
+                showMessage('❌ Terjadi kesalahan jaringan. Coba lagi.', true);
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
