@@ -35,9 +35,10 @@
 
         <div class="container mx-auto mt-8 px-4 max-w-5xl">
             <!-- Tabs -->
-            <div class="flex space-x-2 mb-6 border-b border-gray-200">
-                <button onclick="switchTab('produk')" id="tab-produk" class="px-6 py-3 font-semibold border-b-2 border-indigo-600 text-indigo-600 transition-colors">📦 Tambah Produk</button>
-                <button onclick="switchTab('artikel')" id="tab-artikel" class="px-6 py-3 font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors">📝 Tambah Artikel</button>
+            <div class="flex space-x-2 mb-6 border-b border-gray-200 overflow-x-auto">
+                <button onclick="switchTab('produk')" id="tab-produk" class="whitespace-nowrap px-6 py-3 font-semibold border-b-2 border-indigo-600 text-indigo-600 transition-colors">📦 Tambah Produk</button>
+                <button onclick="switchTab('artikel')" id="tab-artikel" class="whitespace-nowrap px-6 py-3 font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors">📝 Tambah Artikel</button>
+                <button onclick="switchTab('csv')" id="tab-csv" class="whitespace-nowrap px-6 py-3 font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors">📑 Import / Export CSV</button>
             </div>
 
             <div id="status-message" class="hidden mb-6 p-4 rounded-lg font-medium text-center"></div>
@@ -64,7 +65,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">URL Gambar Gambar (Cover)</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">URL Gambar (Cover)</label>
                         <input type="url" id="p-gambar" required placeholder="https://..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none">
                     </div>
                     <div>
@@ -124,6 +125,44 @@
                     <span>📢 Terbitkan Artikel ke Database</span>
                 </button>
             </form>
+
+            <!-- TAB 3: MANAJEMEN CSV (IMPORT / EXPORT) -->
+            <div id="form-csv" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hidden">
+                <h2 class="text-2xl font-bold mb-2 text-gray-800">Manajemen CSV Massal</h2>
+                <p class="text-gray-500 mb-8">Tambah puluhan produk sekaligus atau backup produk Anda dengan file CSV.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Area Download & Export -->
+                    <div class="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center">
+                        <div class="text-4xl mb-4">📥</div>
+                        <h3 class="font-bold text-lg mb-2">Download Data</h3>
+                        <p class="text-sm text-gray-500 mb-6">Unduh file template kosong untuk diisi, atau export produk yang sudah ada di database saat ini.</p>
+                        
+                        <div class="space-y-3">
+                            <button onclick="downloadTemplate()" class="w-full bg-gray-100 text-gray-700 font-semibold py-3 rounded-lg hover:bg-gray-200 transition">
+                                📝 Unduh Template Kosong
+                            </button>
+                            <button onclick="exportProducts()" class="w-full border border-indigo-600 text-indigo-600 font-semibold py-3 rounded-lg hover:bg-indigo-50 transition">
+                                📦 Export Semua Produk Saat Ini
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Area Import -->
+                    <div class="border-2 border-dashed border-indigo-200 bg-indigo-50 rounded-xl p-6 text-center flex flex-col justify-center">
+                        <div class="text-4xl mb-4">📤</div>
+                        <h3 class="font-bold text-lg mb-2">Upload Data Produk</h3>
+                        <p class="text-sm text-gray-500 mb-6">Pilih file CSV (sesuai format template) untuk ditambahkan massal ke database Google Sheet Anda.</p>
+                        
+                        <input type="file" id="csvFileInput" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 mb-4 cursor-pointer">
+                        
+                        <button onclick="uploadCSV()" id="btn-upload-csv" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition flex justify-center items-center gap-2">
+                            <span>🚀 Import CSV Sekarang</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -131,6 +170,8 @@
         // MASUKKAN URL APP SCRIPT ANDA DI SINI! (Harus sama dengan yang di index.html)
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNwl9USTq7SywZbFh0P1zHEOLaA9ewgl53AliV6-BAOVlK3rvEqmXbVKa0IMad8KaT/exec';
         
+        let globalProducts = []; // Tambahan variabel global untuk nampung data pas export
+
         async function checkLogin() {
             const input = document.getElementById('pin-input').value;
             const btn = document.getElementById('btn-login');
@@ -149,6 +190,7 @@
                 
                 // Ambil PIN dari settings (Jika tidak ada di sheet, fallback ke "admin123")
                 const realPin = data.settings.adminPin || "admin123";
+                globalProducts = data.products || []; // Simpan data produk buat di-export nanti
 
                 if(input === realPin.toString()) {
                     document.getElementById('login-screen').classList.add('hidden');
@@ -174,26 +216,24 @@
         });
 
         function switchTab(tab) {
-            const formProduk = document.getElementById('form-produk');
-            const formArtikel = document.getElementById('form-artikel');
-            const btnProduk = document.getElementById('tab-produk');
-            const btnArtikel = document.getElementById('tab-artikel');
-
-            if(tab === 'produk') {
-                formProduk.classList.remove('hidden');
-                formArtikel.classList.add('hidden');
-                btnProduk.classList.replace('border-transparent', 'border-indigo-600');
-                btnProduk.classList.replace('text-gray-500', 'text-indigo-600');
-                btnArtikel.classList.replace('border-indigo-600', 'border-transparent');
-                btnArtikel.classList.replace('text-indigo-600', 'text-gray-500');
-            } else {
-                formProduk.classList.add('hidden');
-                formArtikel.classList.remove('hidden');
-                btnArtikel.classList.replace('border-transparent', 'border-indigo-600');
-                btnArtikel.classList.replace('text-gray-500', 'text-indigo-600');
-                btnProduk.classList.replace('border-indigo-600', 'border-transparent');
-                btnProduk.classList.replace('text-indigo-600', 'text-gray-500');
-            }
+            const tabs = ['produk', 'artikel', 'csv'];
+            
+            tabs.forEach(t => {
+                const form = document.getElementById(`form-${t}`);
+                const btn = document.getElementById(`tab-${t}`);
+                
+                if(!btn || !form) return;
+                
+                if(t === tab) {
+                    form.classList.remove('hidden');
+                    btn.classList.replace('border-transparent', 'border-indigo-600');
+                    btn.classList.replace('text-gray-500', 'text-indigo-600');
+                } else {
+                    form.classList.add('hidden');
+                    btn.classList.replace('border-indigo-600', 'border-transparent');
+                    btn.classList.replace('text-indigo-600', 'text-gray-500');
+                }
+            });
             
             // Sembunyikan pesan sukses/error saat pindah tab
             document.getElementById('status-message').classList.add('hidden');
@@ -275,167 +315,135 @@
                 console.error('Error:', error);
             });
         }
+
+        // ==========================================
+        // LOGIKA CSV (DOWNLOAD, EXPORT, IMPORT)
+        // ==========================================
+        const CSV_HEADER = "Judul,Deskripsi,URL_Gambar,Harga,Link_Sales_Page,Link_Checkout,Kategori,Promo\n";
+
+        // Helper untuk download file
+        function downloadCSVFile(csvContent, filename) {
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Download Template Kosong
+        function downloadTemplate() {
+            const exampleRow = '"Ebook Jualan","Panduan nulis jualan laris","https://gambar.com/cover.jpg","Rp 150.000","https://affiliate.com/1","https://affiliate.com/2","Ebook","Ya"\n';
+            downloadCSVFile(CSV_HEADER + exampleRow, "Template_Produk_DigiStore.csv");
+        }
+
+        // Export Data Produk Saat Ini
+        function exportProducts() {
+            if(!globalProducts || globalProducts.length === 0) {
+                showMessage("Belum ada data produk di database untuk diexport.", true);
+                return;
+            }
+            
+            let csvContent = CSV_HEADER;
+            globalProducts.forEach(p => {
+                // Bungkus tiap field dengan kutip biar koma di dalam teks nggak error pas diparsing Excel
+                const row = [
+                    `"${(p.judul || '').replace(/"/g, '""')}"`,
+                    `"${(p.deskripsi || '').replace(/"/g, '""')}"`,
+                    `"${(p.gambar || '').replace(/"/g, '""')}"`,
+                    `"${(p.harga || '').replace(/"/g, '""')}"`,
+                    `"${(p.linkSales || '').replace(/"/g, '""')}"`,
+                    `"${(p.linkCheckout || '').replace(/"/g, '""')}"`,
+                    `"${(p.kategori || '').replace(/"/g, '""')}"`,
+                    `"${(p.promo || '').replace(/"/g, '""')}"`
+                ].join(',');
+                csvContent += row + "\n";
+            });
+            
+            downloadCSVFile(csvContent, "Export_Produk_Database.csv");
+        }
+
+        // Import File CSV (Upload)
+        function uploadCSV() {
+            const fileInput = document.getElementById('csvFileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showMessage("❌ Harap pilih file CSV terlebih dahulu!", true);
+                return;
+            }
+
+            const btn = document.getElementById('btn-upload-csv');
+            const oriText = btn.innerHTML;
+            btn.innerHTML = `<span>⏳ Sedang memproses...</span>`;
+            btn.disabled = true;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                let rows = text.split('\n');
+                let dataToUpload = [];
+
+                // Parsing baris per baris (mulai index 1 untuk skip baris header)
+                for (let i = 1; i < rows.length; i++) {
+                    let rowString = rows[i].trim();
+                    if (!rowString) continue; // Skip baris yang kosong
+
+                    // Regex untuk misahin CSV by koma (ngabaiin koma di dalam tanda kutip)
+                    let cols = rowString.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(col => {
+                        let cleanStr = col.trim();
+                        // Ilangin tanda kutip di awal & akhir teks
+                        if (cleanStr.startsWith('"') && cleanStr.endsWith('"')) {
+                            cleanStr = cleanStr.substring(1, cleanStr.length - 1).replace(/""/g, '"');
+                        }
+                        return cleanStr;
+                    });
+
+                    // Pastikan panjang array minimal 8 kolom biar sesuai struktur Google Sheet
+                    while(cols.length < 8) cols.push(""); 
+                    dataToUpload.push(cols.slice(0, 8)); // Ambil persis 8 kolom
+                }
+
+                if (dataToUpload.length === 0) {
+                    showMessage("❌ File CSV kosong atau format tidak sesuai.", true);
+                    btn.innerHTML = oriText;
+                    btn.disabled = false;
+                    return;
+                }
+
+                // Siapkan payload khusus buat bulk insert
+                const payload = {
+                    action: 'import_produk_csv',
+                    data: dataToUpload
+                };
+
+                // Kirim request ke Google Apps Script (doPost)
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                })
+                .then(() => {
+                    btn.innerHTML = oriText;
+                    btn.disabled = false;
+                    fileInput.value = ""; // Kosongin form input file
+                    showMessage(`✅ Berhasil mengimpor ${dataToUpload.length} produk sekaligus ke Google Sheet!`);
+                })
+                .catch(error => {
+                    btn.innerHTML = oriText;
+                    btn.disabled = false;
+                    showMessage('❌ Gagal mengunggah. Terjadi kesalahan jaringan.', true);
+                    console.error('Error Bulk Insert:', error);
+                });
+            };
+            
+            // Mulai baca file sebagai teks
+            reader.readAsText(file);
+        }
     </script>
 </body>
 </html>
-```
-
----
-
-### 2. Full Code Google Apps Script (`Code.gs`)
-Untuk memastikan kode backend Anda mendapatkan fungsi penambahan data (`doPost`) serta kolom pengaturan PIN yang baru, hapus semua kode lama di App Script Anda, dan timpa dengan kode di bawah ini.
-
-*Catatan: Saya memberikan kode penuh ini karena Anda perlu memasukkan fungsi `doPost` (untuk menyimpan data admin) dan struktur kolom `Articles` yang baru.*
-
-```javascript:Backend Apps Script:Code.gs
-// ========================================================
-// BACKEND GOOGLE APPS SCRIPT - MARKETPLACE AFFILIATE
-// ========================================================
-
-function onOpen() {
-  const ui = SpreadsheetApp.getUi();
-  ui.createMenu('⚙️ Setup Marketplace')
-    .addItem('🚀 Setup Database Baru (Auto-fill)', 'setupDatabase')
-    .addToUi();
-}
-
-function doGet(e) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  
-  // 1. Settings
-  let settings = {};
-  const settingsSheet = ss.getSheetByName('Settings');
-  if (settingsSheet) {
-    const settingsData = settingsSheet.getDataRange().getValues();
-    for(let i = 1; i < settingsData.length; i++) {
-      if(settingsData[i][0]) settings[settingsData[i][0]] = settingsData[i][1];
-    }
-  }
-
-  // 2. Products
-  let products = [];
-  const productsSheet = ss.getSheetByName('Products');
-  if (productsSheet) {
-    const productsData = productsSheet.getDataRange().getValues();
-    for(let i = 1; i < productsData.length; i++) {
-      if(productsData[i][0]) {
-        products.push({
-          judul: productsData[i][0], deskripsi: productsData[i][1],
-          gambar: productsData[i][2], harga: productsData[i][3],
-          linkSales: productsData[i][4], linkCheckout: productsData[i][5],
-          kategori: productsData[i][6], promo: productsData[i][7]
-        });
-      }
-    }
-  }
-
-  // 3. Articles (Dengan Kolom Isi Lengkap)
-  let articles = [];
-  const articlesSheet = ss.getSheetByName('Articles');
-  if(articlesSheet) {
-    const articlesData = articlesSheet.getDataRange().getValues();
-    for(let i = 1; i < articlesData.length; i++) {
-      if(articlesData[i][0]) {
-        articles.push({
-          judul: articlesData[i][0], ringkasan: articlesData[i][1],
-          gambar: articlesData[i][2], tanggal: articlesData[i][3],
-          isiLengkap: articlesData[i][4] // Mengambil isi artikel lengkap
-        });
-      }
-    }
-  }
-
-  const responseData = { settings: settings, products: products, articles: articles };
-  
-  return ContentService.createTextOutput(JSON.stringify(responseData))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-function doPost(e) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  
-  try {
-    const payload = JSON.parse(e.postData.contents);
-    
-    if (payload.action === 'tambah_produk') {
-      const sheet = ss.getSheetByName('Products');
-      sheet.appendRow([
-        payload.data.judul, payload.data.deskripsi, payload.data.gambar, 
-        payload.data.harga, payload.data.linkSales, payload.data.linkCheckout, 
-        payload.data.kategori, payload.data.promo
-      ]);
-    } 
-    else if (payload.action === 'tambah_artikel') {
-      const sheet = ss.getSheetByName('Articles');
-      sheet.appendRow([
-        payload.data.judul, payload.data.ringkasan, 
-        payload.data.gambar, payload.data.tanggal, 
-        payload.data.isiLengkap
-      ]);
-    }
-    
-    return ContentService.createTextOutput(JSON.stringify({ status: 'success' }))
-      .setMimeType(ContentService.MimeType.JSON);
-      
-  } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: error.message }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}
-
-function setupDatabase() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  
-  // Setup Settings
-  let sheetSettings = ss.getSheetByName("Settings");
-  if (!sheetSettings) {
-    sheetSettings = ss.insertSheet("Settings");
-    sheetSettings.appendRow(["Key", "Value", "Penjelasan"]);
-    sheetSettings.getRange("A1:C1").setFontWeight("bold").setBackground("#d9ead3");
-    
-    const settingsData = [
-      ["namaToko", "DigiStore Affiliate", "Nama toko di Header & Footer"],
-      ["adminPin", "admin123", "PIN rahasia untuk masuk ke halaman Dashboard admin.html"],
-      ["heroTitle", "Temukan Tools Digital Terbaik", "Teks besar di homepage"],
-      ["heroSubtitle", "Kumpulan template, ebook, dan tools premium untuk boost produktivitasmu.", "Teks kecil di bawah judul"],
-      ["warnaUtama", "#4F46E5", "Kode warna utama (Hex)"],
-      ["warnaBackground", "#F9FAFB", "Kode warna latar belakang (Hex)"],
-      ["fontFamily", "Inter", "Nama Google Font (Contoh: Poppins, Inter, Montserrat)"],
-      ["logoUrl", "https://placehold.co/150x50/4F46E5/FFFFFF?text=DigiStore", "Link gambar logo (Kosongkan jika tidak ada)"],
-      ["bannerImage", "https://placehold.co/1200x300/4F46E5/FFFFFF?text=PROMO+BESAR+BULAN+INI", "Link gambar banner atas"],
-      ["bannerUrl", "#", "Link tujuan saat banner atas diklik"],
-      ["bottomBannerImage", "https://placehold.co/1200x200/EC4899/FFFFFF?text=JOIN+GRUP+TELEGRAM+KAMI", "Link gambar banner bawah"],
-      ["bottomBannerUrl", "#", "Link tujuan saat banner bawah diklik"],
-      ["tampilkanBlog", "Ya", "Ketik 'Ya' untuk menampilkan artikel blog"],
-      ["itemsPerPage", "4", "Jumlah produk per halaman (Pagination)"],
-      ["tampilkanWA", "Ya", "Ketik 'Ya' untuk memunculkan ikon WA melayang"],
-      ["waNumber", "6281234567890", "Nomor WA (awalan 62 tanpa +)"],
-      ["waMessage", "Halo admin, saya tertarik dengan produk digital Anda.", "Pesan otomatis WA"]
-    ];
-    
-    settingsData.forEach(row => sheetSettings.appendRow(row));
-    sheetSettings.autoResizeColumns(1, 3);
-  } else {
-    // Sisipkan baris adminPin jika sudah ada sheet tapi belum ada PIN (Update)
-    sheetSettings.insertRowAfter(1);
-    sheetSettings.getRange("A2:C2").setValues([["adminPin", "admin123", "PIN rahasia untuk login ke panel admin"]]);
-  }
-  
-  // Setup Products
-  let sheetProducts = ss.getSheetByName("Products");
-  if (!sheetProducts) {
-    sheetProducts = ss.insertSheet("Products");
-    sheetProducts.appendRow(["Judul", "Deskripsi", "URL_Gambar", "Harga", "Link_Sales_Page", "Link_Checkout", "Kategori", "Promo"]);
-    sheetProducts.getRange("A1:H1").setFontWeight("bold").setBackground("#c9daf8");
-  }
-  
-  // Setup Articles
-  let sheetArticles = ss.getSheetByName("Articles");
-  if (!sheetArticles) {
-    sheetArticles = ss.insertSheet("Articles");
-    sheetArticles.appendRow(["Judul", "Ringkasan", "URL_Gambar", "Tanggal", "Isi_Artikel_Lengkap"]);
-    sheetArticles.getRange("A1:E1").setFontWeight("bold").setBackground("#fff2cc");
-  }
-
-  SpreadsheetApp.getUi().alert("✅ Kolom 'adminPin' dan Database berhasil diperbarui! Silakan cek tab Settings.");
-}
