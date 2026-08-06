@@ -174,40 +174,18 @@
         </footer>
     </div>
 
+    <!-- Floating WhatsApp Button (Disembunyikan secara default) -->
+    <a id="floating-wa" href="#" target="_blank" class="hidden fixed bottom-6 right-6 bg-[#25D366] text-white p-4 rounded-full shadow-xl hover:bg-[#20b858] hover:scale-110 transition-all duration-300 z-50 flex items-center justify-center">
+        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </a>
+
     <script>
         // ==========================================
-        // SIMULASI DATA DARI GOOGLE SHEETS
+        // FETCH DATA DARI GOOGLE APPS SCRIPT API
         // ==========================================
-        const mockData = {
-            settings: {
-                namaToko: "DigiStore Affiliate",
-                logoUrl: "https://placehold.co/150x40/ffffff/4F46E5?text=LOGO", // Kosongkan jika tidak pakai logo gambar
-                heroTitle: "Temukan Tools Digital & Ebook Terbaik",
-                heroSubtitle: "Tingkatkan produktivitas dan skill Anda dengan koleksi produk digital pilihan berkualitas tinggi.",
-                warnaUtama: "#4F46E5", 
-                warnaBackground: "#F9FAFB", 
-                fontFamily: "Poppins",
-                bannerImage: "https://placehold.co/1200x300/4F46E5/FFFFFF?text=PROMO+AKHIR+TAHUN+DISKON+50%25", 
-                bannerUrl: "https://example.com/promo",
-                bottomBannerImage: "https://placehold.co/1200x300/111827/FFFFFF?text=GABUNG+GRUP+TELEGRAM+KAMI", // Banner 2
-                bottomBannerUrl: "https://t.me/example",
-                itemsPerPage: 4, // Set berapa produk yang muncul per halaman!
-                tampilkanBlog: "Ya" // "Ya" untuk memunculkan section blog
-            },
-            products: [
-                { judul: "Ultimate Notion Life Planner", deskripsi: "Template Notion all-in-one untuk mengatur jadwal, keuangan, dan habit Anda sehari-hari.", gambar: "https://placehold.co/600x400/1F2937/FFFFFF?text=Notion+Planner", harga: "Rp 150.000", linkSales: "#", linkCheckout: "#", kategori: "Template", promo: "Ya" },
-                { judul: "Ebook: Jago Copywriting 101", deskripsi: "Pelajari rahasia menulis kata-kata yang menjual. Cocok untuk pemula dan pebisnis online.", gambar: "https://placehold.co/600x400/4F46E5/FFFFFF?text=Ebook+Copywriting", harga: "Rp 99.000", linkSales: "#", linkCheckout: "#", kategori: "Ebook", promo: "" },
-                { judul: "100+ Canva Template Sosmed", deskripsi: "Kumpulan template Instagram dan TikTok siap pakai, tinggal edit teks dan gambar.", gambar: "https://placehold.co/600x400/EC4899/FFFFFF?text=Canva+Templates", harga: "Rp 75.000", linkSales: "#", linkCheckout: "#", kategori: "Desain", promo: "Ya" },
-                { judul: "Mastering Facebook Ads 2026", deskripsi: "Video panduan lengkap cara beriklan di Facebook dan Instagram agar untung maksimal.", gambar: "https://placehold.co/600x400/3B82F6/FFFFFF?text=FB+Ads+Course", harga: "Rp 250.000", linkSales: "#", linkCheckout: "#", kategori: "Kursus", promo: "" },
-                { judul: "Premium UI Kit Elementor", deskripsi: "Ratusan block dan template Elementor siap import untuk bikin landing page super cepat.", gambar: "https://placehold.co/600x400/10B981/FFFFFF?text=Elementor+UI+Kit", harga: "Rp 120.000", linkSales: "#", linkCheckout: "#", kategori: "Template", promo: "" },
-                { judul: "Panduan Freelance Pemula", deskripsi: "Langkah-langkah mendapatkan klien pertama dari Upwork dan Fiverr.", gambar: "https://placehold.co/600x400/8B5CF6/FFFFFF?text=Freelance+Guide", harga: "Rp 85.000", linkSales: "#", linkCheckout: "#", kategori: "Ebook", promo: "" }
-            ],
-            articles: [
-                { judul: "5 Cara Menghasilkan Uang dari Affiliate Marketing Tanpa Modal", ringkasan: "Temukan strategi teruji untuk mulai menghasilkan komisi affiliate pertama Anda hari ini juga.", gambar: "https://placehold.co/400x250/F3F4F6/4F46E5?text=Blog+1", tanggal: "10 Agu 2026", link: "#" },
-                { judul: "Mengapa Anda Harus Mulai Menjual Produk Digital di 2026?", ringkasan: "Produk digital memiliki margin keuntungan yang tinggi dan tidak butuh biaya pengiriman. Simak ulasannya.", gambar: "https://placehold.co/400x250/F3F4F6/4F46E5?text=Blog+2", tanggal: "05 Agu 2026", link: "#" },
-                { judul: "Review Lengkap Notion Planer: Benarkah Bikin Produktif?", ringkasan: "Kami mencoba menggunakan ultimate planner selama 30 hari. Ini adalah hasil nyata yang kami rasakan.", gambar: "https://placehold.co/400x250/F3F4F6/4F46E5?text=Blog+3", tanggal: "28 Jul 2026", link: "#" }
-            ]
-        };
+        
+        // GANTI URL INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA!
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNwl9USTq7SywZbFh0P1zHEOLaA9ewgl53AliV6-BAOVlK3rvEqmXbVKa0IMad8KaT/exec'; 
 
         // Variable global
         let allProducts = [];
@@ -216,10 +194,66 @@
         let globalSettings = {};
         let currentPage = 1;
 
-        // Simulasi delay
-        setTimeout(() => {
-            renderApp(mockData);
-        }, 1500); 
+        // Data dummy untuk Preview jika URL belum diganti
+        const mockData = {
+            settings: {
+                namaToko: "DigiStore Affiliate",
+                heroTitle: "Temukan Tools Digital Terbaik",
+                heroSubtitle: "Kumpulan template, ebook, dan tools premium untuk boost produktivitasmu.",
+                warnaUtama: "#4F46E5",
+                warnaBackground: "#F9FAFB",
+                fontFamily: "Inter",
+                logoUrl: "https://placehold.co/150x50/4F46E5/FFFFFF?text=DigiStore",
+                bannerImage: "https://placehold.co/1200x300/4F46E5/FFFFFF?text=PROMO+BESAR+BULAN+INI",
+                bannerUrl: "#",
+                bottomBannerImage: "https://placehold.co/1200x200/EC4899/FFFFFF?text=JOIN+GRUP+TELEGRAM+KAMI",
+                bottomBannerUrl: "#",
+                tampilkanBlog: "Ya",
+                itemsPerPage: 4,
+                tampilkanWA: "Ya",
+                waNumber: "6281234567890",
+                waMessage: "Halo admin, saya tertarik dengan produk digital Anda."
+            },
+            products: [
+                { judul: "Template Notion Pro", deskripsi: "Sistem manajemen hidup lengkap dan terstruktur.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Notion", harga: "Rp 150.000", linkSales: "#", linkCheckout: "#", kategori: "Template", promo: "Ya" },
+                { judul: "Ebook Copywriting", deskripsi: "Teknik nulis iklan jagoan bikin closingan melesat.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Ebook", harga: "Rp 99.000", linkSales: "#", linkCheckout: "#", kategori: "Ebook", promo: "" },
+                { judul: "Canva Pro Assets", deskripsi: "Ribuan elemen canva premium untuk desain sosmed.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Canva", harga: "Rp 120.000", linkSales: "#", linkCheckout: "#", kategori: "Design", promo: "Ya" },
+                { judul: "Kursus FB Ads", deskripsi: "Mastering Facebook Ads 2026. Dari pemula jadi pro.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=FB+Ads", harga: "Rp 450.000", linkSales: "#", linkCheckout: "#", kategori: "Kursus", promo: "" },
+                { judul: "UI/UX Starter Kit", deskripsi: "Wireframe & komponen Figma lengkap untuk project Anda.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Figma", harga: "Rp 200.000", linkSales: "#", linkCheckout: "#", kategori: "Design", promo: "" },
+                { judul: "Plugin AutoPost SEO", deskripsi: "Otomatisasi blog WordPress dengan AI dan SEO Friendly.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Plugin", harga: "Rp 350.000", linkSales: "#", linkCheckout: "#", kategori: "Tools", promo: "" }
+            ],
+            articles: [
+                { judul: "Cara Memaksimalkan Penjualan Affiliate di 2026", ringkasan: "Strategi ampuh untuk meningkatkan konversi link affiliate Anda tahun ini. Pelajari metodenya sekarang...", gambar: "https://placehold.co/600x400/4F46E5/FFFFFF?text=Blog+1", tanggal: "05 Agustus 2026", link: "#" },
+                { judul: "Tools Wajib Untuk Digital Marketer", ringkasan: "Daftar 10 tools gratis dan berbayar yang wajib dimiliki oleh digital marketer untuk scale up bisnis...", gambar: "https://placehold.co/600x400/4F46E5/FFFFFF?text=Blog+2", tanggal: "01 Agustus 2026", link: "#" },
+                { judul: "Panduan Memulai Karir Freelance", ringkasan: "Langkah demi langkah mendapatkan klien pertama dari platform freelance internasional secara efektif...", gambar: "https://placehold.co/600x400/4F46E5/FFFFFF?text=Blog+3", tanggal: "28 Juli 2026", link: "#" }
+            ]
+        };
+
+        // Cek apakah sedang mode Preview (URL belum diganti)
+        if (SCRIPT_URL === 'URL_APPS_SCRIPT_ANDA_DISINI') {
+            console.log("Menjalankan mode preview dengan data dummy...");
+            // Beri jeda 1 detik untuk mensimulasikan waktu loading (opsional)
+            setTimeout(() => {
+                renderApp(mockData);
+            }, 1000);
+        } else {
+            // Fetch data asli dari Apps Script
+            fetch(SCRIPT_URL)
+                .then(response => response.json())
+                .then(data => {
+                    renderApp(data);
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                    document.getElementById('loading').innerHTML = `
+                        <div class="text-red-500 text-center">
+                            <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <p class="text-lg font-medium">Gagal memuat data dari server.</p>
+                            <p class="text-sm text-gray-500 mt-2">Pastikan URL Apps Script sudah benar.</p>
+                        </div>
+                    `;
+                });
+        }
 
         function renderApp(data) {
             globalSettings = data.settings;
@@ -230,7 +264,14 @@
             renderPromoSection();
             setupFilters();
             renderCatalog();
-            setupBlogSection(data.articles, globalSettings);
+            setupWhatsApp(globalSettings); // Memanggil fungsi setup WA
+            
+            // Render blog jika data artikel ada
+            if(data.articles) {
+                setupBlogSection(data.articles, globalSettings);
+            } else {
+                setupBlogSection([], globalSettings);
+            }
 
             // Tampilkan UI
             document.getElementById('loading').style.display = 'none';
@@ -294,6 +335,21 @@
                 document.getElementById('bottom-banner-image').src = settings.bottomBannerImage;
                 if(settings.bottomBannerUrl) document.getElementById('bottom-banner-link').href = settings.bottomBannerUrl;
                 document.getElementById('bottom-banner-section').classList.remove('hidden');
+            }
+        }
+
+        function setupWhatsApp(settings) {
+            const showWA = settings.tampilkanWA && settings.tampilkanWA.toLowerCase() === 'ya';
+            const waButton = document.getElementById('floating-wa');
+            
+            if(showWA && settings.waNumber) {
+                // Bersihkan nomor (hilangkan + atau spasi jika ada)
+                const cleanNumber = settings.waNumber.toString().replace(/[^0-9]/g, '');
+                const message = encodeURIComponent(settings.waMessage || 'Halo admin!');
+                const waLink = `https://wa.me/${cleanNumber}?text=${message}`;
+                
+                waButton.href = waLink;
+                waButton.classList.remove('hidden'); // Tampilkan tombol
             }
         }
 
