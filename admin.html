@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Marketplace</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tambahan library SheetJS untuk baca Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body class="bg-gray-50 min-h-screen text-gray-800 font-sans">
 
@@ -38,7 +40,7 @@
             <div class="flex space-x-2 mb-6 border-b border-gray-200 overflow-x-auto">
                 <button onclick="switchTab('produk')" id="tab-produk" class="whitespace-nowrap px-6 py-3 font-semibold border-b-2 border-indigo-600 text-indigo-600 transition-colors">📦 Tambah Produk</button>
                 <button onclick="switchTab('artikel')" id="tab-artikel" class="whitespace-nowrap px-6 py-3 font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors">📝 Tambah Artikel</button>
-                <button onclick="switchTab('csv')" id="tab-csv" class="whitespace-nowrap px-6 py-3 font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors">📑 Import / Export CSV</button>
+                <button onclick="switchTab('csv')" id="tab-csv" class="whitespace-nowrap px-6 py-3 font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors">📑 Import / Export Data</button>
             </div>
 
             <div id="status-message" class="hidden mb-6 p-4 rounded-lg font-medium text-center"></div>
@@ -128,8 +130,8 @@
 
             <!-- TAB 3: MANAJEMEN CSV (IMPORT / EXPORT) -->
             <div id="form-csv" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hidden">
-                <h2 class="text-2xl font-bold mb-2 text-gray-800">Manajemen CSV Massal</h2>
-                <p class="text-gray-500 mb-8">Tambah puluhan produk sekaligus atau backup produk Anda dengan file CSV.</p>
+                <h2 class="text-2xl font-bold mb-2 text-gray-800">Manajemen Data Excel (.xlsx)</h2>
+                <p class="text-gray-500 mb-8">Tambah puluhan produk sekaligus atau backup produk Anda dengan file Excel.</p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     
@@ -137,11 +139,11 @@
                     <div class="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center">
                         <div class="text-4xl mb-4">📥</div>
                         <h3 class="font-bold text-lg mb-2">Download Data</h3>
-                        <p class="text-sm text-gray-500 mb-6">Unduh file template kosong untuk diisi, atau export produk yang sudah ada di database saat ini.</p>
+                        <p class="text-sm text-gray-500 mb-6">Unduh file template Excel kosong, atau export produk dari database saat ini.</p>
                         
                         <div class="space-y-3">
                             <button onclick="downloadTemplate()" class="w-full bg-gray-100 text-gray-700 font-semibold py-3 rounded-lg hover:bg-gray-200 transition">
-                                📝 Unduh Template Kosong
+                                📝 Unduh Template Excel
                             </button>
                             <button onclick="exportProducts()" class="w-full border border-indigo-600 text-indigo-600 font-semibold py-3 rounded-lg hover:bg-indigo-50 transition">
                                 📦 Export Semua Produk Saat Ini
@@ -153,12 +155,12 @@
                     <div class="border-2 border-dashed border-indigo-200 bg-indigo-50 rounded-xl p-6 text-center flex flex-col justify-center">
                         <div class="text-4xl mb-4">📤</div>
                         <h3 class="font-bold text-lg mb-2">Upload Data Produk</h3>
-                        <p class="text-sm text-gray-500 mb-6">Pilih file CSV (sesuai format template) untuk ditambahkan massal ke database Google Sheet Anda.</p>
+                        <p class="text-sm text-gray-500 mb-6">Pilih file Excel (.xlsx) untuk ditambahkan massal ke database Anda.</p>
                         
-                        <input type="file" id="csvFileInput" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 mb-4 cursor-pointer">
+                        <input type="file" id="csvFileInput" accept=".xlsx, .xls, .csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 mb-4 cursor-pointer">
                         
                         <button onclick="uploadCSV()" id="btn-upload-csv" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition flex justify-center items-center gap-2">
-                            <span>🚀 Import CSV Sekarang</span>
+                            <span>🚀 Import Excel Sekarang</span>
                         </button>
                     </div>
                 </div>
@@ -317,132 +319,135 @@
         }
 
         // ==========================================
-        // LOGIKA CSV (DOWNLOAD, EXPORT, IMPORT)
+        // LOGIKA EXCEL (.xlsx) (DOWNLOAD, EXPORT, IMPORT)
         // ==========================================
-        const CSV_HEADER = "Judul,Deskripsi,URL_Gambar,Harga,Link_Sales_Page,Link_Checkout,Kategori,Promo\n";
+        const EXCEL_HEADER = ["Judul", "Deskripsi", "URL_Gambar", "Harga", "Link_Sales_Page", "Link_Checkout", "Kategori", "Promo"];
 
-        // Helper untuk download file
-        function downloadCSVFile(csvContent, filename) {
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            const url = URL.createObjectURL(blob);
-            link.setAttribute("href", url);
-            link.setAttribute("download", filename);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        // Download Template Kosong
+        // Download Template Kosong (Excel)
         function downloadTemplate() {
-            const exampleRow = '"Ebook Jualan","Panduan nulis jualan laris","https://gambar.com/cover.jpg","Rp 150.000","https://affiliate.com/1","https://affiliate.com/2","Ebook","Ya"\n';
-            downloadCSVFile(CSV_HEADER + exampleRow, "Template_Produk_DigiStore.csv");
+            const ws_data = [
+                EXCEL_HEADER,
+                ["Ebook Jualan", "Panduan nulis jualan laris", "https://gambar.com/cover.jpg", "Rp 150.000", "https://affiliate.com/1", "https://affiliate.com/2", "Ebook", "Ya"]
+            ];
+            // Mengubah array 2D menjadi sheet
+            const ws = XLSX.utils.aoa_to_sheet(ws_data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Template_Produk");
+            // Membuat dan mengunduh file xlsx
+            XLSX.writeFile(wb, "Template_Produk_DigiStore.xlsx");
         }
 
-        // Export Data Produk Saat Ini
+        // Export Data Produk Saat Ini (Excel)
         function exportProducts() {
             if(!globalProducts || globalProducts.length === 0) {
                 showMessage("Belum ada data produk di database untuk diexport.", true);
                 return;
             }
             
-            let csvContent = CSV_HEADER;
+            let ws_data = [EXCEL_HEADER];
             globalProducts.forEach(p => {
-                // Bungkus tiap field dengan kutip biar koma di dalam teks nggak error pas diparsing Excel
-                const row = [
-                    `"${(p.judul || '').replace(/"/g, '""')}"`,
-                    `"${(p.deskripsi || '').replace(/"/g, '""')}"`,
-                    `"${(p.gambar || '').replace(/"/g, '""')}"`,
-                    `"${(p.harga || '').replace(/"/g, '""')}"`,
-                    `"${(p.linkSales || '').replace(/"/g, '""')}"`,
-                    `"${(p.linkCheckout || '').replace(/"/g, '""')}"`,
-                    `"${(p.kategori || '').replace(/"/g, '""')}"`,
-                    `"${(p.promo || '').replace(/"/g, '""')}"`
-                ].join(',');
-                csvContent += row + "\n";
+                ws_data.push([
+                    p.judul || '', p.deskripsi || '', p.gambar || '', 
+                    p.harga || '', p.linkSales || '', p.linkCheckout || '', 
+                    p.kategori || '', p.promo || ''
+                ]);
             });
             
-            downloadCSVFile(csvContent, "Export_Produk_Database.csv");
+            const ws = XLSX.utils.aoa_to_sheet(ws_data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Data_Produk");
+            XLSX.writeFile(wb, "Export_Produk_Database.xlsx");
         }
 
-        // Import File CSV (Upload)
+        // Import File Excel (Upload)
         function uploadCSV() {
             const fileInput = document.getElementById('csvFileInput');
             const file = fileInput.files[0];
             
             if (!file) {
-                showMessage("❌ Harap pilih file CSV terlebih dahulu!", true);
+                showMessage("❌ Harap pilih file Excel terlebih dahulu!", true);
                 return;
             }
 
             const btn = document.getElementById('btn-upload-csv');
             const oriText = btn.innerHTML;
-            btn.innerHTML = `<span>⏳ Sedang memproses...</span>`;
+            btn.innerHTML = `<span>⏳ Sedang memproses Excel...</span>`;
             btn.disabled = true;
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                const text = e.target.result;
-                let rows = text.split('\n');
-                let dataToUpload = [];
+                try {
+                    // Membaca file excel dalam format ArrayBuffer
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    
+                    // Ambil sheet pertama saja
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    // Konversi sheet ke format array of arrays (2D)
+                    const json_data = XLSX.utils.sheet_to_json(worksheet, {header: 1});
 
-                // Parsing baris per baris (mulai index 1 untuk skip baris header)
-                for (let i = 1; i < rows.length; i++) {
-                    let rowString = rows[i].trim();
-                    if (!rowString) continue; // Skip baris yang kosong
+                    let dataToUpload = [];
 
-                    // Regex untuk misahin CSV by koma (ngabaiin koma di dalam tanda kutip)
-                    let cols = rowString.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(col => {
-                        let cleanStr = col.trim();
-                        // Ilangin tanda kutip di awal & akhir teks
-                        if (cleanStr.startsWith('"') && cleanStr.endsWith('"')) {
-                            cleanStr = cleanStr.substring(1, cleanStr.length - 1).replace(/""/g, '"');
+                    // Mulai dari index 1 untuk melompati baris header/judul kolom
+                    for (let i = 1; i < json_data.length; i++) {
+                        let row = json_data[i];
+                        
+                        // Abaikan baris kosong
+                        if (!row || row.length === 0 || (row.length === 1 && !row[0])) continue;
+
+                        let cols = [];
+                        // Pastikan selalu mengirim 8 kolom (sesuai database Sheet)
+                        for(let j = 0; j < 8; j++) {
+                            cols.push(row[j] ? String(row[j]).trim() : "");
                         }
-                        return cleanStr;
+                        dataToUpload.push(cols);
+                    }
+
+                    if (dataToUpload.length === 0) {
+                        showMessage("❌ File Excel kosong atau format tidak sesuai.", true);
+                        btn.innerHTML = oriText;
+                        btn.disabled = false;
+                        return;
+                    }
+
+                    // Payload dikirim ke Google Apps Script
+                    // Nama action tetap 'import_produk_csv' agar Code.gs tidak error/perlu diubah
+                    const payload = {
+                        action: 'import_produk_csv', 
+                        data: dataToUpload
+                    };
+
+                    fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    })
+                    .then(() => {
+                        btn.innerHTML = oriText;
+                        btn.disabled = false;
+                        fileInput.value = ""; 
+                        showMessage(`✅ Berhasil mengimpor ${dataToUpload.length} produk dari Excel ke Database!`);
+                    })
+                    .catch(error => {
+                        btn.innerHTML = oriText;
+                        btn.disabled = false;
+                        showMessage('❌ Gagal mengunggah. Terjadi kesalahan jaringan.', true);
+                        console.error('Error Bulk Insert:', error);
                     });
 
-                    // Pastikan panjang array minimal 8 kolom biar sesuai struktur Google Sheet
-                    while(cols.length < 8) cols.push(""); 
-                    dataToUpload.push(cols.slice(0, 8)); // Ambil persis 8 kolom
+                } catch (err) {
+                    btn.innerHTML = oriText;
+                    btn.disabled = false;
+                    showMessage("❌ Gagal membaca file Excel. Pastikan formatnya benar.", true);
+                    console.error(err);
                 }
-
-                if (dataToUpload.length === 0) {
-                    showMessage("❌ File CSV kosong atau format tidak sesuai.", true);
-                    btn.innerHTML = oriText;
-                    btn.disabled = false;
-                    return;
-                }
-
-                // Siapkan payload khusus buat bulk insert
-                const payload = {
-                    action: 'import_produk_csv',
-                    data: dataToUpload
-                };
-
-                // Kirim request ke Google Apps Script (doPost)
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                })
-                .then(() => {
-                    btn.innerHTML = oriText;
-                    btn.disabled = false;
-                    fileInput.value = ""; // Kosongin form input file
-                    showMessage(`✅ Berhasil mengimpor ${dataToUpload.length} produk sekaligus ke Google Sheet!`);
-                })
-                .catch(error => {
-                    btn.innerHTML = oriText;
-                    btn.disabled = false;
-                    showMessage('❌ Gagal mengunggah. Terjadi kesalahan jaringan.', true);
-                    console.error('Error Bulk Insert:', error);
-                });
             };
             
-            // Mulai baca file sebagai teks
-            reader.readAsText(file);
+            // Perintah ini yang membedakan excel dan teks biasa
+            reader.readAsArrayBuffer(file);
         }
     </script>
 </body>
