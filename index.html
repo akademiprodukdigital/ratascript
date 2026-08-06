@@ -125,7 +125,6 @@
             <div class="container mx-auto max-w-7xl">
                 <div class="flex justify-between items-center mb-10">
                     <h2 class="text-3xl font-bold text-gray-900">Artikel & Panduan Terbaru</h2>
-                    <a href="#" class="text-indigo-600 font-semibold hover:underline">Lihat Semua &rarr;</a>
                 </div>
                 <div id="blog-list" class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <!-- Artikel di-inject di sini -->
@@ -179,16 +178,51 @@
         <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
     </a>
 
+    <!-- MODAL POPUP ARTIKEL -->
+    <div id="article-modal" class="fixed inset-0 z-[100] hidden">
+        <!-- Latar Belakang Gelap (Overlay) -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="closeArticleModal()"></div>
+        
+        <!-- Kontainer Modal -->
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden relative">
+                
+                <!-- Tombol Close Modal -->
+                <button onclick="closeArticleModal()" class="absolute top-4 right-4 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-full w-10 h-10 flex items-center justify-center transition-colors z-10 shadow-sm">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+
+                <!-- Isi Modal (Bisa di-scroll) -->
+                <div class="overflow-y-auto w-full">
+                    <!-- Cover Gambar Artikel -->
+                    <img id="modal-image" src="" alt="Cover Artikel" class="w-full h-64 md:h-80 object-cover" onerror="this.src='https://placehold.co/800x400/cccccc/ffffff?text=No+Image'">
+                    
+                    <div class="p-6 md:p-8">
+                        <span id="modal-date" class="text-sm font-semibold text-indigo-600 mb-2 block"></span>
+                        <h2 id="modal-title" class="text-2xl md:text-3xl font-bold text-gray-900 mb-6 leading-tight"></h2>
+                        
+                        <!-- Area Konten Artikel -->
+                        <div id="modal-content" class="prose prose-indigo max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">
+                            <!-- Isi artikel akan di-inject di sini -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END MODAL POPUP ARTIKEL -->
+
     <script>
         // ==========================================
         // FETCH DATA DARI GOOGLE APPS SCRIPT API
         // ==========================================
         
-        // URL WEB APP GOOGLE APPS SCRIPT (SUDAH DIUPDATE)
+        // URL WEB APP GOOGLE APPS SCRIPT
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNwl9USTq7SywZbFh0P1zHEOLaA9ewgl53AliV6-BAOVlK3rvEqmXbVKa0IMad8KaT/exec'; 
 
         // Variable global
         let allProducts = [];
+        let globalArticles = []; // Menyimpan data artikel secara global agar bisa dipanggil saat modal dibuka
         let currentCategory = 'Semua';
         let searchQuery = '';
         let globalSettings = {};
@@ -223,58 +257,97 @@
                 { judul: "Plugin AutoPost SEO", deskripsi: "Otomatisasi blog WordPress dengan AI dan SEO Friendly.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Plugin", harga: "Rp 350.000", linkSales: "#", linkCheckout: "#", kategori: "Tools", promo: "" }
             ],
             articles: [
-                { judul: "Cara Memaksimalkan Penjualan Affiliate di 2026", ringkasan: "Strategi ampuh untuk meningkatkan konversi link affiliate Anda tahun ini. Pelajari metodenya sekarang...", gambar: "https://placehold.co/600x400/4F46E5/FFFFFF?text=Blog+1", tanggal: "05 Agustus 2026", link: "#" },
-                { judul: "Tools Wajib Untuk Digital Marketer", ringkasan: "Daftar 10 tools gratis dan berbayar yang wajib dimiliki oleh digital marketer untuk scale up bisnis...", gambar: "https://placehold.co/600x400/4F46E5/FFFFFF?text=Blog+2", tanggal: "01 Agustus 2026", link: "#" },
-                { judul: "Panduan Memulai Karir Freelance", ringkasan: "Langkah demi langkah mendapatkan klien pertama dari platform freelance internasional secara efektif...", gambar: "https://placehold.co/600x400/4F46E5/FFFFFF?text=Blog+3", tanggal: "28 Juli 2026", link: "#" }
+                { judul: "Cara Memaksimalkan Penjualan Affiliate di 2026", ringkasan: "Strategi ampuh untuk meningkatkan konversi link affiliate Anda tahun ini. Pelajari metodenya sekarang...", gambar: "https://placehold.co/600x400/4F46E5/FFFFFF?text=Blog+1", tanggal: "05 Agustus 2026", isiLengkap: "Ini adalah isi artikel yang sangat panjang. Anda bisa membaca panduan lengkapnya di sini.\n\nStrategi pertama adalah fokus pada audiens yang tertarget. Jangan asal sebar link.\n\nKedua, berikan bonus atau nilai tambah bagi orang yang membeli lewat link affiliate Anda." },
+                { judul: "Tools Wajib Untuk Digital Marketer", ringkasan: "Daftar 10 tools gratis dan berbayar yang wajib dimiliki oleh digital marketer untuk scale up bisnis...", gambar: "https://placehold.co/600x400/4F46E5/FFFFFF?text=Blog+2", tanggal: "01 Agustus 2026", isiLengkap: "Digital marketer yang handal membutuhkan senjata yang tepat.\n\nBeberapa tools yang wajib dimiliki antara lain:\n1. Google Analytics\n2. Ahrefs / SEMRush\n3. Mailchimp / ConvertKit\n\nPastikan Anda menguasai tools tersebut sebelum mencari alternatif yang lebih mahal." },
+                { judul: "Panduan Memulai Karir Freelance", ringkasan: "Langkah demi langkah mendapatkan klien pertama dari platform freelance internasional secara efektif...", gambar: "https://placehold.co/600x400/4F46E5/FFFFFF?text=Blog+3", tanggal: "28 Juli 2026", isiLengkap: "Freelance adalah jalan keluar dari rutinitas 9-5.\n\nMulailah dengan membangun portofolio yang kuat. Buat contoh proyek pura-pura jika belum punya klien sungguhan.\n\nDaftar di Fiverr atau Upwork, namun jangan lupakan juga LinkedIn sebagai ladang pencarian klien premium." }
             ]
         };
 
-        // Cek apakah sedang mode Preview (URL belum diganti)
-        if (SCRIPT_URL === 'URL_APPS_SCRIPT_ANDA_DISINI') {
-            console.log("Menjalankan mode preview dengan data dummy...");
-            // Beri jeda 1 detik untuk mensimulasikan waktu loading (opsional)
-            setTimeout(() => {
-                renderApp(mockData);
-            }, 1000);
-        } else {
-            // Fetch data asli dari Apps Script dengan opsi redirect: 'follow'
+        // FUNGSI CACHING DAN FETCHING DATA
+        function fetchDataFromGoogle() {
+            const cacheKey = 'marketplace_data_cache';
+            const cachedData = localStorage.getItem(cacheKey);
+            
+            // 1. Cek apakah ada data di Local Storage (Cache Browser)
+            if (cachedData) {
+                console.log("Menggunakan data dari Local Storage (Super Cepat)...");
+                try {
+                    const parsedData = JSON.parse(cachedData);
+                    renderApp(parsedData); // Render seketika
+                } catch(e) {
+                    console.error("Cache rusak, akan ambil data baru.");
+                }
+            }
+
+            // 2. Jika ini preview, pakai data mock
+            if (SCRIPT_URL === 'URL_APPS_SCRIPT_ANDA_DISINI') {
+                setTimeout(() => renderApp(mockData), 1000);
+                return;
+            }
+
+            // 3. Selalu ambil data baru dari Google (Background Update)
+            let isTimeout = false;
+            const timeoutFetch = setTimeout(() => {
+                isTimeout = true;
+                if (!cachedData) {
+                    document.getElementById('loading').innerHTML = `
+                        <div class="text-red-500 text-center">
+                            <p class="text-lg font-medium">Koneksi sangat lambat.</p>
+                            <p class="text-sm text-gray-500 mt-2">Silakan refresh (muat ulang) halaman ini.</p>
+                        </div>
+                    `;
+                }
+            }, 10000); // Batas nunggu 10 detik
+
             fetch(SCRIPT_URL, { method: 'GET', redirect: 'follow' })
                 .then(response => {
                     if (!response.ok) throw new Error("Gagal terhubung ke Apps Script");
                     return response.json();
                 })
                 .then(data => {
-                    renderApp(data);
+                    clearTimeout(timeoutFetch);
+                    if (isTimeout) return; // Kalau udah timeout, cuekin aja
+                    
+                    // Simpan data baru ke Local Storage untuk kunjungan berikutnya
+                    localStorage.setItem(cacheKey, JSON.stringify(data));
+                    console.log("Data terbaru berhasil diambil dan disimpan ke cache.");
+                    
+                    // Kalau sebelumnya belum ada data cache (loading screen masih muter), render sekarang.
+                    // Kalau sebelumnya udah ada data cache, biarkan saja (nanti data update pas di-refresh user)
+                    if (!cachedData) {
+                        renderApp(data);
+                    }
                 })
                 .catch(error => {
+                    clearTimeout(timeoutFetch);
                     console.error("Error fetching data:", error);
-                    document.getElementById('loading').innerHTML = `
-                        <div class="text-red-500 text-center">
-                            <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <p class="text-lg font-medium">Gagal memuat data dari server.</p>
-                            <p class="text-sm text-gray-500 mt-2">Penyebab: Cek Console atau pastikan Akses Script "Siapa Saja".</p>
-                        </div>
-                    `;
+                    if (!cachedData) {
+                        document.getElementById('loading').innerHTML = `
+                            <div class="text-red-500 text-center">
+                                <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <p class="text-lg font-medium">Gagal memuat data dari server.</p>
+                                <p class="text-sm text-gray-500 mt-2">Penyebab: Cek Console atau pastikan Akses Script "Siapa Saja".</p>
+                            </div>
+                        `;
+                    }
                 });
         }
+
+        // Panggil fungsi utama saat halaman dimuat
+        fetchDataFromGoogle();
 
         function renderApp(data) {
             globalSettings = data.settings;
             allProducts = data.products;
+            globalArticles = data.articles || [];
 
             setupDesign(globalSettings);
             setupHomepage(globalSettings);
             renderPromoSection();
             setupFilters();
             renderCatalog();
-            setupWhatsApp(globalSettings); // Memanggil fungsi setup WA
-            
-            // Render blog jika data artikel ada
-            if(data.articles) {
-                setupBlogSection(data.articles, globalSettings);
-            } else {
-                setupBlogSection([], globalSettings);
-            }
+            setupWhatsApp(globalSettings); 
+            setupBlogSection(globalArticles, globalSettings);
 
             // Tampilkan UI
             document.getElementById('loading').style.display = 'none';
@@ -346,13 +419,12 @@
             const waButton = document.getElementById('floating-wa');
             
             if(showWA && settings.waNumber) {
-                // Bersihkan nomor (hilangkan + atau spasi jika ada)
                 const cleanNumber = settings.waNumber.toString().replace(/[^0-9]/g, '');
                 const message = encodeURIComponent(settings.waMessage || 'Halo admin!');
                 const waLink = `https://wa.me/${cleanNumber}?text=${message}`;
                 
                 waButton.href = waLink;
-                waButton.classList.remove('hidden'); // Tampilkan tombol
+                waButton.classList.remove('hidden');
             }
         }
 
@@ -360,7 +432,6 @@
             return `
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group border border-gray-100">
                     <div class="relative overflow-hidden">
-                        <!-- Tambahkan loading="lazy" di sini -->
                         <img src="${p.gambar}" alt="${p.judul}" loading="lazy" class="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/cccccc/ffffff?text=No+Image'">
                         <div class="absolute top-3 right-3 bg-white/90 backdrop-blur text-xs font-bold px-2 py-1 rounded-md text-gray-700 shadow-sm">${p.kategori || 'Lainnya'}</div>
                     </div>
@@ -389,7 +460,6 @@
             const promoList = document.getElementById('promo-list');
             const promoSection = document.getElementById('promo-section');
             
-            // Filter produk yang ada string 'ya' di kolom promo (case insensitive)
             const promos = allProducts.filter(p => p.promo && p.promo.toLowerCase().includes('ya'));
             
             if(promos.length > 0) {
@@ -418,7 +488,7 @@
                     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
                     e.target.classList.add('active');
                     currentCategory = e.target.getAttribute('data-cat');
-                    currentPage = 1; // Reset halaman ke-1 saat ganti kategori
+                    currentPage = 1; 
                     renderCatalog();
                 });
             });
@@ -426,7 +496,7 @@
             const searchInput = document.getElementById('searchInput');
             searchInput.addEventListener('input', (e) => {
                 searchQuery = e.target.value.toLowerCase();
-                currentPage = 1; // Reset halaman ke-1 saat ngetik search
+                currentPage = 1; 
                 renderCatalog();
             });
         }
@@ -435,14 +505,12 @@
             const productList = document.getElementById('product-list');
             const noResults = document.getElementById('no-results');
             
-            // 1. Logika Filter (Kategori & Search)
             const filteredProducts = allProducts.filter(p => {
                 const matchCategory = currentCategory === 'Semua' || p.kategori === currentCategory;
                 const matchSearch = p.judul.toLowerCase().includes(searchQuery) || p.deskripsi.toLowerCase().includes(searchQuery);
                 return matchCategory && matchSearch;
             });
 
-            // 2. Logika Pagination
             const itemsPerPage = parseInt(globalSettings.itemsPerPage) || 8;
             const totalItems = filteredProducts.length;
             const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -453,16 +521,13 @@
             const startIndex = (currentPage - 1) * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
             
-            // Potong array sesuai halaman yang sedang aktif
             const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
 
-            // 3. Render ke HTML
             if (paginatedProducts.length > 0) {
                 productList.innerHTML = paginatedProducts.map(p => createProductCardHTML(p, globalSettings)).join('');
                 productList.style.display = 'grid';
                 noResults.classList.add('hidden');
                 
-                // Munculkan tombol halaman
                 renderPagination(totalPages);
             } else {
                 productList.style.display = 'none';
@@ -474,7 +539,6 @@
         function renderPagination(totalPages) {
             const paginationContainer = document.getElementById('pagination');
             
-            // Kalau cuma 1 halaman, gak usah tampilkan tombol
             if(totalPages <= 1) {
                 paginationContainer.innerHTML = '';
                 return;
@@ -487,12 +551,10 @@
             
             paginationContainer.innerHTML = paginationHTML;
 
-            // Pasang listener klik
             document.querySelectorAll('.page-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     currentPage = parseInt(e.target.getAttribute('data-page'));
                     renderCatalog();
-                    // Scroll smooth ke atas produk biar user gak nyasar
                     document.getElementById('product-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
                 });
             });
@@ -506,21 +568,21 @@
 
             if(showBlog && articles && articles.length > 0) {
                 blogSection.classList.remove('hidden');
-                navBlog.classList.remove('hidden'); // Munculkan link artikel di navbar atas
+                navBlog.classList.remove('hidden'); 
                 
-                blogList.innerHTML = articles.map(art => `
+                // MENGGUNAKAN ONCLICK KE FUNGSI MODAL
+                blogList.innerHTML = articles.map((art, index) => `
                     <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-gray-100 flex flex-col">
-                        <a href="${art.link}" class="block overflow-hidden relative">
-                            <!-- Tambahkan loading="lazy" di gambar artikel -->
+                        <div onclick="openArticleModal(${index})" class="block overflow-hidden relative cursor-pointer">
                             <img src="${art.gambar}" alt="${art.judul}" loading="lazy" class="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-500">
-                        </a>
+                        </div>
                         <div class="p-6 flex flex-col flex-grow">
                             <span class="text-xs font-semibold text-gray-500 mb-2">${art.tanggal}</span>
-                            <a href="${art.link}" class="block group-hover:text-indigo-600 transition-colors">
+                            <div onclick="openArticleModal(${index})" class="block group-hover:text-indigo-600 transition-colors cursor-pointer">
                                 <h3 class="text-lg font-bold text-gray-900 mb-3 leading-snug">${art.judul}</h3>
-                            </a>
+                            </div>
                             <p class="text-gray-600 text-sm mb-4 line-clamp-3">${art.ringkasan}</p>
-                            <a href="${art.link}" class="mt-auto text-sm font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">Baca Selengkapnya <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
+                            <div onclick="openArticleModal(${index})" class="mt-auto text-sm font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 cursor-pointer">Baca Selengkapnya <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></div>
                         </div>
                     </div>
                 `).join('');
@@ -529,6 +591,48 @@
                 navBlog.classList.add('hidden');
             }
         }
+
+        // ==========================================
+        // FUNGSI UNTUK MODAL ARTIKEL
+        // ==========================================
+        function openArticleModal(index) {
+            const article = globalArticles[index];
+            if(!article) return;
+
+            // Isi data ke dalam modal
+            document.getElementById('modal-title').innerText = article.judul;
+            document.getElementById('modal-date').innerText = article.tanggal;
+            
+            const modalImg = document.getElementById('modal-image');
+            modalImg.src = article.gambar;
+            // Sembunyikan gambar jika tidak ada gambarnya
+            if(!article.gambar) {
+                modalImg.classList.add('hidden');
+            } else {
+                modalImg.classList.remove('hidden');
+            }
+
+            // Isi konten artikel (ubah newline jadi <br> agar rapi)
+            let contentText = article.isiLengkap || article.ringkasan || "Tidak ada isi artikel.";
+            document.getElementById('modal-content').innerText = contentText;
+
+            // Munculkan Modal
+            const modal = document.getElementById('article-modal');
+            modal.classList.remove('hidden');
+            
+            // Kunci scroll background
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeArticleModal() {
+            // Sembunyikan Modal
+            const modal = document.getElementById('article-modal');
+            modal.classList.add('hidden');
+            
+            // Buka kembali scroll background
+            document.body.style.overflow = 'auto';
+        }
+
     </script>
 </body>
 </html>
