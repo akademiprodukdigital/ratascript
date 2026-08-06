@@ -17,7 +17,9 @@
                 <p class="text-gray-500 text-sm">Masukkan PIN Rahasia Anda</p>
             </div>
             <input type="password" id="pin-input" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none mb-4" placeholder="••••••••">
-            <button onclick="checkLogin()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition">Masuk Dashboard</button>
+            <button id="btn-login" onclick="checkLogin()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition flex justify-center items-center">
+                <span>Masuk Dashboard</span>
+            </button>
             <p id="login-error" class="text-red-500 text-sm text-center mt-3 hidden">PIN Salah!</p>
         </div>
     </div>
@@ -129,16 +131,40 @@
         // MASUKKAN URL APP SCRIPT ANDA DI SINI! (Harus sama dengan yang di index.html)
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNwl9USTq7SywZbFh0P1zHEOLaA9ewgl53AliV6-BAOVlK3rvEqmXbVKa0IMad8KaT/exec';
         
-        // PIN Rahasia (Bisa Anda ganti)
-        const SECRET_PIN = "admin123";
-
-        function checkLogin() {
+        async function checkLogin() {
             const input = document.getElementById('pin-input').value;
-            if(input === SECRET_PIN) {
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
+            const btn = document.getElementById('btn-login');
+            const errorMsg = document.getElementById('login-error');
+            
+            // Ubah teks tombol jadi loading
+            const oriText = btn.innerHTML;
+            btn.innerHTML = `<span>⏳ Mengecek...</span>`;
+            btn.disabled = true;
+            errorMsg.classList.add('hidden');
+
+            try {
+                // Ambil data PIN dinamis dari Google Sheets via API
+                const response = await fetch(SCRIPT_URL, { method: 'GET', redirect: 'follow' });
+                const data = await response.json();
+                
+                // Ambil PIN dari settings (Jika tidak ada di sheet, fallback ke "admin123")
+                const realPin = data.settings.adminPin || "admin123";
+
+                if(input === realPin.toString()) {
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
+                } else {
+                    errorMsg.innerText = "PIN Salah!";
+                    errorMsg.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                errorMsg.innerText = "Gagal koneksi ke server!";
+                errorMsg.classList.remove('hidden');
+            } finally {
+                // Kembalikan tombol ke kondisi semula
+                btn.innerHTML = oriText;
+                btn.disabled = false;
             }
         }
 
@@ -252,3 +278,164 @@
     </script>
 </body>
 </html>
+```
+
+---
+
+### 2. Full Code Google Apps Script (`Code.gs`)
+Untuk memastikan kode backend Anda mendapatkan fungsi penambahan data (`doPost`) serta kolom pengaturan PIN yang baru, hapus semua kode lama di App Script Anda, dan timpa dengan kode di bawah ini.
+
+*Catatan: Saya memberikan kode penuh ini karena Anda perlu memasukkan fungsi `doPost` (untuk menyimpan data admin) dan struktur kolom `Articles` yang baru.*
+
+```javascript:Backend Apps Script:Code.gs
+// ========================================================
+// BACKEND GOOGLE APPS SCRIPT - MARKETPLACE AFFILIATE
+// ========================================================
+
+function onOpen() {
+  const ui = SpreadsheetApp.getUi();
+  ui.createMenu('⚙️ Setup Marketplace')
+    .addItem('🚀 Setup Database Baru (Auto-fill)', 'setupDatabase')
+    .addToUi();
+}
+
+function doGet(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  
+  // 1. Settings
+  let settings = {};
+  const settingsSheet = ss.getSheetByName('Settings');
+  if (settingsSheet) {
+    const settingsData = settingsSheet.getDataRange().getValues();
+    for(let i = 1; i < settingsData.length; i++) {
+      if(settingsData[i][0]) settings[settingsData[i][0]] = settingsData[i][1];
+    }
+  }
+
+  // 2. Products
+  let products = [];
+  const productsSheet = ss.getSheetByName('Products');
+  if (productsSheet) {
+    const productsData = productsSheet.getDataRange().getValues();
+    for(let i = 1; i < productsData.length; i++) {
+      if(productsData[i][0]) {
+        products.push({
+          judul: productsData[i][0], deskripsi: productsData[i][1],
+          gambar: productsData[i][2], harga: productsData[i][3],
+          linkSales: productsData[i][4], linkCheckout: productsData[i][5],
+          kategori: productsData[i][6], promo: productsData[i][7]
+        });
+      }
+    }
+  }
+
+  // 3. Articles (Dengan Kolom Isi Lengkap)
+  let articles = [];
+  const articlesSheet = ss.getSheetByName('Articles');
+  if(articlesSheet) {
+    const articlesData = articlesSheet.getDataRange().getValues();
+    for(let i = 1; i < articlesData.length; i++) {
+      if(articlesData[i][0]) {
+        articles.push({
+          judul: articlesData[i][0], ringkasan: articlesData[i][1],
+          gambar: articlesData[i][2], tanggal: articlesData[i][3],
+          isiLengkap: articlesData[i][4] // Mengambil isi artikel lengkap
+        });
+      }
+    }
+  }
+
+  const responseData = { settings: settings, products: products, articles: articles };
+  
+  return ContentService.createTextOutput(JSON.stringify(responseData))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  
+  try {
+    const payload = JSON.parse(e.postData.contents);
+    
+    if (payload.action === 'tambah_produk') {
+      const sheet = ss.getSheetByName('Products');
+      sheet.appendRow([
+        payload.data.judul, payload.data.deskripsi, payload.data.gambar, 
+        payload.data.harga, payload.data.linkSales, payload.data.linkCheckout, 
+        payload.data.kategori, payload.data.promo
+      ]);
+    } 
+    else if (payload.action === 'tambah_artikel') {
+      const sheet = ss.getSheetByName('Articles');
+      sheet.appendRow([
+        payload.data.judul, payload.data.ringkasan, 
+        payload.data.gambar, payload.data.tanggal, 
+        payload.data.isiLengkap
+      ]);
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({ status: 'success' }))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: error.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function setupDatabase() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  
+  // Setup Settings
+  let sheetSettings = ss.getSheetByName("Settings");
+  if (!sheetSettings) {
+    sheetSettings = ss.insertSheet("Settings");
+    sheetSettings.appendRow(["Key", "Value", "Penjelasan"]);
+    sheetSettings.getRange("A1:C1").setFontWeight("bold").setBackground("#d9ead3");
+    
+    const settingsData = [
+      ["namaToko", "DigiStore Affiliate", "Nama toko di Header & Footer"],
+      ["adminPin", "admin123", "PIN rahasia untuk masuk ke halaman Dashboard admin.html"],
+      ["heroTitle", "Temukan Tools Digital Terbaik", "Teks besar di homepage"],
+      ["heroSubtitle", "Kumpulan template, ebook, dan tools premium untuk boost produktivitasmu.", "Teks kecil di bawah judul"],
+      ["warnaUtama", "#4F46E5", "Kode warna utama (Hex)"],
+      ["warnaBackground", "#F9FAFB", "Kode warna latar belakang (Hex)"],
+      ["fontFamily", "Inter", "Nama Google Font (Contoh: Poppins, Inter, Montserrat)"],
+      ["logoUrl", "https://placehold.co/150x50/4F46E5/FFFFFF?text=DigiStore", "Link gambar logo (Kosongkan jika tidak ada)"],
+      ["bannerImage", "https://placehold.co/1200x300/4F46E5/FFFFFF?text=PROMO+BESAR+BULAN+INI", "Link gambar banner atas"],
+      ["bannerUrl", "#", "Link tujuan saat banner atas diklik"],
+      ["bottomBannerImage", "https://placehold.co/1200x200/EC4899/FFFFFF?text=JOIN+GRUP+TELEGRAM+KAMI", "Link gambar banner bawah"],
+      ["bottomBannerUrl", "#", "Link tujuan saat banner bawah diklik"],
+      ["tampilkanBlog", "Ya", "Ketik 'Ya' untuk menampilkan artikel blog"],
+      ["itemsPerPage", "4", "Jumlah produk per halaman (Pagination)"],
+      ["tampilkanWA", "Ya", "Ketik 'Ya' untuk memunculkan ikon WA melayang"],
+      ["waNumber", "6281234567890", "Nomor WA (awalan 62 tanpa +)"],
+      ["waMessage", "Halo admin, saya tertarik dengan produk digital Anda.", "Pesan otomatis WA"]
+    ];
+    
+    settingsData.forEach(row => sheetSettings.appendRow(row));
+    sheetSettings.autoResizeColumns(1, 3);
+  } else {
+    // Sisipkan baris adminPin jika sudah ada sheet tapi belum ada PIN (Update)
+    sheetSettings.insertRowAfter(1);
+    sheetSettings.getRange("A2:C2").setValues([["adminPin", "admin123", "PIN rahasia untuk login ke panel admin"]]);
+  }
+  
+  // Setup Products
+  let sheetProducts = ss.getSheetByName("Products");
+  if (!sheetProducts) {
+    sheetProducts = ss.insertSheet("Products");
+    sheetProducts.appendRow(["Judul", "Deskripsi", "URL_Gambar", "Harga", "Link_Sales_Page", "Link_Checkout", "Kategori", "Promo"]);
+    sheetProducts.getRange("A1:H1").setFontWeight("bold").setBackground("#c9daf8");
+  }
+  
+  // Setup Articles
+  let sheetArticles = ss.getSheetByName("Articles");
+  if (!sheetArticles) {
+    sheetArticles = ss.insertSheet("Articles");
+    sheetArticles.appendRow(["Judul", "Ringkasan", "URL_Gambar", "Tanggal", "Isi_Artikel_Lengkap"]);
+    sheetArticles.getRange("A1:E1").setFontWeight("bold").setBackground("#fff2cc");
+  }
+
+  SpreadsheetApp.getUi().alert("✅ Kolom 'adminPin' dan Database berhasil diperbarui! Silakan cek tab Settings.");
+}
