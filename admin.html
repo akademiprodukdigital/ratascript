@@ -3,270 +3,357 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Marketplace</title>
+    <title>Admin Dashboard - iMersAFFLINK</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Tambahan library SheetJS untuk baca Excel -->
+    
+    <!-- Library SheetJS untuk baca & tulis file Excel (.xlsx) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-</head>
-<body class="bg-gray-50 min-h-screen text-gray-800 font-sans">
+    
+    <!-- Library Quill.js untuk Rich Text Editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        
+        /* Animasi Transisi */
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Styling Tab yang lebih hidup */
+        .tab-btn { position: relative; transition: all 0.3s ease; }
+        .tab-btn.active { color: #4f46e5; font-weight: 700; }
+        .tab-btn.active::after {
+            content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 3px;
+            background-color: #4f46e5; border-radius: 3px 3px 0 0;
+        }
 
-    <!-- Screen Login Admin -->
-    <div id="login-screen" class="min-h-screen flex items-center justify-center">
-        <div class="bg-white p-8 rounded-2xl shadow-xl w-96 max-w-full">
-            <div class="text-center mb-6">
-                <span class="text-4xl">🔒</span>
-                <h2 class="text-2xl font-bold mt-2">Area Admin</h2>
-                <p class="text-gray-500 text-sm">Masukkan PIN Rahasia Anda</p>
+        /* Merapikan border Editor Quill agar serasi dengan Tailwind (Desain Keren) */
+        .ql-toolbar.ql-snow { 
+            border-radius: 0.75rem 0.75rem 0 0; border-color: #d1d5db; 
+            background-color: #f8fafc; font-family: inherit; border-bottom: none;
+        }
+        .ql-container.ql-snow { 
+            border-radius: 0 0 0.75rem 0.75rem; border-color: #d1d5db; 
+            font-family: inherit; font-size: 1rem; background-color: white;
+        }
+        .ql-editor { min-height: 250px; padding: 1.5rem; }
+        .ql-editor:focus { outline: none; }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c7c7cc; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div id="login-section" class="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 p-4">
+        <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-md text-center transform transition-all fade-in">
+            <div class="bg-indigo-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                <svg class="w-10 h-10 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
             </div>
-            <input type="password" id="pin-input" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none mb-4" placeholder="••••••••">
-            <button id="btn-login" onclick="checkLogin()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition flex justify-center items-center">
-                <span>Masuk Dashboard</span>
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Panel Admin</h2>
+            <p class="text-gray-500 mb-8 font-medium">Masukkan PIN rahasia Anda</p>
+            
+            <input type="password" id="pin-input" placeholder="••••••••" class="w-full text-center tracking-[0.5em] px-4 py-4 rounded-xl border-2 border-gray-200 focus:ring-0 focus:border-indigo-500 outline-none mb-6 text-xl font-bold text-gray-800 transition-colors">
+            
+            <button onclick="checkLogin()" id="btn-login" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 active:transform active:scale-95 transition-all shadow-lg shadow-indigo-200 text-lg">
+                Masuk Dashboard
             </button>
-            <p id="login-error" class="text-red-500 text-sm text-center mt-3 hidden">PIN Salah!</p>
         </div>
     </div>
 
-    <!-- Dashboard Admin (Disembunyikan sebelum login) -->
-    <div id="dashboard" class="hidden min-h-screen pb-12">
-        <nav class="bg-indigo-600 text-white p-4 shadow-md sticky top-0 z-50">
-            <div class="container mx-auto flex justify-between items-center max-w-5xl">
-                <h1 class="text-xl font-bold">⚙️ Dashboard Admin</h1>
-                <button onclick="location.reload()" class="bg-indigo-800 px-4 py-2 rounded-lg hover:bg-indigo-900 text-sm font-semibold">Keluar</button>
-            </div>
-        </nav>
-
-        <div class="container mx-auto mt-8 px-4 max-w-5xl">
-            <!-- Tabs -->
-            <div class="flex space-x-2 mb-6 border-b border-gray-200 overflow-x-auto">
-                <button onclick="switchTab('produk')" id="tab-produk" class="whitespace-nowrap px-6 py-3 font-semibold border-b-2 border-indigo-600 text-indigo-600 transition-colors">📦 Tambah Produk</button>
-                <button onclick="switchTab('artikel')" id="tab-artikel" class="whitespace-nowrap px-6 py-3 font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors">📝 Tambah Artikel</button>
-                <button onclick="switchTab('csv')" id="tab-csv" class="whitespace-nowrap px-6 py-3 font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors">📑 Import / Export Data</button>
-            </div>
-
-            <div id="status-message" class="hidden mb-6 p-4 rounded-lg font-medium text-center"></div>
-
-            <!-- Form Tambah Produk -->
-            <form id="form-produk" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100" onsubmit="submitForm(event, 'produk')">
-                <h2 class="text-2xl font-bold mb-6 text-gray-800">Tambah Produk Baru</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Judul Produk</label>
-                        <input type="text" id="p-judul" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none">
+    <div id="dashboard-section" class="hidden">
+        
+        <header class="bg-indigo-600 bg-gradient-to-r from-indigo-600 to-indigo-800 text-white sticky top-0 z-40 shadow-lg">
+            <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
-                        <input type="text" id="p-kategori" required placeholder="Contoh: Ebook, Template" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none">
-                    </div>
+                    <h1 class="text-2xl font-bold tracking-tight">Dashboard Admin</h1>
                 </div>
-
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Singkat</label>
-                    <textarea id="p-deskripsi" required rows="3" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">URL Gambar (Cover)</label>
-                        <input type="url" id="p-gambar" required placeholder="https://..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Harga (Format Bebas)</label>
-                        <input type="text" id="p-harga" required placeholder="Rp 150.000" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Link Sales Page</label>
-                        <input type="url" id="p-sales" required placeholder="https://..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Link Checkout Kilat</label>
-                        <input type="url" id="p-checkout" required placeholder="https://..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none">
-                    </div>
-                </div>
-
-                <div class="mb-8">
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="checkbox" id="p-promo" class="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500">
-                        <span class="text-gray-700 font-medium">Jadikan Produk Promo / Pilihan di Halaman Depan</span>
-                    </label>
-                </div>
-
-                <button type="submit" id="btn-submit-produk" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transition flex justify-center items-center gap-2">
-                    <span>💾 Simpan Produk ke Database</span>
+                <button onclick="logout()" class="text-sm font-bold bg-white/10 hover:bg-white/20 border border-white/20 px-5 py-2.5 rounded-xl transition-all backdrop-blur-sm">
+                    Keluar
                 </button>
-            </form>
+            </div>
+        </header>
 
-            <!-- Form Tambah Artikel -->
-            <form id="form-artikel" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hidden" onsubmit="submitForm(event, 'artikel')">
-                <h2 class="text-2xl font-bold mb-6 text-gray-800">Tulis Artikel Baru</h2>
-                
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Judul Artikel</label>
-                    <input type="text" id="a-judul" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none">
-                </div>
-
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">URL Gambar Thumbnail</label>
-                    <input type="url" id="a-gambar" required placeholder="https://..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none">
-                </div>
-
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Ringkasan (Tampil di Card Depan)</label>
-                    <textarea id="a-ringkasan" required rows="2" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
-                </div>
-
-                <div class="mb-8">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Isi Artikel Lengkap</label>
-                    <textarea id="a-isi" required rows="10" placeholder="Tulis paragraf panjang di sini..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
-                </div>
-
-                <button type="submit" id="btn-submit-artikel" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transition flex justify-center items-center gap-2">
-                    <span>📢 Terbitkan Artikel ke Database</span>
+        <main class="max-w-6xl mx-auto px-6 py-8">
+            <div class="flex border-b border-gray-300 mb-8 overflow-x-auto no-scrollbar">
+                <button class="tab-btn active px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-produk')">
+                    <span>📦</span> Tambah Produk
                 </button>
-            </form>
+                <button class="tab-btn px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-artikel')">
+                    <span>📝</span> Tulis Artikel
+                </button>
+                <button class="tab-btn px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-import')">
+                    <span>📊</span> Excel (Import/Export)
+                </button>
+            </div>
 
-            <!-- TAB 3: MANAJEMEN CSV (IMPORT / EXPORT) -->
-            <div id="form-csv" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hidden">
-                <h2 class="text-2xl font-bold mb-2 text-gray-800">Manajemen Data Excel (.xlsx)</h2>
-                <p class="text-gray-500 mb-8">Tambah puluhan produk sekaligus atau backup produk Anda dengan file Excel.</p>
-                
+            <div id="tab-produk" class="tab-content block fade-in">
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+                    <h2 class="text-2xl font-bold mb-8 text-gray-900 flex items-center gap-3">
+                        <div class="bg-indigo-100 p-2 rounded-lg text-indigo-600">➕</div> Upload Produk Baru
+                    </h2>
+                    <form id="form-produk" onsubmit="event.preventDefault(); submitData('produk');">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Nama Produk</label>
+                                <input type="text" id="p-judul" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Kategori</label>
+                                <input type="text" id="p-kategori" placeholder="Contoh: Ebook, Template..." required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">URL Gambar (Thumbnail)</label>
+                            <input type="url" id="p-gambar" required placeholder="https://..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Deskripsi Singkat</label>
+                            <textarea id="p-deskripsi" required rows="3" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors"></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Harga (Rp)</label>
+                                <input type="text" id="p-harga" required placeholder="Rp 150.000" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Status Promo?</label>
+                                <select id="p-promo" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                                    <option value="">Tidak</option>
+                                    <option value="Ya">Ya, Masukkan ke Promo</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Link Sales Page</label>
+                                <input type="url" id="p-sales" placeholder="https://..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Link Checkout / Beli</label>
+                                <input type="url" id="p-checkout" required placeholder="https://..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                            </div>
+                        </div>
+
+                        <button type="submit" id="btn-submit-produk" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-lg flex justify-center items-center gap-2 text-lg">
+                            <span>🚀</span> Terbitkan Produk ke Database
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="tab-artikel" class="tab-content hidden fade-in">
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+                    <h2 class="text-2xl font-bold mb-8 text-gray-900 flex items-center gap-3">
+                        <div class="bg-purple-100 p-2 rounded-lg text-purple-600">📝</div> Tulis Artikel Baru
+                    </h2>
+                    <form id="form-artikel" onsubmit="event.preventDefault(); submitData('artikel');">
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Judul Artikel</label>
+                            <input type="text" id="a-judul" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">URL Gambar Thumbnail (Opsional)</label>
+                            <input type="url" id="a-gambar" placeholder="https://..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Ringkasan Singkat (Tampil di Card Depan)</label>
+                            <textarea id="a-ringkasan" required rows="2" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none bg-gray-50 focus:bg-white transition-colors"></textarea>
+                        </div>
+
+                        <div class="mb-8">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Isi Artikel Lengkap</label>
+                            <!-- Wadah untuk Editor Quill.js -->
+                            <div id="editor-container"></div>
+                        </div>
+
+                        <button type="submit" id="btn-submit-artikel" class="w-full bg-purple-600 text-white font-bold py-4 rounded-xl hover:bg-purple-700 active:scale-[0.98] transition-all shadow-lg flex justify-center items-center gap-2 text-lg">
+                            <span>📢</span> Terbitkan Artikel ke Database
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="tab-import" class="tab-content hidden fade-in">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    
-                    <!-- Area Download & Export -->
-                    <div class="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center">
-                        <div class="text-4xl mb-4">📥</div>
-                        <h3 class="font-bold text-lg mb-2">Download Data</h3>
-                        <p class="text-sm text-gray-500 mb-6">Unduh file template Excel kosong, atau export produk dari database saat ini.</p>
+                    <!-- Export Data -->
+                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 flex flex-col items-center text-center">
+                        <div class="bg-emerald-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
+                            <span class="text-3xl">📥</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Backup / Export Excel</h3>
+                        <p class="text-gray-500 mb-8 flex-grow">Unduh seluruh data produk Anda ke dalam format file Excel (.xlsx) murni untuk dicadangkan.</p>
                         
-                        <div class="space-y-3">
-                            <button onclick="downloadTemplate()" class="w-full bg-gray-100 text-gray-700 font-semibold py-3 rounded-lg hover:bg-gray-200 transition">
-                                📝 Unduh Template Excel
+                        <button onclick="fetchExportData()" id="btn-export" class="w-full bg-white border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 font-bold py-4 rounded-xl transition-colors text-lg">
+                            Download Data (.xlsx)
+                        </button>
+                    </div>
+
+                    <!-- Import Data -->
+                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 flex flex-col items-center text-center">
+                        <div class="bg-blue-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
+                            <span class="text-3xl">📤</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Import Produk Massal</h3>
+                        <p class="text-gray-500 mb-6 flex-grow">Punya puluhan link affiliate? Import sekaligus menggunakan file template Excel kami.</p>
+                        
+                        <div class="space-y-4 w-full">
+                            <button onclick="downloadTemplate()" class="w-full text-blue-600 font-bold text-sm hover:underline flex justify-center items-center gap-2 py-2">
+                                <span>📄</span> Unduh Template Excel Kosong
                             </button>
-                            <button onclick="exportProducts()" class="w-full border border-indigo-600 text-indigo-600 font-semibold py-3 rounded-lg hover:bg-indigo-50 transition">
-                                📦 Export Semua Produk Saat Ini
+                            
+                            <div class="border-2 border-dashed border-gray-300 bg-gray-50 rounded-2xl p-6 text-center hover:bg-gray-100 hover:border-blue-400 transition-all cursor-pointer relative group">
+                                <input type="file" id="file-import" accept=".xlsx" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                                <svg class="w-8 h-8 text-gray-400 mx-auto mb-2 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                <span class="text-sm text-gray-600 font-medium group-hover:text-blue-600 transition-colors">Klik untuk pilih file .xlsx</span>
+                            </div>
+
+                            <button onclick="importExcel()" id="btn-import" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 active:scale-[0.98] transition-all shadow-lg text-lg">
+                                🚀 Mulai Import Data
                             </button>
                         </div>
                     </div>
-
-                    <!-- Area Import -->
-                    <div class="border-2 border-dashed border-indigo-200 bg-indigo-50 rounded-xl p-6 text-center flex flex-col justify-center">
-                        <div class="text-4xl mb-4">📤</div>
-                        <h3 class="font-bold text-lg mb-2">Upload Data Produk</h3>
-                        <p class="text-sm text-gray-500 mb-6">Pilih file Excel (.xlsx) untuk ditambahkan massal ke database Anda.</p>
-                        
-                        <input type="file" id="csvFileInput" accept=".xlsx, .xls, .csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 mb-4 cursor-pointer">
-                        
-                        <button onclick="uploadCSV()" id="btn-upload-csv" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition flex justify-center items-center gap-2">
-                            <span>🚀 Import Excel Sekarang</span>
-                        </button>
-                    </div>
                 </div>
             </div>
-        </div>
+
+        </main>
     </div>
 
+    <div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-8 py-4 rounded-2xl shadow-2xl opacity-0 translate-y-6 pointer-events-none z-[100] text-sm font-bold flex items-center gap-3 transition-all duration-300">
+        <span id="toast-msg">Notifikasi</span>
+    </div>
+
+    <!-- Script Tambahan Quill.js (PENTING) -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
     <script>
-        // MASUKKAN URL APP SCRIPT ANDA DI SINI! (Harus sama dengan yang di index.html)
+        // MASUKKAN URL APP SCRIPT ANDA DI SINI!
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNwl9USTq7SywZbFh0P1zHEOLaA9ewgl53AliV6-BAOVlK3rvEqmXbVKa0IMad8KaT/exec';
         
-        let globalProducts = []; // Tambahan variabel global untuk nampung data pas export
+        let quill; // Variabel global untuk Quill Editor
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Cek status login
+            if(localStorage.getItem('adminLoggedIn') === 'true') {
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('dashboard-section').classList.remove('hidden');
+                document.getElementById('dashboard-section').classList.add('fade-in');
+            }
+
+            // Inisialisasi Quill Editor
+            if(document.getElementById('editor-container')) {
+                quill = new Quill('#editor-container', {
+                    theme: 'snow',
+                    placeholder: 'Ketik isi artikel, sisipkan link, atau format tulisan di sini...',
+                    modules: {
+                        toolbar: [
+                            ['bold', 'italic', 'underline', 'strike'],        
+                            ['blockquote', 'code-block'],
+                            [{ 'header': 1 }, { 'header': 2 }],               
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],     
+                            [{ 'color': [] }, { 'background': [] }],          
+                            ['link'],                                         
+                            ['clean']                                         
+                        ]
+                    }
+                });
+            }
+        });
 
         async function checkLogin() {
-            const input = document.getElementById('pin-input').value;
+            const pin = document.getElementById('pin-input').value;
             const btn = document.getElementById('btn-login');
-            const errorMsg = document.getElementById('login-error');
             
-            // Ubah teks tombol jadi loading
-            const oriText = btn.innerHTML;
-            btn.innerHTML = `<span>⏳ Mengecek...</span>`;
+            if(!pin) { showMessage('⚠️ Masukkan PIN!', true); return; }
+            
+            btn.innerHTML = '<span class="animate-pulse">Memeriksa... ⏳</span>';
             btn.disabled = true;
-            errorMsg.classList.add('hidden');
 
             try {
-                // Ambil data PIN dinamis dari Google Sheets via API
-                const response = await fetch(SCRIPT_URL, { method: 'GET', redirect: 'follow' });
+                const response = await fetch(SCRIPT_URL);
                 const data = await response.json();
                 
-                // Ambil PIN dari settings (Jika tidak ada di sheet, fallback ke "admin123")
-                const realPin = data.settings.adminPin || "admin123";
-                globalProducts = data.products || []; // Simpan data produk buat di-export nanti
-
-                if(input === realPin.toString()) {
-                    document.getElementById('login-screen').classList.add('hidden');
-                    document.getElementById('dashboard').classList.remove('hidden');
+                if(data.settings && data.settings.adminPin === pin) {
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    document.getElementById('login-section').classList.add('hidden');
+                    document.getElementById('dashboard-section').classList.remove('hidden');
+                    document.getElementById('dashboard-section').classList.add('fade-in');
+                    showMessage('✅ Berhasil Login!');
                 } else {
-                    errorMsg.innerText = "PIN Salah!";
-                    errorMsg.classList.remove('hidden');
+                    showMessage('❌ PIN Salah! Silakan cek di Google Sheets tab Settings.', true);
                 }
             } catch (error) {
-                console.error("Error:", error);
-                errorMsg.innerText = "Gagal koneksi ke server!";
-                errorMsg.classList.remove('hidden');
+                showMessage('❌ Gagal terhubung ke server.', true);
+                console.error(error);
             } finally {
-                // Kembalikan tombol ke kondisi semula
-                btn.innerHTML = oriText;
+                btn.innerHTML = 'Masuk Dashboard';
                 btn.disabled = false;
             }
         }
 
-        // Jalankan login pakai Enter
-        document.getElementById('pin-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') checkLogin();
-        });
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            document.getElementById('login-section').classList.remove('hidden');
+            document.getElementById('login-section').classList.add('fade-in');
+            document.getElementById('dashboard-section').classList.add('hidden');
+            document.getElementById('pin-input').value = '';
+        }
 
-        function switchTab(tab) {
-            const tabs = ['produk', 'artikel', 'csv'];
-            
-            tabs.forEach(t => {
-                const form = document.getElementById(`form-${t}`);
-                const btn = document.getElementById(`tab-${t}`);
-                
-                if(!btn || !form) return;
-                
-                if(t === tab) {
-                    form.classList.remove('hidden');
-                    btn.classList.replace('border-transparent', 'border-indigo-600');
-                    btn.classList.replace('text-gray-500', 'text-indigo-600');
-                } else {
-                    form.classList.add('hidden');
-                    btn.classList.replace('border-indigo-600', 'border-transparent');
-                    btn.classList.replace('text-indigo-600', 'text-gray-500');
-                }
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('fade-in');
             });
+            const selectedTab = document.getElementById(tabId);
+            selectedTab.classList.remove('hidden');
+            // Sedikit delay agar animasi jalan
+            setTimeout(() => selectedTab.classList.add('fade-in'), 10);
             
-            // Sembunyikan pesan sukses/error saat pindah tab
-            document.getElementById('status-message').classList.add('hidden');
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
         }
 
         function showMessage(msg, isError = false) {
-            const el = document.getElementById('status-message');
-            el.innerText = msg;
-            el.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerHTML = msg;
             
             if(isError) {
-                el.classList.add('bg-red-100', 'text-red-800');
+                toast.classList.replace('bg-gray-900', 'bg-red-500');
             } else {
-                el.classList.add('bg-green-100', 'text-green-800');
+                toast.classList.replace('bg-red-500', 'bg-gray-900');
             }
-            
-            // Hilang otomatis setelah 5 detik
-            setTimeout(() => { el.classList.add('hidden'); }, 5000);
+
+            toast.classList.remove('opacity-0', 'translate-y-6');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-6');
+            }, 3000);
         }
 
-        function submitForm(event, type) {
-            event.preventDefault(); // Mencegah reload halaman
-            
-            const btn = document.getElementById(`btn-submit-${type}`);
+        async function submitData(type) {
+            let payload = { action: '', data: {} };
+            const btn = document.getElementById(type === 'produk' ? 'btn-submit-produk' : 'btn-submit-artikel');
             const oriText = btn.innerHTML;
-            btn.innerHTML = `<span>⏳ Sedang menyimpan...</span>`;
+            
+            btn.innerHTML = '<span class="animate-pulse">Mengirim Data... ⏳</span>';
             btn.disabled = true;
 
-            let payload = { action: 'tambah_' + type };
-
-            if(type === 'produk') {
+            if (type === 'produk') {
+                payload.action = 'tambah_produk';
                 payload.data = {
                     judul: document.getElementById('p-judul').value,
                     deskripsi: document.getElementById('p-deskripsi').value,
@@ -275,10 +362,17 @@
                     linkSales: document.getElementById('p-sales').value,
                     linkCheckout: document.getElementById('p-checkout').value,
                     kategori: document.getElementById('p-kategori').value,
-                    promo: document.getElementById('p-promo').checked ? 'Ya' : ''
+                    promo: document.getElementById('p-promo').value
                 };
             } else if (type === 'artikel') {
-                // Auto generate tanggal hari ini (Format Indo)
+                const htmlContent = quill.root.innerHTML;
+                if (quill.getText().trim().length === 0) {
+                    showMessage('❌ Isi artikel tidak boleh kosong!', true);
+                    btn.innerHTML = oriText;
+                    btn.disabled = false;
+                    return;
+                }
+                payload.action = 'tambah_artikel';
                 const today = new Date();
                 const options = { day: 'numeric', month: 'long', year: 'numeric' };
                 const tglIndo = today.toLocaleDateString('id-ID', options);
@@ -288,166 +382,144 @@
                     ringkasan: document.getElementById('a-ringkasan').value,
                     gambar: document.getElementById('a-gambar').value,
                     tanggal: tglIndo,
-                    isiLengkap: document.getElementById('a-isi').value
+                    isiLengkap: htmlContent
                 };
             }
 
-            // Kirim data ke Apps Script menggunakan POST
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                // Mode no-cors wajib dipakai karena Google Script meredirect POST
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            })
-            .then(response => {
-                // Karena no-cors, kita tidak bisa membaca response JSON dengan baik.
-                // Tapi jika sampai di sini, artinya request terkirim.
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showMessage(`✅ ${type === 'produk' ? 'Produk' : 'Artikel'} berhasil diterbitkan!`);
+                    document.getElementById(`form-${type}`).reset();
+                    if(type === 'artikel') quill.setContents([]); 
+                } else {
+                    showMessage(`❌ Gagal: ${result.message}`, true);
+                }
+            } catch (error) {
+                showMessage('❌ Terjadi kesalahan koneksi.', true);
+                console.error(error);
+            } finally {
                 btn.innerHTML = oriText;
                 btn.disabled = false;
-                showMessage(`✅ ${type === 'produk' ? 'Produk' : 'Artikel'} berhasil ditambahkan ke Database!`);
-                event.target.reset(); // Kosongkan form input biasa
-                if(type === 'artikel') quill.root.innerHTML = ''; // Kosongkan text editor
-            })
-            .catch(error => {
-                btn.innerHTML = oriText;
-                btn.disabled = false;
-                showMessage('❌ Terjadi kesalahan jaringan. Coba lagi.', true);
-                console.error('Error:', error);
-            });
-        }
-
-        // ==========================================
-        // LOGIKA EXCEL (.xlsx) (DOWNLOAD, EXPORT, IMPORT)
-        // ==========================================
-        const EXCEL_HEADER = ["Judul", "Deskripsi", "URL_Gambar", "Harga", "Link_Sales_Page", "Link_Checkout", "Kategori", "Promo"];
-
-        // Download Template Kosong (Excel)
-        function downloadTemplate() {
-            const ws_data = [
-                EXCEL_HEADER,
-                ["Ebook Jualan", "Panduan nulis jualan laris", "https://gambar.com/cover.jpg", "Rp 150.000", "https://affiliate.com/1", "https://affiliate.com/2", "Ebook", "Ya"]
-            ];
-            // Mengubah array 2D menjadi sheet
-            const ws = XLSX.utils.aoa_to_sheet(ws_data);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Template_Produk");
-            // Membuat dan mengunduh file xlsx
-            XLSX.writeFile(wb, "Template_Produk_DigiStore.xlsx");
-        }
-
-        // Export Data Produk Saat Ini (Excel)
-        function exportProducts() {
-            if(!globalProducts || globalProducts.length === 0) {
-                showMessage("Belum ada data produk di database untuk diexport.", true);
-                return;
             }
-            
-            let ws_data = [EXCEL_HEADER];
-            globalProducts.forEach(p => {
-                ws_data.push([
-                    p.judul || '', p.deskripsi || '', p.gambar || '', 
-                    p.harga || '', p.linkSales || '', p.linkCheckout || '', 
-                    p.kategori || '', p.promo || ''
-                ]);
-            });
-            
-            const ws = XLSX.utils.aoa_to_sheet(ws_data);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Data_Produk");
-            XLSX.writeFile(wb, "Export_Produk_Database.xlsx");
         }
 
-        // Import File Excel (Upload)
-        function uploadCSV() {
-            const fileInput = document.getElementById('csvFileInput');
+        async function fetchExportData() {
+            const btn = document.getElementById('btn-export');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="animate-pulse">Menyiapkan Excel... ⏳</span>';
+            btn.disabled = true;
+            
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const data = await response.json();
+                
+                if(!data.products || data.products.length === 0) {
+                    showMessage('⚠️ Belum ada produk di database.', true);
+                    return;
+                }
+
+                const exportData = [
+                    ["Judul", "Deskripsi", "URL_Gambar", "Harga", "Link_Sales_Page", "Link_Checkout", "Kategori", "Promo"]
+                ];
+                
+                data.products.forEach(p => {
+                    exportData.push([
+                        p.judul || '', p.deskripsi || '', p.gambar || '', 
+                        p.harga || '', p.linkSales || '', p.linkCheckout || '', 
+                        p.kategori || '', p.promo || ''
+                    ]);
+                });
+
+                const ws = XLSX.utils.aoa_to_sheet(exportData);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Data_Produk");
+                XLSX.writeFile(wb, "Backup_Produk_AFFLINK.xlsx");
+                
+                showMessage('✅ Data berhasil diekspor menjadi .xlsx!');
+            } catch (error) {
+                showMessage('❌ Gagal mengekspor data.', true);
+                console.error(error);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        async function downloadTemplate() {
+            try {
+                const templateData = [
+                    ["Judul", "Deskripsi", "URL_Gambar", "Harga", "Link_Sales_Page", "Link_Checkout", "Kategori", "Promo"],
+                    ["Contoh Ebook A", "Deskripsi ebook...", "https://...", "Rp 150.000", "https://...", "https://...", "Ebook", "Ya"]
+                ];
+
+                const ws = XLSX.utils.aoa_to_sheet(templateData);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Template_Produk");
+                
+                XLSX.writeFile(wb, "Template_Produk_AFFLINK.xlsx");
+                showMessage('✅ Template Excel berhasil diunduh!');
+            } catch (error) {
+                showMessage('❌ Gagal mengunduh template.', true);
+            }
+        }
+
+        async function importExcel() {
+            const fileInput = document.getElementById('file-import');
             const file = fileInput.files[0];
             
-            if (!file) {
-                showMessage("❌ Harap pilih file Excel terlebih dahulu!", true);
-                return;
-            }
-
-            const btn = document.getElementById('btn-upload-csv');
-            const oriText = btn.innerHTML;
-            btn.innerHTML = `<span>⏳ Sedang memproses Excel...</span>`;
-            btn.disabled = true;
+            if (!file) { showMessage('❌ Silakan pilih file Excel (.xlsx)!', true); return; }
 
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 try {
-                    // Membaca file excel dalam format ArrayBuffer
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, {type: 'array'});
-                    
-                    // Ambil sheet pertama saja
                     const firstSheetName = workbook.SheetNames[0];
                     const worksheet = workbook.Sheets[firstSheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
                     
-                    // Konversi sheet ke format array of arrays (2D)
-                    const json_data = XLSX.utils.sheet_to_json(worksheet, {header: 1});
-
-                    let dataToUpload = [];
-
-                    // Mulai dari index 1 untuk melompati baris header/judul kolom
-                    for (let i = 1; i < json_data.length; i++) {
-                        let row = json_data[i];
-                        
-                        // Abaikan baris kosong
-                        if (!row || row.length === 0 || (row.length === 1 && !row[0])) continue;
-
-                        let cols = [];
-                        // Pastikan selalu mengirim 8 kolom (sesuai database Sheet)
-                        for(let j = 0; j < 8; j++) {
-                            cols.push(row[j] ? String(row[j]).trim() : "");
-                        }
-                        dataToUpload.push(cols);
-                    }
-
-                    if (dataToUpload.length === 0) {
-                        showMessage("❌ File Excel kosong atau format tidak sesuai.", true);
-                        btn.innerHTML = oriText;
-                        btn.disabled = false;
+                    if (jsonData.length <= 1) {
+                        showMessage('❌ File Excel kosong atau cuma berisi judul!', true);
                         return;
                     }
 
-                    // Payload dikirim ke Google Apps Script
-                    // Nama action tetap 'import_produk_csv' agar Code.gs tidak error/perlu diubah
+                    const rowsToUpload = jsonData.slice(1);
+                    const btn = document.getElementById('btn-import');
+                    btn.innerHTML = '<span class="animate-pulse">Mengunggah ke Database... ⏳</span>';
+                    btn.disabled = true;
+
                     const payload = {
                         action: 'import_produk_csv', 
-                        data: dataToUpload
+                        data: rowsToUpload
                     };
 
-                    fetch(SCRIPT_URL, {
+                    const response = await fetch(SCRIPT_URL, {
                         method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
-                    })
-                    .then(() => {
-                        btn.innerHTML = oriText;
-                        btn.disabled = false;
-                        fileInput.value = ""; 
-                        showMessage(`✅ Berhasil mengimpor ${dataToUpload.length} produk dari Excel ke Database!`);
-                    })
-                    .catch(error => {
-                        btn.innerHTML = oriText;
-                        btn.disabled = false;
-                        showMessage('❌ Gagal mengunggah. Terjadi kesalahan jaringan.', true);
-                        console.error('Error Bulk Insert:', error);
                     });
+                    const result = await response.json();
 
-                } catch (err) {
-                    btn.innerHTML = oriText;
+                    if (result.status === 'success') {
+                        showMessage(`✅ ${rowsToUpload.length} Produk berhasil diimpor!`);
+                        fileInput.value = ''; 
+                    } else {
+                        showMessage('❌ Gagal impor: ' + result.message, true);
+                    }
+                } catch (error) {
+                    showMessage('❌ Terjadi kesalahan saat membaca file.', true);
+                    console.error(error);
+                } finally {
+                    const btn = document.getElementById('btn-import');
+                    btn.innerHTML = '🚀 Mulai Import Data';
                     btn.disabled = false;
-                    showMessage("❌ Gagal membaca file Excel. Pastikan formatnya benar.", true);
-                    console.error(err);
                 }
             };
-            
-            // Perintah ini yang membedakan excel dan teks biasa
             reader.readAsArrayBuffer(file);
         }
     </script>
