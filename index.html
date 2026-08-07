@@ -10,6 +10,25 @@
         body {
             transition: background-color 0.3s ease, font-family 0.3s ease;
         }
+        
+        /* Tambahan class untuk efek background hero */
+        .hero-bg-overlay {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+        .hero-bg-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6); /* Overlay gelap biar teks kebaca */
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
     </style>
 </head>
 <body>
@@ -28,7 +47,7 @@
                 <!-- Logo & Brand -->
                 <div class="flex items-center gap-3">
                     <img id="logo-image" src="" alt="Logo" class="h-10 w-auto hidden rounded">
-                    <!-- Brand name will now display even if logo is present -->
+                    <!-- Brand name pake innerHTML biar support tag gradient dari admin -->
                     <h1 id="brand-name" class="text-2xl font-bold tracking-wide">Nama Toko</h1>
                 </div>
                 
@@ -47,12 +66,15 @@
             </div>
         </header>
 
-        <section class="bg-white py-20 px-6 text-center shadow-sm">
-            <div class="max-w-3xl mx-auto">
-                <h2 id="hero-title" class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
+        <!-- HERO SECTION (Bisa dikasih background gambar dari admin) -->
+        <section id="hero-section" class="bg-white py-20 px-6 text-center shadow-sm transition-all duration-500">
+            <div class="max-w-3xl mx-auto hero-content">
+                <!-- Title pake innerHTML biar support efek HTML/Gradient, dan font-size dinamis -->
+                <h2 id="hero-title" class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight transition-all">
                     Judul Utama
                 </h2>
-                <p id="hero-subtitle" class="text-lg md:text-xl text-gray-500 mb-8">
+                <!-- Subtitle -->
+                <p id="hero-subtitle" class="text-lg md:text-xl text-gray-500 mb-8 transition-colors">
                     Subjudul deskripsi singkat.
                 </p>
             </div>
@@ -139,6 +161,7 @@
                 <div class="col-span-1 md:col-span-2">
                     <div class="flex items-center gap-3 mb-4">
                         <img id="footer-logo" src="" alt="Logo" class="h-8 hidden rounded">
+                        <!-- Support HTML di nama brand footer -->
                         <h3 id="footer-brand" class="text-2xl font-bold text-white tracking-wide">Toko</h3>
                     </div>
                     <p id="footer-desc" class="text-gray-400 mb-6 max-w-md">Menyediakan berbagai macam tools digital, template, dan panduan untuk membantu meningkatkan produktivitas dan bisnis Anda ke level selanjutnya.</p>
@@ -181,6 +204,7 @@
             </div>
             <div class="text-center pt-8 border-t border-gray-800/50 text-sm">
                 <!-- Tahun otomatis & Brand dinamis -->
+                <!-- Menggunakan textContent / HTML biar support karakter HTML -->
                 <p>&copy; <span id="current-year"></span> <span id="footer-copyright-brand">Toko</span>. All rights reserved.</p>
             </div>
         </footer>
@@ -256,33 +280,6 @@
         let globalSettings = {};
         let currentPage = 1;
 
-        // Data dummy untuk Preview jika URL belum diganti
-        const mockData = {
-            settings: {
-                namaToko: "DigiStore Affiliate",
-                heroTitle: "Temukan Tools Digital Terbaik",
-                heroSubtitle: "Kumpulan template, ebook, dan tools premium untuk boost produktivitasmu.",
-                warnaUtama: "#4F46E5, #EC4899", // Contoh gradient 
-                warnaBackground: "#F9FAFB", // Contoh warna solid, bisa diganti misal: "#F9FAFB, #E5E7EB"
-                fontFamily: "Inter",
-                logoUrl: "https://placehold.co/150x50/4F46E5/FFFFFF?text=DigiStore",
-                bannerImage: "https://placehold.co/1200x300/4F46E5/FFFFFF?text=PROMO+BESAR+BULAN+INI",
-                bannerUrl: "#",
-                bottomBannerImage: "https://placehold.co/1200x200/EC4899/FFFFFF?text=JOIN+GRUP+TELEGRAM+KAMI",
-                bottomBannerUrl: "#",
-                tampilkanBlog: "Ya",
-                itemsPerPage: 4,
-                tampilkanWA: "Ya",
-                waNumber: "6281234567890",
-                waMessage: "Halo admin, saya tertarik dengan produk digital Anda."
-            },
-            products: [
-                { judul: "Template Notion Pro", deskripsi: "Sistem manajemen hidup lengkap dan terstruktur.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Notion", harga: "Rp 150.000", linkSales: "#", linkCheckout: "#", kategori: "Template", promo: "Ya" },
-                { judul: "Ebook Copywriting", deskripsi: "Teknik nulis iklan jagoan bikin closingan melesat.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Ebook", harga: "Rp 99.000", linkSales: "#", linkCheckout: "#", kategori: "Ebook", promo: "" }
-            ],
-            articles: []
-        };
-
         // FUNGSI CACHING DAN FETCHING DATA
         function fetchDataFromGoogle() {
             const cacheKey = 'marketplace_data_cache';
@@ -296,11 +293,6 @@
                 } catch(e) {
                     console.error("Cache rusak.");
                 }
-            }
-
-            if (SCRIPT_URL === 'URL_APPS_SCRIPT_ANDA_DISINI') {
-                setTimeout(() => renderApp(mockData), 1000);
-                return;
             }
 
             // 2. Fetch ke server untuk ngecek apakah ada update terbaru
@@ -373,6 +365,7 @@
         }
 
         function setupDesign(settings) {
+            // === LOGIKA FONT DINAMIS ===
             const fontName = settings.fontFamily || 'Inter';
             const fontUrl = `https://fonts.googleapis.com/css2?family=${fontName.replace(/ /g, '+')}:wght@400;500;600;700;800&display=swap`;
             
@@ -437,8 +430,9 @@
         }
 
         function setupHomepage(settings) {
-            // Header & Logo
-            document.getElementById('brand-name').innerText = settings.namaToko;
+            // Header & Logo (Support HTML untuk nama brand)
+            document.getElementById('brand-name').innerHTML = settings.namaToko || 'Toko';
+            
             const logoImg = document.getElementById('logo-image');
             if(settings.logoUrl) {
                 logoImg.src = settings.logoUrl;
@@ -447,8 +441,34 @@
                 logoImg.classList.add('hidden');
             }
 
-            document.getElementById('hero-title').innerText = settings.heroTitle;
-            document.getElementById('hero-subtitle').innerText = settings.heroSubtitle;
+            // === LOGIKA HERO SECTION (HTML, Ukuran Font, Background Image) ===
+            const heroTitleEl = document.getElementById('hero-title');
+            const heroSubtitleEl = document.getElementById('hero-subtitle');
+            const heroSectionEl = document.getElementById('hero-section');
+
+            // Support tag HTML untuk Teks Hero (Inner HTML)
+            heroTitleEl.innerHTML = settings.heroTitle || 'Judul Utama';
+            
+            // Subtitle
+            heroSubtitleEl.innerText = settings.heroSubtitle || '';
+
+            // Ukuran Font Hero Dinamis
+            if (settings.heroFontSize && !isNaN(settings.heroFontSize)) {
+                heroTitleEl.style.fontSize = `${settings.heroFontSize}px`;
+            }
+
+            // Gambar Background Hero
+            if (settings.heroBgImage && settings.heroBgImage.trim() !== '') {
+                heroSectionEl.classList.add('hero-bg-overlay');
+                heroSectionEl.style.backgroundImage = `url('${settings.heroBgImage}')`;
+                heroTitleEl.style.color = 'white';
+                heroSubtitleEl.style.color = '#e5e7eb'; // Abu-abu terang biar kontras
+            } else {
+                heroSectionEl.classList.remove('hero-bg-overlay');
+                heroSectionEl.style.backgroundImage = 'none';
+                heroTitleEl.style.color = ''; // kembali ke default tailwind
+                heroSubtitleEl.style.color = ''; 
+            }
 
             // Top Banner
             if(settings.bannerImage) {
@@ -470,9 +490,13 @@
         }
 
         function setupFooter(settings) {
-            // Logo & Brand Footer
-            document.getElementById('footer-brand').innerText = settings.namaToko;
-            document.getElementById('footer-copyright-brand').innerText = settings.namaToko;
+            // Logo & Brand Footer (Support HTML)
+            document.getElementById('footer-brand').innerHTML = settings.namaToko || 'Toko';
+            
+            // Ambil teks murni dari HTML brand untuk ditaruh di copyright bawah
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = settings.namaToko || 'Toko';
+            document.getElementById('footer-copyright-brand').innerText = tempDiv.textContent || tempDiv.innerText || "";
             
             // Tahun Dinamis
             document.getElementById('current-year').innerText = new Date().getFullYear();
@@ -749,8 +773,11 @@
         }
 
         function closeArticleModal() {
+            // Sembunyikan Modal
             const modal = document.getElementById('article-modal');
             modal.classList.add('hidden');
+            
+            // Buka kembali scroll background
             document.body.style.overflow = 'auto';
         }
 
