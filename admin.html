@@ -90,83 +90,21 @@
         <main class="max-w-6xl mx-auto px-6 py-8">
             <!-- Tabs Navigation -->
             <div class="flex border-b border-gray-300 mb-8 overflow-x-auto no-scrollbar">
-                <!-- TAB PENGATURAN -->
-                <button class="tab-btn active px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-pengaturan')">
-                    <span>⚙️</span> Pengaturan Web
-                </button>
-                <button class="tab-btn px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-produk')">
-                    <span>📦</span> Tambah Produk
+                <button class="tab-btn active px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-produk')">
+                    <span>📦</span> Kelola Produk
                 </button>
                 <button class="tab-btn px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-artikel')">
-                    <span>📝</span> Tulis Artikel
+                    <span>📝</span> Kelola Artikel
                 </button>
                 <button class="tab-btn px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-import')">
                     <span>📊</span> Excel (Import/Export)
                 </button>
             </div>
 
-            <!-- TAB PENGATURAN -->
-            <div id="tab-pengaturan" class="tab-content block fade-in">
-                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
-                    <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 p-4 rounded-xl mb-6 flex items-start gap-3">
-                        <span class="text-xl">💡</span>
-                        <p class="text-sm">Merubah pengaturan di sini akan mereset memori Cache di Google Sheets Anda. Pengunjung akan langsung melihat perubahannya.</p>
-                    </div>
-                    
-                    <form id="form-pengaturan" onsubmit="event.preventDefault(); submitData('settings');">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-2">Nama Toko / Brand</label>
-                                <input type="text" id="set-namaToko" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-2">Warna Utama (Bisa 2 Warna = Gradient)</label>
-                                <div class="flex gap-2">
-                                    <input type="color" id="set-warnaColor1" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna 1">
-                                    <input type="color" id="set-warnaColor2" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna 2 (Opsional)">
-                                    <input type="text" id="set-warnaUtama" required placeholder="#4F46E5, #EC4899" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors text-sm">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-2">URL Gambar Logo</label>
-                                <input type="url" id="set-logoUrl" placeholder="https://..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-2">Warna Background (Bisa 2 Warna = Gradient)</label>
-                                <div class="flex gap-2">
-                                    <input type="color" id="set-bgWarnaColor1" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna Background 1">
-                                    <input type="color" id="set-bgWarnaColor2" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna Background 2 (Opsional)">
-                                    <input type="text" id="set-warnaBackground" required placeholder="#F9FAFB" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors text-sm">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-2">Teks Judul Besar (Hero)</label>
-                                <input type="text" id="set-heroTitle" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-2">Nomor WhatsApp Admin</label>
-                                <input type="number" id="set-waNumber" placeholder="628123..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
-                            </div>
-                        </div>
-
-                        <button type="submit" id="btn-submit-settings" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-lg flex justify-center items-center gap-2 text-lg">
-                            <span>💾</span> Simpan & Terapkan Pengaturan
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- TAB PRODUK -->
-            <div id="tab-produk" class="tab-content hidden fade-in">
+            <div id="tab-produk" class="tab-content block fade-in">
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
                     <h2 class="text-2xl font-bold mb-8 text-gray-900 flex items-center gap-3">
-                        <div class="bg-indigo-100 p-2 rounded-lg text-indigo-600">➕</div> Upload Produk Baru
+                        <div class="bg-indigo-100 p-2 rounded-lg text-indigo-600">➕</div> Form Produk
                     </h2>
                     <form id="form-produk" onsubmit="event.preventDefault(); submitData('produk');">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -218,15 +156,35 @@
                         <button type="submit" id="btn-submit-produk" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-lg flex justify-center items-center gap-2 text-lg">
                             <span>🚀</span> Terbitkan Produk ke Database
                         </button>
+                        <button type="button" id="btn-cancel-produk" onclick="cancelEdit('produk')" class="hidden w-full mt-3 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-300 transition-all">Batalkan Edit</button>
                     </form>
+
+                    <!-- TABEL DAFTAR PRODUK (FITUR BARU) -->
+                    <div class="mt-12 border-t border-gray-100 pt-8">
+                        <h3 class="text-lg font-bold mb-4 text-gray-900">Daftar Produk Saat Ini</h3>
+                        <div class="overflow-x-auto rounded-xl border border-gray-200">
+                            <table class="w-full text-left text-sm text-gray-500">
+                                <thead class="bg-gray-50 text-gray-700 uppercase">
+                                    <tr>
+                                        <th class="px-4 py-3 border-b">Judul</th>
+                                        <th class="px-4 py-3 border-b">Kategori</th>
+                                        <th class="px-4 py-3 border-b">Harga</th>
+                                        <th class="px-4 py-3 border-b text-right">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-produk-body" class="bg-white">
+                                    <!-- List Produk di-inject via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- TAB ARTIKEL -->
             <div id="tab-artikel" class="tab-content hidden fade-in">
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
                     <h2 class="text-2xl font-bold mb-8 text-gray-900 flex items-center gap-3">
-                        <div class="bg-purple-100 p-2 rounded-lg text-purple-600">📝</div> Tulis Artikel Baru
+                        <div class="bg-purple-100 p-2 rounded-lg text-purple-600">📝</div> Form Artikel
                     </h2>
                     <form id="form-artikel" onsubmit="event.preventDefault(); submitData('artikel');">
                         <div class="mb-6">
@@ -253,11 +211,30 @@
                         <button type="submit" id="btn-submit-artikel" class="w-full bg-purple-600 text-white font-bold py-4 rounded-xl hover:bg-purple-700 active:scale-[0.98] transition-all shadow-lg flex justify-center items-center gap-2 text-lg">
                             <span>📢</span> Terbitkan Artikel ke Database
                         </button>
+                        <button type="button" id="btn-cancel-artikel" onclick="cancelEdit('artikel')" class="hidden w-full mt-3 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-300 transition-all">Batalkan Edit</button>
                     </form>
+
+                    <!-- TABEL DAFTAR ARTIKEL (FITUR BARU) -->
+                    <div class="mt-12 border-t border-gray-100 pt-8">
+                        <h3 class="text-lg font-bold mb-4 text-gray-900">Daftar Artikel Saat Ini</h3>
+                        <div class="overflow-x-auto rounded-xl border border-gray-200">
+                            <table class="w-full text-left text-sm text-gray-500">
+                                <thead class="bg-gray-50 text-gray-700 uppercase">
+                                    <tr>
+                                        <th class="px-4 py-3 border-b">Judul Artikel</th>
+                                        <th class="px-4 py-3 border-b">Tanggal</th>
+                                        <th class="px-4 py-3 border-b text-right">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-artikel-body" class="bg-white">
+                                    <!-- List Artikel di-inject via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- TAB IMPORT EXCEL -->
             <div id="tab-import" class="tab-content hidden fade-in">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <!-- Export Data -->
@@ -312,117 +289,54 @@
     <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 
     <script>
-        // MASUKKAN URL APP SCRIPT ANDA DI SINI!
+        // PENTING: GANTI SCRIPT_URL DI BAWAH DENGAN URL DEPLOY TERBARU!
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNwl9USTq7SywZbFh0P1zHEOLaA9ewgl53AliV6-BAOVlK3rvEqmXbVKa0IMad8KaT/exec';
         
         let quill; // Variabel global untuk Quill
+        let adminData = { products: [], articles: [] }; // Menyimpan data dari server untuk fitur Edit
+        let editState = { type: null, rowIndex: null }; // Melacak form sedang dalam mode Edit atau Tambah
 
         document.addEventListener("DOMContentLoaded", async function() {
-            
-            // --- LOGIKA GRADIENT (WARNA UTAMA) ---
-            const inputColor1 = document.getElementById('set-warnaColor1');
-            const inputColor2 = document.getElementById('set-warnaColor2');
-            const inputText = document.getElementById('set-warnaUtama');
-
-            if (inputColor1 && inputColor2 && inputText) {
-                inputColor1.addEventListener('input', function() {
-                    const vals = inputText.value.split(',').map(v => v.trim());
-                    if(vals.length > 1 && vals[1] !== '') {
-                        inputText.value = `${inputColor1.value.toUpperCase()}, ${vals[1]}`;
-                    } else {
-                        inputText.value = inputColor1.value.toUpperCase();
-                    }
-                });
-                inputColor2.addEventListener('input', function() {
-                    const vals = inputText.value.split(',').map(v => v.trim());
-                    const firstColor = (vals[0] && vals[0] !== '') ? vals[0] : inputColor1.value.toUpperCase();
-                    inputText.value = `${firstColor}, ${inputColor2.value.toUpperCase()}`;
-                });
-                inputText.addEventListener('input', function(e) {
-                    const vals = e.target.value.split(',').map(v => v.trim());
-                    if(vals[0] && /^#[0-9A-F]{6}$/i.test(vals[0])) inputColor1.value = vals[0];
-                    if(vals[1] && /^#[0-9A-F]{6}$/i.test(vals[1])) inputColor2.value = vals[1];
-                });
-            }
-
-            // --- LOGIKA GRADIENT (WARNA BACKGROUND) ---
-            const bgInputColor1 = document.getElementById('set-bgWarnaColor1');
-            const bgInputColor2 = document.getElementById('set-bgWarnaColor2');
-            const bgInputText = document.getElementById('set-warnaBackground');
-
-            if (bgInputColor1 && bgInputColor2 && bgInputText) {
-                bgInputColor1.addEventListener('input', function() {
-                    const vals = bgInputText.value.split(',').map(v => v.trim());
-                    if(vals.length > 1 && vals[1] !== '') {
-                        bgInputText.value = `${bgInputColor1.value.toUpperCase()}, ${vals[1]}`;
-                    } else {
-                        bgInputText.value = bgInputColor1.value.toUpperCase();
-                    }
-                });
-                bgInputColor2.addEventListener('input', function() {
-                    const vals = bgInputText.value.split(',').map(v => v.trim());
-                    const firstColor = (vals[0] && vals[0] !== '') ? vals[0] : bgInputColor1.value.toUpperCase();
-                    bgInputText.value = `${firstColor}, ${bgInputColor2.value.toUpperCase()}`;
-                });
-                bgInputText.addEventListener('input', function(e) {
-                    const vals = e.target.value.split(',').map(v => v.trim());
-                    if(vals[0] && /^#[0-9A-F]{6}$/i.test(vals[0])) bgInputColor1.value = vals[0];
-                    if(vals[1] && /^#[0-9A-F]{6}$/i.test(vals[1])) bgInputColor2.value = vals[1];
-                });
-            }
-
             // 1. Cek status login
             if(localStorage.getItem('adminLoggedIn') === 'true') {
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('dashboard-section').classList.remove('hidden');
                 document.getElementById('dashboard-section').classList.add('fade-in');
+                
+                // Ambil data untuk tabel di bawah form
+                fetchAndRenderTables();
             }
 
-            // 2. Fetch Info dari Google Sheets (Otomatis)
+            // 2. Fetch Logo & Judul dari Google Sheets (Otomatis)
             try {
                 const response = await fetch(SCRIPT_URL);
-                const data = await response.json();
+                const textData = await response.text();
                 
-                if (data.settings) {
-                    // Update Logo di kerangka gembok
-                    if (data.settings.logoUrl) {
-                        const logoImg = document.getElementById('login-logo-img');
-                        const logoSvg = document.getElementById('login-logo-svg');
-                        const logoContainer = document.getElementById('login-logo-container');
-                        
-                        logoImg.src = data.settings.logoUrl;
-                        logoImg.classList.remove('hidden');
-                        logoSvg.classList.add('hidden');
-                        logoContainer.classList.remove('bg-indigo-100', 'shadow-inner'); 
+                try {
+                    const data = JSON.parse(textData);
+                    if (data.settings) {
+                        // Update Logo di kerangka gembok
+                        if (data.settings.logoUrl) {
+                            const logoImg = document.getElementById('login-logo-img');
+                            const logoSvg = document.getElementById('login-logo-svg');
+                            const logoContainer = document.getElementById('login-logo-container');
+                            
+                            logoImg.src = data.settings.logoUrl;
+                            logoImg.classList.remove('hidden');
+                            logoSvg.classList.add('hidden');
+                            // Hilangkan background ungu bulat agar logo tampil bersih
+                            logoContainer.classList.remove('bg-indigo-100', 'shadow-inner'); 
+                        }
+                        // Update Judul "Panel Admin" jadi "Admin NamaToko"
+                        if (data.settings.namaToko) {
+                            document.getElementById('login-title').innerText = "Admin " + data.settings.namaToko;
+                        }
                     }
-                    if (data.settings.namaToko) {
-                        document.getElementById('login-title').innerText = "Admin " + data.settings.namaToko;
-                        if(document.getElementById('set-namaToko')) document.getElementById('set-namaToko').value = data.settings.namaToko;
-                    }
-                    if(document.getElementById('set-logoUrl')) document.getElementById('set-logoUrl').value = data.settings.logoUrl || '';
-                    if(document.getElementById('set-heroTitle')) document.getElementById('set-heroTitle').value = data.settings.heroTitle || '';
-                    if(document.getElementById('set-waNumber')) document.getElementById('set-waNumber').value = data.settings.waNumber || '';
-                    
-                    // Isi Otomatis Warna Utama
-                    if(document.getElementById('set-warnaUtama')) {
-                        const wUtama = data.settings.warnaUtama || '#4F46E5';
-                        document.getElementById('set-warnaUtama').value = wUtama;
-                        const vals = wUtama.split(',').map(v => v.trim());
-                        if(vals[0] && /^#[0-9A-F]{6}$/i.test(vals[0])) document.getElementById('set-warnaColor1').value = vals[0];
-                        if(vals[1] && /^#[0-9A-F]{6}$/i.test(vals[1])) document.getElementById('set-warnaColor2').value = vals[1];
-                    }
-
-                    // Isi Otomatis Warna Background
-                    if(document.getElementById('set-warnaBackground')) {
-                        const wBg = data.settings.warnaBackground || '#F9FAFB';
-                        document.getElementById('set-warnaBackground').value = wBg;
-                        const valsBg = wBg.split(',').map(v => v.trim());
-                        if(valsBg[0] && /^#[0-9A-F]{6}$/i.test(valsBg[0])) document.getElementById('set-bgWarnaColor1').value = valsBg[0];
-                        if(valsBg[1] && /^#[0-9A-F]{6}$/i.test(valsBg[1])) document.getElementById('set-bgWarnaColor2').value = valsBg[1];
-                    }
+                } catch(e) {
+                    console.log("Response bukan JSON. Abaikan logo update.");
                 }
             } catch (error) {
-                console.log("Gagal memuat info server: ", error);
+                console.log("Gagal memuat logo & nama toko: ", error);
             }
 
             // 3. Inisialisasi Quill Editor untuk Artikel
@@ -456,16 +370,24 @@
 
             try {
                 const response = await fetch(SCRIPT_URL);
-                const data = await response.json();
+                const textData = await response.text();
                 
-                if(data.settings && data.settings.adminPin === pin) {
-                    localStorage.setItem('adminLoggedIn', 'true');
-                    document.getElementById('login-section').classList.add('hidden');
-                    document.getElementById('dashboard-section').classList.remove('hidden');
-                    document.getElementById('dashboard-section').classList.add('fade-in');
-                    showMessage('✅ Berhasil Login!');
-                } else {
-                    showMessage('❌ PIN Salah! Silakan cek di Google Sheets tab Settings.', true);
+                try {
+                    const data = JSON.parse(textData);
+                    if(data.settings && data.settings.adminPin === pin) {
+                        localStorage.setItem('adminLoggedIn', 'true');
+                        document.getElementById('login-section').classList.add('hidden');
+                        document.getElementById('dashboard-section').classList.remove('hidden');
+                        document.getElementById('dashboard-section').classList.add('fade-in');
+                        showMessage('✅ Berhasil Login!');
+                        
+                        // Tarik data tabel kalau barusan login
+                        fetchAndRenderTables();
+                    } else {
+                        showMessage('❌ PIN Salah! Silakan cek di Google Sheets tab Settings.', true);
+                    }
+                } catch(e) {
+                    showMessage('❌ Gagal: Cek Console. Pastikan Link Apps Script sudah benar.', true);
                 }
             } catch (error) {
                 showMessage('❌ Gagal terhubung ke server.', true);
@@ -513,32 +435,158 @@
             }, 3000);
         }
 
+        // ===============================================
+        // FITUR BARU: RENDER TABEL & MODE EDIT / HAPUS
+        // ===============================================
+        async function fetchAndRenderTables() {
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const data = await response.json();
+                adminData = data; // Simpan data di memori browser
+                renderAdminLists();
+            } catch(e) {
+                console.log("Gagal memuat list tabel", e);
+            }
+        }
+
+        function renderAdminLists() {
+            // Render Daftar Produk
+            const tBodyProduk = document.getElementById('table-produk-body');
+            if (tBodyProduk && adminData.products) {
+                tBodyProduk.innerHTML = adminData.products.map((p, index) => `
+                    <tr class="border-b hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-3 font-medium text-gray-900">${p.judul}</td>
+                        <td class="px-4 py-3">${p.kategori || '-'}</td>
+                        <td class="px-4 py-3 text-indigo-600 font-semibold">${p.harga}</td>
+                        <td class="px-4 py-3 text-right space-x-3 whitespace-nowrap">
+                            <button type="button" onclick="startEdit('produk', ${index})" class="text-blue-500 hover:text-blue-700 font-bold transition-colors">Edit</button>
+                            <button type="button" onclick="deleteData('produk', ${index})" class="text-red-500 hover:text-red-700 font-bold transition-colors">Hapus</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Render Daftar Artikel
+            const tBodyArtikel = document.getElementById('table-artikel-body');
+            if (tBodyArtikel && adminData.articles) {
+                tBodyArtikel.innerHTML = adminData.articles.map((a, index) => `
+                    <tr class="border-b hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-3 font-medium text-gray-900">${a.judul}</td>
+                        <td class="px-4 py-3">${a.tanggal || '-'}</td>
+                        <td class="px-4 py-3 text-right space-x-3 whitespace-nowrap">
+                            <button type="button" onclick="startEdit('artikel', ${index})" class="text-blue-500 hover:text-blue-700 font-bold transition-colors">Edit</button>
+                            <button type="button" onclick="deleteData('artikel', ${index})" class="text-red-500 hover:text-red-700 font-bold transition-colors">Hapus</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function startEdit(type, index) {
+            // Index + 2 karena Baris 1 itu Header Tabel di Google Sheets
+            editState = { type: type, rowIndex: index + 2 }; 
+            
+            if (type === 'produk') {
+                const p = adminData.products[index];
+                document.getElementById('p-judul').value = p.judul;
+                document.getElementById('p-kategori').value = p.kategori;
+                document.getElementById('p-gambar').value = p.gambar;
+                document.getElementById('p-deskripsi').value = p.deskripsi;
+                document.getElementById('p-harga').value = p.harga;
+                document.getElementById('p-promo').value = p.promo;
+                document.getElementById('p-sales').value = p.linkSales;
+                document.getElementById('p-checkout').value = p.linkCheckout;
+                
+                const btn = document.getElementById('btn-submit-produk');
+                btn.innerHTML = '<span>💾</span> Simpan Perubahan Produk';
+                btn.classList.replace('bg-indigo-600', 'bg-blue-600');
+                document.getElementById('btn-cancel-produk').classList.remove('hidden');
+                
+                // Scroll halus ke atas form
+                document.getElementById('form-produk').scrollIntoView({ behavior: 'smooth', block: 'end' });
+            } else if (type === 'artikel') {
+                const a = adminData.articles[index];
+                document.getElementById('a-judul').value = a.judul;
+                document.getElementById('a-gambar').value = a.gambar;
+                document.getElementById('a-ringkasan').value = a.ringkasan;
+                
+                // Fungsi rahasia agar HTML dari Sheets ter-decode dengan rapi ke dalam Quill
+                const textArea = document.createElement('textarea');
+                textArea.innerHTML = a.isiLengkap || '';
+                quill.root.innerHTML = textArea.value; 
+                
+                const btn = document.getElementById('btn-submit-artikel');
+                btn.innerHTML = '<span>💾</span> Simpan Perubahan Artikel';
+                btn.classList.replace('bg-purple-600', 'bg-blue-600');
+                document.getElementById('btn-cancel-artikel').classList.remove('hidden');
+                
+                document.getElementById('form-artikel').scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }
+        }
+
+        function cancelEdit(type) {
+            editState = { type: null, rowIndex: null };
+            document.getElementById(`form-${type}`).reset();
+            
+            if (type === 'produk') {
+                const btn = document.getElementById('btn-submit-produk');
+                btn.innerHTML = '<span>🚀</span> Terbitkan Produk ke Database';
+                btn.classList.replace('bg-blue-600', 'bg-indigo-600');
+                document.getElementById('btn-cancel-produk').classList.add('hidden');
+            } else if (type === 'artikel') {
+                quill.setContents([]);
+                const btn = document.getElementById('btn-submit-artikel');
+                btn.innerHTML = '<span>📢</span> Terbitkan Artikel ke Database';
+                btn.classList.replace('bg-blue-600', 'bg-purple-600');
+                document.getElementById('btn-cancel-artikel').classList.add('hidden');
+            }
+        }
+
+        async function deleteData(type, index) {
+            if(!confirm(`Yakin ingin menghapus ${type} ini selamanya?`)) return;
+            
+            const btnText = document.getElementById(type === 'produk' ? 'btn-submit-produk' : 'btn-submit-artikel');
+            const oriText = btnText.innerHTML;
+            btnText.innerHTML = '<span class="animate-pulse">Menghapus... ⏳</span>';
+            btnText.disabled = true;
+            
+            const payload = {
+                action: type === 'produk' ? 'hapus_produk' : 'hapus_artikel',
+                rowIndex: index + 2 // Index + 2 karena Baris 1 itu Header Google Sheets
+            };
+
+            try {
+                const response = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showMessage(`✅ ${type} berhasil dihapus!`);
+                    fetchAndRenderTables(); // Tarik data ulang biar tabel ke-update
+                } else {
+                    showMessage(`❌ Gagal: ${result.message}`, true);
+                }
+            } catch (error) {
+                showMessage('❌ Terjadi kesalahan jaringan.', true);
+            } finally {
+                cancelEdit(type);
+                btnText.innerHTML = oriText;
+                btnText.disabled = false;
+            }
+        }
+
         async function submitData(type) {
             let payload = { action: '', data: {} };
-            
-            let btnId = '';
-            if (type === 'settings') btnId = 'btn-submit-settings';
-            else if (type === 'produk') btnId = 'btn-submit-produk';
-            else if (type === 'artikel') btnId = 'btn-submit-artikel';
-
-            const btn = document.getElementById(btnId);
+            const btn = document.getElementById(type === 'produk' ? 'btn-submit-produk' : 'btn-submit-artikel');
             const oriText = btn.innerHTML;
             
             btn.innerHTML = '<span class="animate-pulse">Mengirim Data... ⏳</span>';
             btn.disabled = true;
 
-            if (type === 'settings') {
-                payload.action = 'update_settings';
-                payload.data = {
-                    namaToko: document.getElementById('set-namaToko').value,
-                    logoUrl: document.getElementById('set-logoUrl').value,
-                    warnaUtama: document.getElementById('set-warnaUtama').value,
-                    warnaBackground: document.getElementById('set-warnaBackground').value,
-                    heroTitle: document.getElementById('set-heroTitle').value,
-                    waNumber: document.getElementById('set-waNumber').value
-                };
-            } else if (type === 'produk') {
-                payload.action = 'tambah_produk';
+            if (type === 'produk') {
+                // Cek apakah ini mode Edit atau Tambah Baru
+                payload.action = editState.type === 'produk' ? 'edit_produk' : 'tambah_produk';
+                if(editState.rowIndex) payload.rowIndex = editState.rowIndex;
+
                 payload.data = {
                     judul: document.getElementById('p-judul').value,
                     deskripsi: document.getElementById('p-deskripsi').value,
@@ -558,7 +606,11 @@
                     btn.disabled = false;
                     return;
                 }
-                payload.action = 'tambah_artikel';
+                
+                // Cek apakah ini mode Edit atau Tambah Baru
+                payload.action = editState.type === 'artikel' ? 'edit_artikel' : 'tambah_artikel';
+                if(editState.rowIndex) payload.rowIndex = editState.rowIndex;
+
                 const today = new Date();
                 const options = { day: 'numeric', month: 'long', year: 'numeric' };
                 const tglIndo = today.toLocaleDateString('id-ID', options);
@@ -580,18 +632,14 @@
                 const result = await response.json();
                 
                 if (result.status === 'success') {
-                    let msg = type === 'settings' ? 'Pengaturan Web' : (type === 'produk' ? 'Produk' : 'Artikel');
-                    showMessage(`✅ ${msg} berhasil disimpan ke database!`);
+                    const actionWord = editState.type ? 'diupdate' : 'diterbitkan';
+                    showMessage(`✅ ${type === 'produk' ? 'Produk' : 'Artikel'} berhasil ${actionWord}!`);
                     
-                    if(type === 'settings') {
-                        // Memaksa browser web utama sadar bahwa ada update
-                        localStorage.removeItem('marketplace_data_cache'); 
-                        // Langsung reload admin panel ini juga biar warnanya berasa efeknya
-                        setTimeout(() => window.location.reload(), 1500); 
-                    } else {
-                        document.getElementById(`form-${type}`).reset();
-                        if(type === 'artikel') quill.setContents([]); 
-                    }
+                    document.getElementById(`form-${type}`).reset();
+                    if(type === 'artikel') quill.setContents([]); 
+                    
+                    cancelEdit(type); // Reset form kembali ke mode Tambah Baru
+                    fetchAndRenderTables(); // Tarik data ulang buat update tabel list
                 } else {
                     showMessage(`❌ Gagal: ${result.message}`, true);
                 }
@@ -703,6 +751,7 @@
                     if (result.status === 'success') {
                         showMessage(`✅ ${rowsToUpload.length} Produk berhasil diimpor!`);
                         fileInput.value = ''; 
+                        fetchAndRenderTables(); // Auto update tabel list produk
                     } else {
                         showMessage('❌ Gagal impor: ' + result.message, true);
                     }
