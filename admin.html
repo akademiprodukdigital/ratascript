@@ -54,7 +54,6 @@
     <div id="login-section" class="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 p-4">
         <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-md text-center transform transition-all fade-in">
             
-            <!-- Tempat Ikon Gembok / Logo -->
             <div id="login-logo-container" class="bg-indigo-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner overflow-hidden transition-all duration-300">
                 <svg id="login-logo-svg" class="w-10 h-10 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                 <img id="login-logo-img" src="" alt="Logo Toko" class="hidden w-full h-full object-contain p-2">
@@ -88,23 +87,81 @@
         </header>
 
         <main class="max-w-6xl mx-auto px-6 py-8">
-            <!-- Tabs Navigation -->
             <div class="flex border-b border-gray-300 mb-8 overflow-x-auto no-scrollbar">
-                <button class="tab-btn active px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-produk')">
-                    <span>📦</span> Kelola Produk
+                <button class="tab-btn active px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-pengaturan')">
+                    <span>⚙️</span> Pengaturan Web
+                </button>
+                <button class="tab-btn px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-produk')">
+                    <span>📦</span> Tambah Produk
                 </button>
                 <button class="tab-btn px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-artikel')">
-                    <span>📝</span> Kelola Artikel
+                    <span>📝</span> Tulis Artikel
                 </button>
                 <button class="tab-btn px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-import')">
                     <span>📊</span> Excel (Import/Export)
                 </button>
             </div>
 
-            <div id="tab-produk" class="tab-content block fade-in">
+            <div id="tab-pengaturan" class="tab-content block fade-in">
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
-                    <h2 class="text-2xl font-bold mb-8 text-gray-900 flex items-center gap-3">
-                        <div class="bg-indigo-100 p-2 rounded-lg text-indigo-600">➕</div> Form Produk
+                    <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 p-4 rounded-xl mb-6 flex items-start gap-3">
+                        <span class="text-xl">💡</span>
+                        <p class="text-sm">Merubah pengaturan di sini akan mereset memori Cache di Google Sheets Anda. Pengunjung akan langsung melihat perubahannya.</p>
+                    </div>
+                    
+                    <form id="form-pengaturan" onsubmit="event.preventDefault(); submitData('settings');">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Nama Toko / Brand</label>
+                                <input type="text" id="set-namaToko" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Warna Utama (Bisa 2 Warna = Gradient)</label>
+                                <div class="flex gap-2">
+                                    <input type="color" id="set-warnaColor1" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna 1">
+                                    <input type="color" id="set-warnaColor2" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna 2 (Opsional)">
+                                    <input type="text" id="set-warnaUtama" required placeholder="#4F46E5, #EC4899" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors text-sm">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">URL Gambar Logo</label>
+                                <input type="url" id="set-logoUrl" placeholder="https://..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Warna Background (Bisa 2 Warna = Gradient)</label>
+                                <div class="flex gap-2">
+                                    <input type="color" id="set-bgWarnaColor1" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna Background 1">
+                                    <input type="color" id="set-bgWarnaColor2" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna Background 2 (Opsional)">
+                                    <input type="text" id="set-warnaBackground" required placeholder="#F9FAFB" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors text-sm">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Teks Judul Besar (Hero)</label>
+                                <input type="text" id="set-heroTitle" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Nomor WhatsApp Admin</label>
+                                <input type="number" id="set-waNumber" placeholder="628123..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                            </div>
+                        </div>
+
+                        <button type="submit" id="btn-submit-settings" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-lg flex justify-center items-center gap-2 text-lg">
+                            <span>💾</span> Simpan & Terapkan Pengaturan
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="tab-produk" class="tab-content hidden fade-in">
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+                    <h2 class="text-2xl font-bold mb-8 text-gray-900 flex items-center gap-3" id="title-form-produk">
+                        <div class="bg-indigo-100 p-2 rounded-lg text-indigo-600">➕</div> Upload Produk Baru
                     </h2>
                     <form id="form-produk" onsubmit="event.preventDefault(); submitData('produk');">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -159,12 +216,15 @@
                         <button type="button" id="btn-cancel-produk" onclick="cancelEdit('produk')" class="hidden w-full mt-3 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-300 transition-all">Batalkan Edit</button>
                     </form>
 
-                    <!-- TABEL DAFTAR PRODUK (FITUR BARU) -->
+                    <!-- TABEL DAFTAR PRODUK DENGAN PENCARIAN & PAGINATION -->
                     <div class="mt-12 border-t border-gray-100 pt-8">
-                        <h3 class="text-lg font-bold mb-4 text-gray-900">Daftar Produk Saat Ini</h3>
+                        <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+                            <h3 class="text-lg font-bold text-gray-900">Daftar Produk Saat Ini</h3>
+                            <input type="text" oninput="handleSearch('produk', this.value)" placeholder="🔍 Cari nama produk..." class="w-full md:w-64 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-colors">
+                        </div>
                         <div class="overflow-x-auto rounded-xl border border-gray-200">
                             <table class="w-full text-left text-sm text-gray-500">
-                                <thead class="bg-gray-50 text-gray-700 uppercase">
+                                <thead class="bg-gray-50 text-gray-700 uppercase text-xs">
                                     <tr>
                                         <th class="px-4 py-3 border-b">Judul</th>
                                         <th class="px-4 py-3 border-b">Kategori</th>
@@ -177,14 +237,16 @@
                                 </tbody>
                             </table>
                         </div>
+                        <!-- Container Pagination -->
+                        <div id="pagination-produk" class="mt-4"></div>
                     </div>
                 </div>
             </div>
 
             <div id="tab-artikel" class="tab-content hidden fade-in">
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
-                    <h2 class="text-2xl font-bold mb-8 text-gray-900 flex items-center gap-3">
-                        <div class="bg-purple-100 p-2 rounded-lg text-purple-600">📝</div> Form Artikel
+                    <h2 class="text-2xl font-bold mb-8 text-gray-900 flex items-center gap-3" id="title-form-artikel">
+                        <div class="bg-purple-100 p-2 rounded-lg text-purple-600">📝</div> Tulis Artikel Baru
                     </h2>
                     <form id="form-artikel" onsubmit="event.preventDefault(); submitData('artikel');">
                         <div class="mb-6">
@@ -204,7 +266,6 @@
 
                         <div class="mb-8">
                             <label class="block text-sm font-bold text-gray-700 mb-2">Isi Artikel Lengkap</label>
-                            <!-- Wadah untuk Editor Quill.js -->
                             <div id="editor-container" class="bg-white"></div>
                         </div>
 
@@ -214,12 +275,15 @@
                         <button type="button" id="btn-cancel-artikel" onclick="cancelEdit('artikel')" class="hidden w-full mt-3 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-300 transition-all">Batalkan Edit</button>
                     </form>
 
-                    <!-- TABEL DAFTAR ARTIKEL (FITUR BARU) -->
+                    <!-- TABEL DAFTAR ARTIKEL DENGAN PENCARIAN & PAGINATION -->
                     <div class="mt-12 border-t border-gray-100 pt-8">
-                        <h3 class="text-lg font-bold mb-4 text-gray-900">Daftar Artikel Saat Ini</h3>
+                        <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+                            <h3 class="text-lg font-bold text-gray-900">Daftar Artikel Saat Ini</h3>
+                            <input type="text" oninput="handleSearch('artikel', this.value)" placeholder="🔍 Cari judul artikel..." class="w-full md:w-64 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none transition-colors">
+                        </div>
                         <div class="overflow-x-auto rounded-xl border border-gray-200">
                             <table class="w-full text-left text-sm text-gray-500">
-                                <thead class="bg-gray-50 text-gray-700 uppercase">
+                                <thead class="bg-gray-50 text-gray-700 uppercase text-xs">
                                     <tr>
                                         <th class="px-4 py-3 border-b">Judul Artikel</th>
                                         <th class="px-4 py-3 border-b">Tanggal</th>
@@ -231,13 +295,14 @@
                                 </tbody>
                             </table>
                         </div>
+                        <!-- Container Pagination -->
+                        <div id="pagination-artikel" class="mt-4"></div>
                     </div>
                 </div>
             </div>
 
             <div id="tab-import" class="tab-content hidden fade-in">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Export Data -->
                     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 flex flex-col items-center text-center">
                         <div class="bg-emerald-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
                             <span class="text-3xl">📥</span>
@@ -250,7 +315,6 @@
                         </button>
                     </div>
 
-                    <!-- Import Data -->
                     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 flex flex-col items-center text-center">
                         <div class="bg-blue-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
                             <span class="text-3xl">📤</span>
@@ -280,7 +344,6 @@
         </main>
     </div>
 
-    <!-- Notification Toast -->
     <div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-8 py-4 rounded-2xl shadow-2xl opacity-0 translate-y-6 pointer-events-none z-[100] text-sm font-bold flex items-center gap-3 transition-all duration-300">
         <span id="toast-msg">Notifikasi</span>
     </div>
@@ -289,54 +352,126 @@
     <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 
     <script>
-        // PENTING: GANTI SCRIPT_URL DI BAWAH DENGAN URL DEPLOY TERBARU!
+        // MASUKKAN URL APP SCRIPT ANDA DI SINI!
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNwl9USTq7SywZbFh0P1zHEOLaA9ewgl53AliV6-BAOVlK3rvEqmXbVKa0IMad8KaT/exec';
         
         let quill; // Variabel global untuk Quill
-        let adminData = { products: [], articles: [] }; // Menyimpan data dari server untuk fitur Edit
-        let editState = { type: null, rowIndex: null }; // Melacak form sedang dalam mode Edit atau Tambah
+        let adminData = { products: [], articles: [] }; 
+        let editState = { type: null, rowIndex: null }; 
+
+        // State untuk Pagination & Pencarian
+        let searchProduk = '';
+        let pageProduk = 1;
+        const limitProduk = 10; // Jumlah produk per halaman
+
+        let searchArtikel = '';
+        let pageArtikel = 1;
+        const limitArtikel = 10; // Jumlah artikel per halaman
 
         document.addEventListener("DOMContentLoaded", async function() {
+            
+            // --- LOGIKA GRADIENT (WARNA UTAMA) ---
+            const inputColor1 = document.getElementById('set-warnaColor1');
+            const inputColor2 = document.getElementById('set-warnaColor2');
+            const inputText = document.getElementById('set-warnaUtama');
+
+            if (inputColor1 && inputColor2 && inputText) {
+                inputColor1.addEventListener('input', function() {
+                    const vals = inputText.value.split(',').map(v => v.trim());
+                    if(vals.length > 1 && vals[1] !== '') {
+                        inputText.value = `${inputColor1.value.toUpperCase()}, ${vals[1]}`;
+                    } else {
+                        inputText.value = inputColor1.value.toUpperCase();
+                    }
+                });
+                inputColor2.addEventListener('input', function() {
+                    const vals = inputText.value.split(',').map(v => v.trim());
+                    const firstColor = (vals[0] && vals[0] !== '') ? vals[0] : inputColor1.value.toUpperCase();
+                    inputText.value = `${firstColor}, ${inputColor2.value.toUpperCase()}`;
+                });
+                inputText.addEventListener('input', function(e) {
+                    const vals = e.target.value.split(',').map(v => v.trim());
+                    if(vals[0] && /^#[0-9A-F]{6}$/i.test(vals[0])) inputColor1.value = vals[0];
+                    if(vals[1] && /^#[0-9A-F]{6}$/i.test(vals[1])) inputColor2.value = vals[1];
+                });
+            }
+
+            // --- LOGIKA GRADIENT (WARNA BACKGROUND) ---
+            const bgInputColor1 = document.getElementById('set-bgWarnaColor1');
+            const bgInputColor2 = document.getElementById('set-bgWarnaColor2');
+            const bgInputText = document.getElementById('set-warnaBackground');
+
+            if (bgInputColor1 && bgInputColor2 && bgInputText) {
+                bgInputColor1.addEventListener('input', function() {
+                    const vals = bgInputText.value.split(',').map(v => v.trim());
+                    if(vals.length > 1 && vals[1] !== '') {
+                        bgInputText.value = `${bgInputColor1.value.toUpperCase()}, ${vals[1]}`;
+                    } else {
+                        bgInputText.value = bgInputColor1.value.toUpperCase();
+                    }
+                });
+                bgInputColor2.addEventListener('input', function() {
+                    const vals = bgInputText.value.split(',').map(v => v.trim());
+                    const firstColor = (vals[0] && vals[0] !== '') ? vals[0] : bgInputColor1.value.toUpperCase();
+                    bgInputText.value = `${firstColor}, ${bgInputColor2.value.toUpperCase()}`;
+                });
+                bgInputText.addEventListener('input', function(e) {
+                    const vals = e.target.value.split(',').map(v => v.trim());
+                    if(vals[0] && /^#[0-9A-F]{6}$/i.test(vals[0])) bgInputColor1.value = vals[0];
+                    if(vals[1] && /^#[0-9A-F]{6}$/i.test(vals[1])) bgInputColor2.value = vals[1];
+                });
+            }
+
             // 1. Cek status login
             if(localStorage.getItem('adminLoggedIn') === 'true') {
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('dashboard-section').classList.remove('hidden');
                 document.getElementById('dashboard-section').classList.add('fade-in');
-                
-                // Ambil data untuk tabel di bawah form
                 fetchAndRenderTables();
             }
 
-            // 2. Fetch Logo & Judul dari Google Sheets (Otomatis)
+            // 2. Fetch Info dari Google Sheets (Otomatis)
             try {
                 const response = await fetch(SCRIPT_URL);
-                const textData = await response.text();
+                const data = await response.json();
                 
-                try {
-                    const data = JSON.parse(textData);
-                    if (data.settings) {
-                        // Update Logo di kerangka gembok
-                        if (data.settings.logoUrl) {
-                            const logoImg = document.getElementById('login-logo-img');
-                            const logoSvg = document.getElementById('login-logo-svg');
-                            const logoContainer = document.getElementById('login-logo-container');
-                            
-                            logoImg.src = data.settings.logoUrl;
-                            logoImg.classList.remove('hidden');
-                            logoSvg.classList.add('hidden');
-                            // Hilangkan background ungu bulat agar logo tampil bersih
-                            logoContainer.classList.remove('bg-indigo-100', 'shadow-inner'); 
-                        }
-                        // Update Judul "Panel Admin" jadi "Admin NamaToko"
-                        if (data.settings.namaToko) {
-                            document.getElementById('login-title').innerText = "Admin " + data.settings.namaToko;
-                        }
+                if (data.settings) {
+                    if (data.settings.logoUrl) {
+                        const logoImg = document.getElementById('login-logo-img');
+                        const logoSvg = document.getElementById('login-logo-svg');
+                        const logoContainer = document.getElementById('login-logo-container');
+                        
+                        logoImg.src = data.settings.logoUrl;
+                        logoImg.classList.remove('hidden');
+                        logoSvg.classList.add('hidden');
+                        logoContainer.classList.remove('bg-indigo-100', 'shadow-inner'); 
                     }
-                } catch(e) {
-                    console.log("Response bukan JSON. Abaikan logo update.");
+                    if (data.settings.namaToko) {
+                        document.getElementById('login-title').innerText = "Admin " + data.settings.namaToko;
+                        if(document.getElementById('set-namaToko')) document.getElementById('set-namaToko').value = data.settings.namaToko;
+                    }
+                    if(document.getElementById('set-logoUrl')) document.getElementById('set-logoUrl').value = data.settings.logoUrl || '';
+                    if(document.getElementById('set-heroTitle')) document.getElementById('set-heroTitle').value = data.settings.heroTitle || '';
+                    if(document.getElementById('set-waNumber')) document.getElementById('set-waNumber').value = data.settings.waNumber || '';
+                    
+                    if(document.getElementById('set-warnaUtama')) {
+                        const wUtama = data.settings.warnaUtama || '#4F46E5';
+                        document.getElementById('set-warnaUtama').value = wUtama;
+                        const vals = wUtama.split(',').map(v => v.trim());
+                        if(vals[0] && /^#[0-9A-F]{6}$/i.test(vals[0])) document.getElementById('set-warnaColor1').value = vals[0];
+                        if(vals[1] && /^#[0-9A-F]{6}$/i.test(vals[1])) document.getElementById('set-warnaColor2').value = vals[1];
+                    }
+
+                    if(document.getElementById('set-warnaBackground')) {
+                        const wBg = data.settings.warnaBackground || '#F9FAFB';
+                        document.getElementById('set-warnaBackground').value = wBg;
+                        const valsBg = wBg.split(',').map(v => v.trim());
+                        if(valsBg[0] && /^#[0-9A-F]{6}$/i.test(valsBg[0])) document.getElementById('set-bgWarnaColor1').value = valsBg[0];
+                        if(valsBg[1] && /^#[0-9A-F]{6}$/i.test(valsBg[1])) document.getElementById('set-bgWarnaColor2').value = valsBg[1];
+                    }
                 }
             } catch (error) {
-                console.log("Gagal memuat logo & nama toko: ", error);
+                console.log("Gagal memuat info server: ", error);
             }
 
             // 3. Inisialisasi Quill Editor untuk Artikel
@@ -370,24 +505,17 @@
 
             try {
                 const response = await fetch(SCRIPT_URL);
-                const textData = await response.text();
+                const data = await response.json();
                 
-                try {
-                    const data = JSON.parse(textData);
-                    if(data.settings && data.settings.adminPin === pin) {
-                        localStorage.setItem('adminLoggedIn', 'true');
-                        document.getElementById('login-section').classList.add('hidden');
-                        document.getElementById('dashboard-section').classList.remove('hidden');
-                        document.getElementById('dashboard-section').classList.add('fade-in');
-                        showMessage('✅ Berhasil Login!');
-                        
-                        // Tarik data tabel kalau barusan login
-                        fetchAndRenderTables();
-                    } else {
-                        showMessage('❌ PIN Salah! Silakan cek di Google Sheets tab Settings.', true);
-                    }
-                } catch(e) {
-                    showMessage('❌ Gagal: Cek Console. Pastikan Link Apps Script sudah benar.', true);
+                if(data.settings && data.settings.adminPin === pin) {
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    document.getElementById('login-section').classList.add('hidden');
+                    document.getElementById('dashboard-section').classList.remove('hidden');
+                    document.getElementById('dashboard-section').classList.add('fade-in');
+                    showMessage('✅ Berhasil Login!');
+                    fetchAndRenderTables();
+                } else {
+                    showMessage('❌ PIN Salah! Silakan cek di Google Sheets tab Settings.', true);
                 }
             } catch (error) {
                 showMessage('❌ Gagal terhubung ke server.', true);
@@ -435,55 +563,134 @@
             }, 3000);
         }
 
-        // ===============================================
-        // FITUR BARU: RENDER TABEL & MODE EDIT / HAPUS
-        // ===============================================
         async function fetchAndRenderTables() {
             try {
                 const response = await fetch(SCRIPT_URL);
                 const data = await response.json();
-                adminData = data; // Simpan data di memori browser
+                adminData = data; 
                 renderAdminLists();
             } catch(e) {
                 console.log("Gagal memuat list tabel", e);
             }
         }
 
+        function handleSearch(type, value) {
+            if (type === 'produk') {
+                searchProduk = value.toLowerCase();
+                pageProduk = 1;
+            } else if (type === 'artikel') {
+                searchArtikel = value.toLowerCase();
+                pageArtikel = 1;
+            }
+            renderAdminLists();
+        }
+
+        function setPage(type, pageNum) {
+            if (type === 'produk') pageProduk = pageNum;
+            else if (type === 'artikel') pageArtikel = pageNum;
+            renderAdminLists();
+        }
+
+        function createPaginationHTML(totalItems, limit, currentPage, type) {
+            const totalPages = Math.ceil(totalItems / limit);
+            if (totalPages <= 1) return '';
+
+            let html = '<div class="flex gap-2 justify-end mt-4">';
+            for (let i = 1; i <= totalPages; i++) {
+                const activeClass = i === currentPage 
+                    ? 'bg-indigo-600 text-white border-indigo-600 font-bold shadow' 
+                    : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50';
+                html += `<button onclick="setPage('${type}', ${i})" class="px-3 py-1 text-sm border rounded-md transition-all ${activeClass}">${i}</button>`;
+            }
+            html += '</div>';
+            return html;
+        }
+
         function renderAdminLists() {
-            // Render Daftar Produk
+            // --- RENDER PRODUK DENGAN FILTER & PAGINATION ---
             const tBodyProduk = document.getElementById('table-produk-body');
+            const containerPaginProduk = document.getElementById('pagination-produk');
+            
             if (tBodyProduk && adminData.products) {
-                tBodyProduk.innerHTML = adminData.products.map((p, index) => `
-                    <tr class="border-b hover:bg-gray-50 transition-colors">
-                        <td class="px-4 py-3 font-medium text-gray-900">${p.judul}</td>
-                        <td class="px-4 py-3">${p.kategori || '-'}</td>
-                        <td class="px-4 py-3 text-indigo-600 font-semibold">${p.harga}</td>
-                        <td class="px-4 py-3 text-right space-x-3 whitespace-nowrap">
-                            <button type="button" onclick="startEdit('produk', ${index})" class="text-blue-500 hover:text-blue-700 font-bold transition-colors">Edit</button>
-                            <button type="button" onclick="deleteData('produk', ${index})" class="text-red-500 hover:text-red-700 font-bold transition-colors">Hapus</button>
-                        </td>
-                    </tr>
-                `).join('');
+                // 1. Sisipkan index asli supaya Edit/Hapus gak salah alamat
+                let filteredProduk = adminData.products.map((p, index) => ({ ...p, realIndex: index }));
+                
+                // 2. Filter berdasarkan search
+                if (searchProduk !== '') {
+                    filteredProduk = filteredProduk.filter(p => 
+                        (p.judul && p.judul.toLowerCase().includes(searchProduk)) || 
+                        (p.kategori && p.kategori.toLowerCase().includes(searchProduk))
+                    );
+                }
+
+                // 3. Slice untuk pagination
+                const totalP = filteredProduk.length;
+                const totalPagesP = Math.ceil(totalP / limitProduk);
+                if (pageProduk > totalPagesP && totalPagesP > 0) pageProduk = totalPagesP;
+                
+                const startP = (pageProduk - 1) * limitProduk;
+                const paginatedProduk = filteredProduk.slice(startP, startP + limitProduk);
+
+                // 4. Render ke HTML
+                if (paginatedProduk.length === 0) {
+                    tBodyProduk.innerHTML = `<tr><td colspan="4" class="px-4 py-6 text-center text-gray-400">Tidak ada produk yang ditemukan.</td></tr>`;
+                    containerPaginProduk.innerHTML = '';
+                } else {
+                    tBodyProduk.innerHTML = paginatedProduk.map(p => `
+                        <tr class="border-b hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-3 font-medium text-gray-900">${p.judul}</td>
+                            <td class="px-4 py-3">${p.kategori || '-'}</td>
+                            <td class="px-4 py-3 text-indigo-600 font-semibold">${p.harga}</td>
+                            <td class="px-4 py-3 text-right space-x-3 whitespace-nowrap">
+                                <button type="button" onclick="startEdit('produk', ${p.realIndex})" class="text-blue-500 hover:text-blue-700 font-bold transition-colors">Edit</button>
+                                <button type="button" onclick="deleteData('produk', ${p.realIndex})" class="text-red-500 hover:text-red-700 font-bold transition-colors">Hapus</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                    containerPaginProduk.innerHTML = createPaginationHTML(totalP, limitProduk, pageProduk, 'produk');
+                }
             }
 
-            // Render Daftar Artikel
+            // --- RENDER ARTIKEL DENGAN FILTER & PAGINATION ---
             const tBodyArtikel = document.getElementById('table-artikel-body');
+            const containerPaginArtikel = document.getElementById('pagination-artikel');
+
             if (tBodyArtikel && adminData.articles) {
-                tBodyArtikel.innerHTML = adminData.articles.map((a, index) => `
-                    <tr class="border-b hover:bg-gray-50 transition-colors">
-                        <td class="px-4 py-3 font-medium text-gray-900">${a.judul}</td>
-                        <td class="px-4 py-3">${a.tanggal || '-'}</td>
-                        <td class="px-4 py-3 text-right space-x-3 whitespace-nowrap">
-                            <button type="button" onclick="startEdit('artikel', ${index})" class="text-blue-500 hover:text-blue-700 font-bold transition-colors">Edit</button>
-                            <button type="button" onclick="deleteData('artikel', ${index})" class="text-red-500 hover:text-red-700 font-bold transition-colors">Hapus</button>
-                        </td>
-                    </tr>
-                `).join('');
+                let filteredArtikel = adminData.articles.map((a, index) => ({ ...a, realIndex: index }));
+                
+                if (searchArtikel !== '') {
+                    filteredArtikel = filteredArtikel.filter(a => 
+                        a.judul && a.judul.toLowerCase().includes(searchArtikel)
+                    );
+                }
+
+                const totalA = filteredArtikel.length;
+                const totalPagesA = Math.ceil(totalA / limitArtikel);
+                if (pageArtikel > totalPagesA && totalPagesA > 0) pageArtikel = totalPagesA;
+                
+                const startA = (pageArtikel - 1) * limitArtikel;
+                const paginatedArtikel = filteredArtikel.slice(startA, startA + limitArtikel);
+
+                if (paginatedArtikel.length === 0) {
+                    tBodyArtikel.innerHTML = `<tr><td colspan="3" class="px-4 py-6 text-center text-gray-400">Tidak ada artikel yang ditemukan.</td></tr>`;
+                    containerPaginArtikel.innerHTML = '';
+                } else {
+                    tBodyArtikel.innerHTML = paginatedArtikel.map(a => `
+                        <tr class="border-b hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-3 font-medium text-gray-900">${a.judul}</td>
+                            <td class="px-4 py-3">${a.tanggal || '-'}</td>
+                            <td class="px-4 py-3 text-right space-x-3 whitespace-nowrap">
+                                <button type="button" onclick="startEdit('artikel', ${a.realIndex})" class="text-blue-500 hover:text-blue-700 font-bold transition-colors">Edit</button>
+                                <button type="button" onclick="deleteData('artikel', ${a.realIndex})" class="text-red-500 hover:text-red-700 font-bold transition-colors">Hapus</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                    containerPaginArtikel.innerHTML = createPaginationHTML(totalA, limitArtikel, pageArtikel, 'artikel');
+                }
             }
         }
 
         function startEdit(type, index) {
-            // Index + 2 karena Baris 1 itu Header Tabel di Google Sheets
             editState = { type: type, rowIndex: index + 2 }; 
             
             if (type === 'produk') {
@@ -497,12 +704,13 @@
                 document.getElementById('p-sales').value = p.linkSales;
                 document.getElementById('p-checkout').value = p.linkCheckout;
                 
+                document.getElementById('title-form-produk').innerHTML = '<div class="bg-blue-100 p-2 rounded-lg text-blue-600">✏️</div> Update Produk Ini';
                 const btn = document.getElementById('btn-submit-produk');
                 btn.innerHTML = '<span>💾</span> Simpan Perubahan Produk';
                 btn.classList.replace('bg-indigo-600', 'bg-blue-600');
+                btn.classList.replace('hover:bg-indigo-700', 'hover:bg-blue-700');
                 document.getElementById('btn-cancel-produk').classList.remove('hidden');
                 
-                // Scroll halus ke atas form
                 document.getElementById('form-produk').scrollIntoView({ behavior: 'smooth', block: 'end' });
             } else if (type === 'artikel') {
                 const a = adminData.articles[index];
@@ -510,14 +718,15 @@
                 document.getElementById('a-gambar').value = a.gambar;
                 document.getElementById('a-ringkasan').value = a.ringkasan;
                 
-                // Fungsi rahasia agar HTML dari Sheets ter-decode dengan rapi ke dalam Quill
-                const textArea = document.createElement('textarea');
-                textArea.innerHTML = a.isiLengkap || '';
-                quill.root.innerHTML = textArea.value; 
+                // Gunakan fitur paste HTML agar quill mengenali tag html dan tidak hancur
+                let contentText = a.isiLengkap || a.ringkasan || "Tidak ada isi artikel.";
+                quill.clipboard.dangerouslyPasteHTML(contentText);
                 
+                document.getElementById('title-form-artikel').innerHTML = '<div class="bg-blue-100 p-2 rounded-lg text-blue-600">✏️</div> Update Artikel Ini';
                 const btn = document.getElementById('btn-submit-artikel');
                 btn.innerHTML = '<span>💾</span> Simpan Perubahan Artikel';
                 btn.classList.replace('bg-purple-600', 'bg-blue-600');
+                btn.classList.replace('hover:bg-purple-700', 'hover:bg-blue-700');
                 document.getElementById('btn-cancel-artikel').classList.remove('hidden');
                 
                 document.getElementById('form-artikel').scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -529,15 +738,19 @@
             document.getElementById(`form-${type}`).reset();
             
             if (type === 'produk') {
+                document.getElementById('title-form-produk').innerHTML = '<div class="bg-indigo-100 p-2 rounded-lg text-indigo-600">➕</div> Upload Produk Baru';
                 const btn = document.getElementById('btn-submit-produk');
                 btn.innerHTML = '<span>🚀</span> Terbitkan Produk ke Database';
                 btn.classList.replace('bg-blue-600', 'bg-indigo-600');
+                btn.classList.replace('hover:bg-blue-700', 'hover:bg-indigo-700');
                 document.getElementById('btn-cancel-produk').classList.add('hidden');
             } else if (type === 'artikel') {
                 quill.setContents([]);
+                document.getElementById('title-form-artikel').innerHTML = '<div class="bg-purple-100 p-2 rounded-lg text-purple-600">📝</div> Tulis Artikel Baru';
                 const btn = document.getElementById('btn-submit-artikel');
                 btn.innerHTML = '<span>📢</span> Terbitkan Artikel ke Database';
                 btn.classList.replace('bg-blue-600', 'bg-purple-600');
+                btn.classList.replace('hover:bg-blue-700', 'hover:bg-purple-700');
                 document.getElementById('btn-cancel-artikel').classList.add('hidden');
             }
         }
@@ -545,10 +758,11 @@
         async function deleteData(type, index) {
             if(!confirm(`Yakin ingin menghapus ${type} ini selamanya?`)) return;
             
-            const btnText = document.getElementById(type === 'produk' ? 'btn-submit-produk' : 'btn-submit-artikel');
-            const oriText = btnText.innerHTML;
-            btnText.innerHTML = '<span class="animate-pulse">Menghapus... ⏳</span>';
-            btnText.disabled = true;
+            let btnId = type === 'produk' ? 'btn-submit-produk' : 'btn-submit-artikel';
+            const btn = document.getElementById(btnId);
+            const oriText = btn.innerHTML;
+            btn.innerHTML = '<span class="animate-pulse">Menghapus... ⏳</span>';
+            btn.disabled = true;
             
             const payload = {
                 action: type === 'produk' ? 'hapus_produk' : 'hapus_artikel',
@@ -569,21 +783,36 @@
                 showMessage('❌ Terjadi kesalahan jaringan.', true);
             } finally {
                 cancelEdit(type);
-                btnText.innerHTML = oriText;
-                btnText.disabled = false;
+                btn.innerHTML = oriText;
+                btn.disabled = false;
             }
         }
 
         async function submitData(type) {
             let payload = { action: '', data: {} };
-            const btn = document.getElementById(type === 'produk' ? 'btn-submit-produk' : 'btn-submit-artikel');
+            
+            let btnId = '';
+            if (type === 'settings') btnId = 'btn-submit-settings';
+            else if (type === 'produk') btnId = 'btn-submit-produk';
+            else if (type === 'artikel') btnId = 'btn-submit-artikel';
+
+            const btn = document.getElementById(btnId);
             const oriText = btn.innerHTML;
             
             btn.innerHTML = '<span class="animate-pulse">Mengirim Data... ⏳</span>';
             btn.disabled = true;
 
-            if (type === 'produk') {
-                // Cek apakah ini mode Edit atau Tambah Baru
+            if (type === 'settings') {
+                payload.action = 'update_settings';
+                payload.data = {
+                    namaToko: document.getElementById('set-namaToko').value,
+                    logoUrl: document.getElementById('set-logoUrl').value,
+                    warnaUtama: document.getElementById('set-warnaUtama').value,
+                    warnaBackground: document.getElementById('set-warnaBackground').value,
+                    heroTitle: document.getElementById('set-heroTitle').value,
+                    waNumber: document.getElementById('set-waNumber').value
+                };
+            } else if (type === 'produk') {
                 payload.action = editState.type === 'produk' ? 'edit_produk' : 'tambah_produk';
                 if(editState.rowIndex) payload.rowIndex = editState.rowIndex;
 
@@ -607,7 +836,6 @@
                     return;
                 }
                 
-                // Cek apakah ini mode Edit atau Tambah Baru
                 payload.action = editState.type === 'artikel' ? 'edit_artikel' : 'tambah_artikel';
                 if(editState.rowIndex) payload.rowIndex = editState.rowIndex;
 
@@ -632,14 +860,19 @@
                 const result = await response.json();
                 
                 if (result.status === 'success') {
-                    const actionWord = editState.type ? 'diupdate' : 'diterbitkan';
-                    showMessage(`✅ ${type === 'produk' ? 'Produk' : 'Artikel'} berhasil ${actionWord}!`);
+                    let msg = type === 'settings' ? 'Pengaturan Web' : (type === 'produk' ? 'Produk' : 'Artikel');
+                    let actionWord = editState.type ? 'diupdate' : 'disimpan';
+                    if(type === 'settings') actionWord = 'disimpan';
                     
-                    document.getElementById(`form-${type}`).reset();
-                    if(type === 'artikel') quill.setContents([]); 
+                    showMessage(`✅ ${msg} berhasil ${actionWord} ke database!`);
                     
-                    cancelEdit(type); // Reset form kembali ke mode Tambah Baru
-                    fetchAndRenderTables(); // Tarik data ulang buat update tabel list
+                    if(type === 'settings') {
+                        localStorage.removeItem('marketplace_data_cache'); 
+                        setTimeout(() => window.location.reload(), 1500); 
+                    } else {
+                        cancelEdit(type);
+                        fetchAndRenderTables(); 
+                    }
                 } else {
                     showMessage(`❌ Gagal: ${result.message}`, true);
                 }
@@ -751,7 +984,7 @@
                     if (result.status === 'success') {
                         showMessage(`✅ ${rowsToUpload.length} Produk berhasil diimpor!`);
                         fileInput.value = ''; 
-                        fetchAndRenderTables(); // Auto update tabel list produk
+                        fetchAndRenderTables(); 
                     } else {
                         showMessage('❌ Gagal impor: ' + result.message, true);
                     }
