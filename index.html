@@ -666,8 +666,19 @@
                 modalImg.classList.remove('hidden');
             }
 
-            let contentText = article.isiLengkap || article.ringkasan || "Tidak ada isi artikel.";
-            document.getElementById('modal-content').innerHTML = contentText;
+            // Fungsi sakti untuk menerjemahkan HTML rusak (&lt;p&gt;) jadi HTML asli (<p>)
+            function decodeHTMLEntities(text) {
+                const textArea = document.createElement('textarea');
+                textArea.innerHTML = text;
+                return textArea.value;
+            }
+
+            let rawContent = article.isiLengkap || article.ringkasan || "Tidak ada isi artikel.";
+            
+            // Terapkan fungsi penerjemah ke isi artikel
+            let cleanHTML = decodeHTMLEntities(rawContent);
+
+            document.getElementById('modal-content').innerHTML = cleanHTML;
 
             const modal = document.getElementById('article-modal');
             modal.classList.remove('hidden');
@@ -675,8 +686,11 @@
         }
 
         function closeArticleModal() {
+            // Sembunyikan Modal
             const modal = document.getElementById('article-modal');
             modal.classList.add('hidden');
+            
+            // Buka kembali scroll background
             document.body.style.overflow = 'auto';
         }
 
