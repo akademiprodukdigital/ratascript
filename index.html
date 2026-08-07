@@ -614,7 +614,9 @@
 
             // Isi konten artikel (ubah newline jadi <br> agar rapi)
             let contentText = article.isiLengkap || article.ringkasan || "Tidak ada isi artikel.";
-            document.getElementById('modal-content').innerText = contentText;
+            
+            // UBAH DI SINI: Pakai innerHTML supaya tag <a href=""> dan format teks dari editor dirender dengan benar
+            document.getElementById('modal-content').innerHTML = contentText;
 
             // Munculkan Modal
             const modal = document.getElementById('article-modal');
