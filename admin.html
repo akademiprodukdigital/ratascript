@@ -87,16 +87,15 @@
         </header>
 
         <main class="max-w-6xl mx-auto px-6 py-8">
-            <!-- Tabs Navigation -->
             <div class="flex border-b border-gray-300 mb-8 overflow-x-auto no-scrollbar">
                 <button class="tab-btn active px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-pengaturan')">
                     <span>⚙️</span> Pengaturan Web
                 </button>
                 <button class="tab-btn px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-produk')">
-                    <span>📦</span> Kelola Produk
+                    <span>📦</span> Tambah Produk
                 </button>
                 <button class="tab-btn px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-artikel')">
-                    <span>📝</span> Kelola Artikel
+                    <span>📝</span> Tulis Artikel
                 </button>
                 <button class="tab-btn px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-import')">
                     <span>📊</span> Excel (Import/Export)
@@ -111,18 +110,20 @@
                     </div>
                     
                     <form id="form-pengaturan" onsubmit="event.preventDefault(); submitData('settings');">
+                        
                         <!-- BAGIAN HEADER & UMUM -->
                         <h3 class="text-lg font-bold text-gray-900 border-b pb-2 mb-4">Pengaturan Header & Umum</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">Nama Toko / Brand</label>
                                 <input type="text" id="set-namaToko" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                                <p class="text-xs text-gray-500 mt-1">💡 Dukung HTML. Cth Gradient: &lt;span style="background: linear-gradient(to right, #f00, #00f); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"&gt;NamaToko&lt;/span&gt;</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-2">Warna Utama (Header & Tombol)</label>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Warna Utama (Bisa 2 Warna = Gradient)</label>
                                 <div class="flex gap-2">
                                     <input type="color" id="set-warnaColor1" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna 1">
-                                    <input type="color" id="set-warnaColor2" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna 2 (Opsional untuk Gradient)">
+                                    <input type="color" id="set-warnaColor2" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna 2 (Opsional)">
                                     <input type="text" id="set-warnaUtama" required placeholder="#4F46E5, #EC4899" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors text-sm">
                                 </div>
                             </div>
@@ -134,19 +135,50 @@
                                 <input type="url" id="set-logoUrl" placeholder="https://..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
                             </div>
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-2">Warna Background (Konten Web)</label>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Warna Background (Bisa 2 Warna = Gradient)</label>
                                 <div class="flex gap-2">
                                     <input type="color" id="set-bgWarnaColor1" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna Background 1">
-                                    <input type="color" id="set-bgWarnaColor2" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna Background 2 (Opsional untuk Gradient)">
+                                    <input type="color" id="set-bgWarnaColor2" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna Background 2 (Opsional)">
                                     <input type="text" id="set-warnaBackground" required placeholder="#F9FAFB" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors text-sm">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Jenis Font Utama (Google Fonts)</label>
+                                <select id="set-fontFamily" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                                    <option value="Inter">Inter (Modern & Clean)</option>
+                                    <option value="Poppins">Poppins (Bulat & Elegan)</option>
+                                    <option value="Montserrat">Montserrat (Tegas & Profesional)</option>
+                                    <option value="Playfair Display">Playfair Display (Klasik & Mewah)</option>
+                                    <option value="Plus Jakarta Sans">Plus Jakarta Sans (Kekinian)</option>
+                                    <option value="Roboto">Roboto (Simpel & Cepat)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Ukuran Font Judul Hero (Angka pixel, Cth: 48)</label>
+                                <input type="number" id="set-heroFontSize" placeholder="Biarkan kosong untuk ukuran bawaan" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">Teks Judul Besar (Hero Homepage)</label>
-                                <input type="text" id="set-heroTitle" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                                <textarea id="set-heroTitle" rows="2" placeholder="Ketik judul besar di sini..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors"></textarea>
+                                <p class="text-xs text-gray-500 mt-1">💡 Dukung HTML. Cth Gradient: &lt;span style="background: linear-gradient(to right, #4F46E5, #EC4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"&gt;Judul&lt;/span&gt;</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Sub-Judul / Deskripsi Singkat Hero</label>
+                                <textarea id="set-heroSubtitle" rows="2" placeholder="Deskripsi di bawah judul besar..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Background Gambar Hero (Opsional)</label>
+                                <input type="url" id="set-heroBgImage" placeholder="https://..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                                <p class="text-xs text-gray-500 mt-1">Kosongkan jika hanya ingin warna solid/gradient.</p>
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">Nomor WhatsApp Admin</label>
@@ -254,7 +286,6 @@
                         <button type="button" id="btn-cancel-produk" onclick="cancelEdit('produk')" class="hidden w-full mt-3 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-300 transition-all">Batalkan Edit</button>
                     </form>
 
-                    <!-- TABEL DAFTAR PRODUK DENGAN PENCARIAN & PAGINATION -->
                     <div class="mt-12 border-t border-gray-100 pt-8">
                         <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
                             <h3 class="text-lg font-bold text-gray-900">Daftar Produk Saat Ini</h3>
@@ -313,7 +344,6 @@
                         <button type="button" id="btn-cancel-artikel" onclick="cancelEdit('artikel')" class="hidden w-full mt-3 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-300 transition-all">Batalkan Edit</button>
                     </form>
 
-                    <!-- TABEL DAFTAR ARTIKEL DENGAN PENCARIAN & PAGINATION -->
                     <div class="mt-12 border-t border-gray-100 pt-8">
                         <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
                             <h3 class="text-lg font-bold text-gray-900">Daftar Artikel Saat Ini</h3>
@@ -341,7 +371,6 @@
 
             <div id="tab-import" class="tab-content hidden fade-in">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Export Data -->
                     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 flex flex-col items-center text-center">
                         <div class="bg-emerald-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
                             <span class="text-3xl">📥</span>
@@ -354,7 +383,6 @@
                         </button>
                     </div>
 
-                    <!-- Import Data -->
                     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 flex flex-col items-center text-center">
                         <div class="bg-blue-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
                             <span class="text-3xl">📤</span>
@@ -384,7 +412,6 @@
         </main>
     </div>
 
-    <!-- Notification Toast -->
     <div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-8 py-4 rounded-2xl shadow-2xl opacity-0 translate-y-6 pointer-events-none z-[100] text-sm font-bold flex items-center gap-3 transition-all duration-300">
         <span id="toast-msg">Notifikasi</span>
     </div>
@@ -403,11 +430,11 @@
         // State untuk Pagination & Pencarian
         let searchProduk = '';
         let pageProduk = 1;
-        const limitProduk = 10; 
+        const limitProduk = 10; // Jumlah produk per halaman
 
         let searchArtikel = '';
         let pageArtikel = 1;
-        const limitArtikel = 10; 
+        const limitArtikel = 10; // Jumlah artikel per halaman
 
         // Setup Event Listener Gradient Helper
         function bindGradientColor(inputColor1, inputColor2, inputText) {
@@ -454,7 +481,6 @@
                 const data = await response.json();
                 
                 if (data.settings) {
-                    // Update Logo
                     if (data.settings.logoUrl) {
                         const logoImg = document.getElementById('login-logo-img');
                         const logoSvg = document.getElementById('login-logo-svg');
@@ -466,13 +492,17 @@
                         logoContainer.classList.remove('bg-indigo-100', 'shadow-inner'); 
                     }
                     if (data.settings.namaToko) {
-                        document.getElementById('login-title').innerText = "Admin " + data.settings.namaToko;
+                        document.getElementById('login-title').innerText = "Admin Setup";
                         if(document.getElementById('set-namaToko')) document.getElementById('set-namaToko').value = data.settings.namaToko;
                     }
 
-                    // Isi form text biasa
+                    // Isi form text biasa (termasuk variabel baru)
                     if(document.getElementById('set-logoUrl')) document.getElementById('set-logoUrl').value = data.settings.logoUrl || '';
+                    if(document.getElementById('set-fontFamily')) document.getElementById('set-fontFamily').value = data.settings.fontFamily || 'Inter';
+                    if(document.getElementById('set-heroFontSize')) document.getElementById('set-heroFontSize').value = data.settings.heroFontSize || '';
                     if(document.getElementById('set-heroTitle')) document.getElementById('set-heroTitle').value = data.settings.heroTitle || '';
+                    if(document.getElementById('set-heroSubtitle')) document.getElementById('set-heroSubtitle').value = data.settings.heroSubtitle || '';
+                    if(document.getElementById('set-heroBgImage')) document.getElementById('set-heroBgImage').value = data.settings.heroBgImage || '';
                     if(document.getElementById('set-waNumber')) document.getElementById('set-waNumber').value = data.settings.waNumber || '';
                     if(document.getElementById('set-footerDeskripsi')) document.getElementById('set-footerDeskripsi').value = data.settings.footerDeskripsi || '';
                     if(document.getElementById('set-linkFacebook')) document.getElementById('set-linkFacebook').value = data.settings.linkFacebook || '';
@@ -502,7 +532,7 @@
                 console.log("Gagal memuat info server: ", error);
             }
 
-            // 3. Inisialisasi Quill Editor
+            // 3. Inisialisasi Quill Editor untuk Artikel
             if(document.getElementById('editor-container')) {
                 quill = new Quill('#editor-container', {
                     theme: 'snow',
@@ -795,7 +825,7 @@
             
             const payload = {
                 action: type === 'produk' ? 'hapus_produk' : 'hapus_artikel',
-                rowIndex: index + 2 
+                rowIndex: index + 2 // Index + 2 karena Baris 1 itu Header Google Sheets
             };
 
             try {
@@ -804,7 +834,7 @@
                 
                 if (result.status === 'success') {
                     showMessage(`✅ ${type} berhasil dihapus!`);
-                    fetchAndRenderTables(); 
+                    fetchAndRenderTables(); // Tarik data ulang biar tabel ke-update
                 } else {
                     showMessage(`❌ Gagal: ${result.message}`, true);
                 }
@@ -837,9 +867,13 @@
                 payload.data = {
                     namaToko: document.getElementById('set-namaToko').value,
                     logoUrl: document.getElementById('set-logoUrl').value,
+                    fontFamily: document.getElementById('set-fontFamily').value,
                     warnaUtama: document.getElementById('set-warnaUtama').value,
                     warnaBackground: document.getElementById('set-warnaBackground').value,
                     heroTitle: document.getElementById('set-heroTitle').value,
+                    heroSubtitle: document.getElementById('set-heroSubtitle').value,
+                    heroFontSize: document.getElementById('set-heroFontSize').value,
+                    heroBgImage: document.getElementById('set-heroBgImage').value,
                     waNumber: document.getElementById('set-waNumber').value,
                     // Penambahan Footer & Links
                     warnaFooter: document.getElementById('set-warnaFooter').value,
