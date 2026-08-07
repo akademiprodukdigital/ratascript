@@ -215,6 +215,21 @@
 
     <script>
         // ==========================================
+        // FUNGSI HELPER UNTUK GRADIENT
+        // ==========================================
+        function getBackgroundCSS(colorStr) {
+            const colors = (colorStr || '#4F46E5').split(',').map(c => c.trim());
+            if (colors.length > 1 && colors[1] !== '') {
+                return `background: linear-gradient(to right, ${colors[0]}, ${colors[1]});`;
+            }
+            return `background-color: ${colors[0]};`;
+        }
+
+        function getPrimaryColor(colorStr) {
+            return (colorStr || '#4F46E5').split(',')[0].trim();
+        }
+
+        // ==========================================
         // FETCH DATA DARI GOOGLE APPS SCRIPT API
         // ==========================================
         
@@ -223,7 +238,7 @@
 
         // Variable global
         let allProducts = [];
-        let globalArticles = []; // Menyimpan data artikel secara global agar bisa dipanggil saat modal dibuka
+        let globalArticles = []; 
         let currentCategory = 'Semua';
         let searchQuery = '';
         let globalSettings = {};
@@ -235,8 +250,8 @@
                 namaToko: "DigiStore Affiliate",
                 heroTitle: "Temukan Tools Digital Terbaik",
                 heroSubtitle: "Kumpulan template, ebook, dan tools premium untuk boost produktivitasmu.",
-                warnaUtama: "#4F46E5",
-                warnaBackground: "#F9FAFB",
+                warnaUtama: "#4F46E5, #EC4899", // Contoh gradient 
+                warnaBackground: "#F9FAFB", // Contoh warna solid, bisa diganti misal: "#F9FAFB, #E5E7EB"
                 fontFamily: "Inter",
                 logoUrl: "https://placehold.co/150x50/4F46E5/FFFFFF?text=DigiStore",
                 bannerImage: "https://placehold.co/1200x300/4F46E5/FFFFFF?text=PROMO+BESAR+BULAN+INI",
@@ -251,17 +266,9 @@
             },
             products: [
                 { judul: "Template Notion Pro", deskripsi: "Sistem manajemen hidup lengkap dan terstruktur.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Notion", harga: "Rp 150.000", linkSales: "#", linkCheckout: "#", kategori: "Template", promo: "Ya" },
-                { judul: "Ebook Copywriting", deskripsi: "Teknik nulis iklan jagoan bikin closingan melesat.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Ebook", harga: "Rp 99.000", linkSales: "#", linkCheckout: "#", kategori: "Ebook", promo: "" },
-                { judul: "Canva Pro Assets", deskripsi: "Ribuan elemen canva premium untuk desain sosmed.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Canva", harga: "Rp 120.000", linkSales: "#", linkCheckout: "#", kategori: "Design", promo: "Ya" },
-                { judul: "Kursus FB Ads", deskripsi: "Mastering Facebook Ads 2026. Dari pemula jadi pro.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=FB+Ads", harga: "Rp 450.000", linkSales: "#", linkCheckout: "#", kategori: "Kursus", promo: "" },
-                { judul: "UI/UX Starter Kit", deskripsi: "Wireframe & komponen Figma lengkap untuk project Anda.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Figma", harga: "Rp 200.000", linkSales: "#", linkCheckout: "#", kategori: "Design", promo: "" },
-                { judul: "Plugin AutoPost SEO", deskripsi: "Otomatisasi blog WordPress dengan AI dan SEO Friendly.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Plugin", harga: "Rp 350.000", linkSales: "#", linkCheckout: "#", kategori: "Tools", promo: "" }
+                { judul: "Ebook Copywriting", deskripsi: "Teknik nulis iklan jagoan bikin closingan melesat.", gambar: "https://placehold.co/600x400/eeeeee/333333?text=Ebook", harga: "Rp 99.000", linkSales: "#", linkCheckout: "#", kategori: "Ebook", promo: "" }
             ],
-            articles: [
-                { judul: "Cara Memaksimalkan Penjualan Affiliate di 2026", ringkasan: "Strategi ampuh untuk meningkatkan konversi link affiliate Anda tahun ini. Pelajari metodenya sekarang...", gambar: "https://placehold.co/600x400/4F46E5/FFFFFF?text=Blog+1", tanggal: "05 Agustus 2026", isiLengkap: "Ini adalah isi artikel yang sangat panjang. Anda bisa membaca panduan lengkapnya di sini.\n\nStrategi pertama adalah fokus pada audiens yang tertarget. Jangan asal sebar link.\n\nKedua, berikan bonus atau nilai tambah bagi orang yang membeli lewat link affiliate Anda." },
-                { judul: "Tools Wajib Untuk Digital Marketer", ringkasan: "Daftar 10 tools gratis dan berbayar yang wajib dimiliki oleh digital marketer untuk scale up bisnis...", gambar: "https://placehold.co/600x400/4F46E5/FFFFFF?text=Blog+2", tanggal: "01 Agustus 2026", isiLengkap: "Digital marketer yang handal membutuhkan senjata yang tepat.\n\nBeberapa tools yang wajib dimiliki antara lain:\n1. Google Analytics\n2. Ahrefs / SEMRush\n3. Mailchimp / ConvertKit\n\nPastikan Anda menguasai tools tersebut sebelum mencari alternatif yang lebih mahal." },
-                { judul: "Panduan Memulai Karir Freelance", ringkasan: "Langkah demi langkah mendapatkan klien pertama dari platform freelance internasional secara efektif...", gambar: "https://placehold.co/600x400/4F46E5/FFFFFF?text=Blog+3", tanggal: "28 Juli 2026", isiLengkap: "Freelance adalah jalan keluar dari rutinitas 9-5.\n\nMulailah dengan membangun portofolio yang kuat. Buat contoh proyek pura-pura jika belum punya klien sungguhan.\n\nDaftar di Fiverr atau Upwork, namun jangan lupakan juga LinkedIn sebagai ladang pencarian klien premium." }
-            ]
+            articles: []
         };
 
         // FUNGSI CACHING DAN FETCHING DATA
@@ -269,24 +276,22 @@
             const cacheKey = 'marketplace_data_cache';
             const cachedData = localStorage.getItem(cacheKey);
             
-            // 1. Cek apakah ada data di Local Storage (Cache Browser)
+            // 1. Tampilkan super cepat dari cache jika ada
             if (cachedData) {
-                console.log("Menggunakan data dari Local Storage (Super Cepat)...");
+                console.log("Menampilkan dari Local Storage (Cepat)...");
                 try {
-                    const parsedData = JSON.parse(cachedData);
-                    renderApp(parsedData); // Render seketika
+                    renderApp(JSON.parse(cachedData)); 
                 } catch(e) {
-                    console.error("Cache rusak, akan ambil data baru.");
+                    console.error("Cache rusak.");
                 }
             }
 
-            // 2. Jika ini preview, pakai data mock
             if (SCRIPT_URL === 'URL_APPS_SCRIPT_ANDA_DISINI') {
                 setTimeout(() => renderApp(mockData), 1000);
                 return;
             }
 
-            // 3. Selalu ambil data baru dari Google (Background Update)
+            // 2. Fetch ke server untuk ngecek apakah ada update terbaru
             let isTimeout = false;
             const timeoutFetch = setTimeout(() => {
                 isTimeout = true;
@@ -294,42 +299,39 @@
                     document.getElementById('loading').innerHTML = `
                         <div class="text-red-500 text-center">
                             <p class="text-lg font-medium">Koneksi sangat lambat.</p>
-                            <p class="text-sm text-gray-500 mt-2">Silakan refresh (muat ulang) halaman ini.</p>
+                            <p class="text-sm text-gray-500 mt-2">Silakan refresh halaman ini.</p>
                         </div>
                     `;
                 }
-            }, 10000); // Batas nunggu 10 detik
+            }, 10000);
 
             fetch(SCRIPT_URL, { method: 'GET', redirect: 'follow' })
                 .then(response => {
-                    if (!response.ok) throw new Error("Gagal terhubung ke Apps Script");
+                    if (!response.ok) throw new Error("Gagal terhubung");
                     return response.json();
                 })
                 .then(data => {
                     clearTimeout(timeoutFetch);
-                    if (isTimeout) return; // Kalau udah timeout, cuekin aja
+                    if (isTimeout) return; 
                     
                     const freshDataStr = JSON.stringify(data);
                     
-                    // KUNCI UTAMA: Jika data dari server BEDA dengan cache, render ulang seketika!
+                    // JIKA DATA BEDA (ADA UPDATE DARI ADMIN): RENDER ULANG!
                     if(cachedData !== freshDataStr) {
-                        console.log("Ada perubahan data dari Admin! Mengupdate tampilan seketika...");
+                        console.log("Ada perubahan data! Mengupdate tampilan seketika...");
                         localStorage.setItem(cacheKey, freshDataStr);
-                        renderApp(data); // PAKSA RENDER ULANG TANPA RELOAD PAGE
+                        renderApp(data); 
                     } else {
-                        console.log("Data di server sama dengan cache, tidak perlu update UI.");
+                        console.log("Data sama, tidak perlu render ulang.");
                         if(!cachedData) renderApp(data); 
                     }
                 })
                 .catch(error => {
                     clearTimeout(timeoutFetch);
-                    console.error("Error fetching data:", error);
                     if (!cachedData) {
                         document.getElementById('loading').innerHTML = `
                             <div class="text-red-500 text-center">
-                                <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 <p class="text-lg font-medium">Gagal memuat data dari server.</p>
-                                <p class="text-sm text-gray-500 mt-2">Penyebab: Cek Console atau pastikan Akses Script "Siapa Saja".</p>
                             </div>
                         `;
                     }
@@ -361,30 +363,53 @@
             const fontName = settings.fontFamily || 'Inter';
             const fontUrl = `https://fonts.googleapis.com/css2?family=${fontName.replace(/ /g, '+')}:wght@400;500;600;700;800&display=swap`;
             
+            // Cegah duplikasi link font
             if (!document.querySelector(`link[href="${fontUrl}"]`)) {
                 const link = document.createElement('link');
                 link.href = fontUrl;
                 link.rel = 'stylesheet';
                 document.head.appendChild(link);
             }
-            
             document.body.style.fontFamily = `'${fontName}', sans-serif`;
 
-            document.getElementById('header').style.backgroundColor = settings.warnaUtama;
-            document.getElementById('app').style.backgroundColor = settings.warnaBackground;
+            // === LOGIKA GRADIENT (WARNA UTAMA) ===
+            const header = document.getElementById('header');
+            const colors = (settings.warnaUtama || '#4F46E5').split(',').map(c => c.trim());
+            const color1 = colors[0];
             
-            // Set warna section blog dengan opacity tipis (Tailwind cara manual)
-            document.getElementById('blog-section').style.backgroundColor = settings.warnaUtama + "10"; 
+            if (colors.length > 1 && colors[1] !== '') {
+                header.style.background = `linear-gradient(to right, ${colors[0]}, ${colors[1]})`;
+            } else {
+                header.style.background = colors[0];
+            }
+            
+            // === LOGIKA GRADIENT (WARNA BACKGROUND) ===
+            const appContainer = document.getElementById('app');
+            const bgColors = (settings.warnaBackground || '#F9FAFB').split(',').map(c => c.trim());
+            if (bgColors.length > 1 && bgColors[1] !== '') {
+                appContainer.style.background = `linear-gradient(to bottom right, ${bgColors[0]}, ${bgColors[1]})`;
+            } else {
+                appContainer.style.background = bgColors[0];
+            }
+            
+            // Set warna section blog dengan opacity tipis
+            const blogSection = document.getElementById('blog-section');
+            if(blogSection) blogSection.style.backgroundColor = color1 + "10"; 
 
+            // Hapus style lama jika ada re-render
             const oldStyle = document.getElementById('dynamic-styles');
             if(oldStyle) oldStyle.remove();
+
+            const primaryBgCSS = (colors.length > 1 && colors[1] !== '') 
+                ? `background: linear-gradient(to right, ${colors[0]}, ${colors[1]}) !important;` 
+                : `background-color: ${colors[0]} !important;`;
 
             const style = document.createElement('style');
             style.id = 'dynamic-styles';
             style.innerHTML = `
-                #searchInput:focus { border-color: ${settings.warnaUtama} !important; outline-color: ${settings.warnaUtama}; box-shadow: 0 0 0 2px ${settings.warnaUtama}40; }
-                .cat-btn.active { background-color: ${settings.warnaUtama} !important; color: white !important; border-color: ${settings.warnaUtama} !important;}
-                .page-btn.active { background-color: ${settings.warnaUtama} !important; color: white !important; border-color: ${settings.warnaUtama} !important;}
+                #searchInput:focus { border-color: ${color1} !important; outline-color: ${color1}; box-shadow: 0 0 0 2px ${color1}40; }
+                .cat-btn.active { ${primaryBgCSS} color: white !important; border-color: transparent !important;}
+                .page-btn.active { ${primaryBgCSS} color: white !important; border-color: transparent !important;}
             `;
             document.head.appendChild(style);
         }
@@ -392,13 +417,12 @@
         function setupHomepage(settings) {
             // Header & Logo
             document.getElementById('brand-name').innerText = settings.namaToko;
+            const logoImg = document.getElementById('logo-image');
             if(settings.logoUrl) {
-                const logoImg = document.getElementById('logo-image');
                 logoImg.src = settings.logoUrl;
                 logoImg.classList.remove('hidden');
-                // Removed the code that hides the brand-name when a logo is present
             } else {
-                document.getElementById('logo-image').classList.add('hidden');
+                logoImg.classList.add('hidden');
             }
 
             // Footer
@@ -408,8 +432,6 @@
                 const footerLogo = document.getElementById('footer-logo');
                 footerLogo.src = settings.logoUrl;
                 footerLogo.classList.remove('hidden');
-            } else {
-                document.getElementById('footer-logo').classList.add('hidden');
             }
 
             document.getElementById('hero-title').innerText = settings.heroTitle;
@@ -451,6 +473,10 @@
         }
 
         function createProductCardHTML(p, settings) {
+            // MENGGUNAKAN FUNGSI HELPER GRADIENT DI SINI
+            const bgCSS = getBackgroundCSS(settings.warnaUtama);
+            const primaryColor = getPrimaryColor(settings.warnaUtama);
+
             return `
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group border border-gray-100">
                     <div class="relative overflow-hidden">
@@ -462,10 +488,10 @@
                         <p class="text-gray-500 text-sm mb-6 flex-grow line-clamp-3">${p.deskripsi}</p>
                         
                         <div class="mt-auto">
-                            <div class="text-2xl font-black mb-4" style="color: ${settings.warnaUtama}">${p.harga}</div>
+                            <div class="text-2xl font-black mb-4" style="color: ${primaryColor}">${p.harga}</div>
                             
                             <div class="space-y-2">
-                                <a href="${p.linkCheckout}" target="_blank" class="block w-full text-center text-white font-semibold py-3 px-4 rounded-xl transition-opacity hover:opacity-90 shadow-md flex items-center justify-center space-x-2" style="background-color: ${settings.warnaUtama}">
+                                <a href="${p.linkCheckout}" target="_blank" class="block w-full text-center text-white font-semibold py-3 px-4 rounded-xl transition-opacity hover:opacity-90 shadow-md flex items-center justify-center space-x-2" style="${bgCSS}">
                                     <span>⚡ Checkout Kilat</span>
                                 </a>
                                 <a href="${p.linkSales}" target="_blank" class="block w-full text-center font-semibold py-2.5 px-4 rounded-xl transition-colors bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm">
@@ -507,6 +533,10 @@
                 </button>`
             ).join('');
 
+            // PENTING: Remove listener lama biar ga numpuk pas auto-update
+            const newFilterContainer = filterContainer.cloneNode(true);
+            filterContainer.parentNode.replaceChild(newFilterContainer, filterContainer);
+
             document.querySelectorAll('.cat-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
@@ -518,7 +548,6 @@
             });
 
             const searchInput = document.getElementById('searchInput');
-            // Hindari duplikasi event listener jika dirender ulang
             const newSearchInput = searchInput.cloneNode(true);
             searchInput.parentNode.replaceChild(newSearchInput, searchInput);
             
@@ -598,7 +627,6 @@
                 blogSection.classList.remove('hidden');
                 navBlog.classList.remove('hidden'); 
                 
-                // MENGGUNAKAN ONCLICK KE FUNGSI MODAL
                 blogList.innerHTML = articles.map((art, index) => `
                     <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-gray-100 flex flex-col">
                         <div onclick="openArticleModal(${index})" class="block overflow-hidden relative cursor-pointer">
@@ -627,39 +655,28 @@
             const article = globalArticles[index];
             if(!article) return;
 
-            // Isi data ke dalam modal
             document.getElementById('modal-title').innerText = article.judul;
             document.getElementById('modal-date').innerText = article.tanggal;
             
             const modalImg = document.getElementById('modal-image');
             modalImg.src = article.gambar;
-            // Sembunyikan gambar jika tidak ada gambarnya
             if(!article.gambar) {
                 modalImg.classList.add('hidden');
             } else {
                 modalImg.classList.remove('hidden');
             }
 
-            // Isi konten artikel (ubah newline jadi <br> agar rapi)
             let contentText = article.isiLengkap || article.ringkasan || "Tidak ada isi artikel.";
-            
-            // Pakai innerHTML supaya tag <a href=""> dan format teks dari editor dirender dengan benar
             document.getElementById('modal-content').innerHTML = contentText;
 
-            // Munculkan Modal
             const modal = document.getElementById('article-modal');
             modal.classList.remove('hidden');
-            
-            // Kunci scroll background
             document.body.style.overflow = 'hidden';
         }
 
         function closeArticleModal() {
-            // Sembunyikan Modal
             const modal = document.getElementById('article-modal');
             modal.classList.add('hidden');
-            
-            // Buka kembali scroll background
             document.body.style.overflow = 'auto';
         }
 
