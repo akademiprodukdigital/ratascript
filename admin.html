@@ -308,7 +308,8 @@
                 btn.innerHTML = oriText;
                 btn.disabled = false;
                 showMessage(`✅ ${type === 'produk' ? 'Produk' : 'Artikel'} berhasil ditambahkan ke Database!`);
-                event.target.reset(); // Kosongkan form
+                event.target.reset(); // Kosongkan form input biasa
+                if(type === 'artikel') quill.root.innerHTML = ''; // Kosongkan text editor
             })
             .catch(error => {
                 btn.innerHTML = oriText;
