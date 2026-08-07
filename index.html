@@ -28,6 +28,7 @@
                 <!-- Logo & Brand -->
                 <div class="flex items-center gap-3">
                     <img id="logo-image" src="" alt="Logo" class="h-10 w-auto hidden rounded">
+                    <!-- Brand name will now display even if logo is present -->
                     <h1 id="brand-name" class="text-2xl font-bold tracking-wide">Nama Toko</h1>
                 </div>
                 
@@ -308,14 +309,16 @@
                     clearTimeout(timeoutFetch);
                     if (isTimeout) return; // Kalau udah timeout, cuekin aja
                     
-                    // Simpan data baru ke Local Storage untuk kunjungan berikutnya
-                    localStorage.setItem(cacheKey, JSON.stringify(data));
-                    console.log("Data terbaru berhasil diambil dan disimpan ke cache.");
+                    const freshDataStr = JSON.stringify(data);
                     
-                    // Kalau sebelumnya belum ada data cache (loading screen masih muter), render sekarang.
-                    // Kalau sebelumnya udah ada data cache, biarkan saja (nanti data update pas di-refresh user)
-                    if (!cachedData) {
-                        renderApp(data);
+                    // KUNCI UTAMA: Jika data dari server BEDA dengan cache, render ulang seketika!
+                    if(cachedData !== freshDataStr) {
+                        console.log("Ada perubahan data dari Admin! Mengupdate tampilan seketika...");
+                        localStorage.setItem(cacheKey, freshDataStr);
+                        renderApp(data); // PAKSA RENDER ULANG TANPA RELOAD PAGE
+                    } else {
+                        console.log("Data di server sama dengan cache, tidak perlu update UI.");
+                        if(!cachedData) renderApp(data); 
                     }
                 })
                 .catch(error => {
@@ -357,10 +360,14 @@
         function setupDesign(settings) {
             const fontName = settings.fontFamily || 'Inter';
             const fontUrl = `https://fonts.googleapis.com/css2?family=${fontName.replace(/ /g, '+')}:wght@400;500;600;700;800&display=swap`;
-            const link = document.createElement('link');
-            link.href = fontUrl;
-            link.rel = 'stylesheet';
-            document.head.appendChild(link);
+            
+            if (!document.querySelector(`link[href="${fontUrl}"]`)) {
+                const link = document.createElement('link');
+                link.href = fontUrl;
+                link.rel = 'stylesheet';
+                document.head.appendChild(link);
+            }
+            
             document.body.style.fontFamily = `'${fontName}', sans-serif`;
 
             document.getElementById('header').style.backgroundColor = settings.warnaUtama;
@@ -369,7 +376,11 @@
             // Set warna section blog dengan opacity tipis (Tailwind cara manual)
             document.getElementById('blog-section').style.backgroundColor = settings.warnaUtama + "10"; 
 
+            const oldStyle = document.getElementById('dynamic-styles');
+            if(oldStyle) oldStyle.remove();
+
             const style = document.createElement('style');
+            style.id = 'dynamic-styles';
             style.innerHTML = `
                 #searchInput:focus { border-color: ${settings.warnaUtama} !important; outline-color: ${settings.warnaUtama}; box-shadow: 0 0 0 2px ${settings.warnaUtama}40; }
                 .cat-btn.active { background-color: ${settings.warnaUtama} !important; color: white !important; border-color: ${settings.warnaUtama} !important;}
@@ -385,6 +396,9 @@
                 const logoImg = document.getElementById('logo-image');
                 logoImg.src = settings.logoUrl;
                 logoImg.classList.remove('hidden');
+                // Removed the code that hides the brand-name when a logo is present
+            } else {
+                document.getElementById('logo-image').classList.add('hidden');
             }
 
             // Footer
@@ -394,6 +408,8 @@
                 const footerLogo = document.getElementById('footer-logo');
                 footerLogo.src = settings.logoUrl;
                 footerLogo.classList.remove('hidden');
+            } else {
+                document.getElementById('footer-logo').classList.add('hidden');
             }
 
             document.getElementById('hero-title').innerText = settings.heroTitle;
@@ -404,6 +420,8 @@
                 document.getElementById('banner-image').src = settings.bannerImage;
                 if(settings.bannerUrl) document.getElementById('banner-link').href = settings.bannerUrl;
                 document.getElementById('banner-section').classList.remove('hidden');
+            } else {
+                document.getElementById('banner-section').classList.add('hidden');
             }
 
             // Bottom Banner
@@ -411,6 +429,8 @@
                 document.getElementById('bottom-banner-image').src = settings.bottomBannerImage;
                 if(settings.bottomBannerUrl) document.getElementById('bottom-banner-link').href = settings.bottomBannerUrl;
                 document.getElementById('bottom-banner-section').classList.remove('hidden');
+            } else {
+                document.getElementById('bottom-banner-section').classList.add('hidden');
             }
         }
 
@@ -425,6 +445,8 @@
                 
                 waButton.href = waLink;
                 waButton.classList.remove('hidden');
+            } else {
+                waButton.classList.add('hidden');
             }
         }
 
@@ -465,6 +487,8 @@
             if(promos.length > 0) {
                 promoSection.classList.remove('hidden');
                 promoList.innerHTML = promos.map(p => createProductCardHTML(p, globalSettings)).join('');
+            } else {
+                promoSection.classList.add('hidden');
             }
         }
 
@@ -494,7 +518,11 @@
             });
 
             const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('input', (e) => {
+            // Hindari duplikasi event listener jika dirender ulang
+            const newSearchInput = searchInput.cloneNode(true);
+            searchInput.parentNode.replaceChild(newSearchInput, searchInput);
+            
+            newSearchInput.addEventListener('input', (e) => {
                 searchQuery = e.target.value.toLowerCase();
                 currentPage = 1; 
                 renderCatalog();
@@ -574,7 +602,7 @@
                 blogList.innerHTML = articles.map((art, index) => `
                     <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-gray-100 flex flex-col">
                         <div onclick="openArticleModal(${index})" class="block overflow-hidden relative cursor-pointer">
-                            <img src="${art.gambar}" alt="${art.judul}" loading="lazy" class="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                            <img src="${art.gambar}" alt="${art.judul}" loading="lazy" class="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/cccccc/ffffff?text=No+Image'">
                         </div>
                         <div class="p-6 flex flex-col flex-grow">
                             <span class="text-xs font-semibold text-gray-500 mb-2">${art.tanggal}</span>
@@ -615,7 +643,7 @@
             // Isi konten artikel (ubah newline jadi <br> agar rapi)
             let contentText = article.isiLengkap || article.ringkasan || "Tidak ada isi artikel.";
             
-            // UBAH DI SINI: Pakai innerHTML supaya tag <a href=""> dan format teks dari editor dirender dengan benar
+            // Pakai innerHTML supaya tag <a href=""> dan format teks dari editor dirender dengan benar
             document.getElementById('modal-content').innerHTML = contentText;
 
             // Munculkan Modal
