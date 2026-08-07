@@ -90,7 +90,7 @@
         <main class="max-w-6xl mx-auto px-6 py-8">
             <!-- Tabs Navigation -->
             <div class="flex border-b border-gray-300 mb-8 overflow-x-auto no-scrollbar">
-                <!-- PENAMBAHAN TAB PENGATURAN DI SINI -->
+                <!-- TAB PENGATURAN -->
                 <button class="tab-btn active px-6 py-4 text-gray-500 hover:text-indigo-600 whitespace-nowrap font-medium text-lg flex items-center gap-2" onclick="switchTab('tab-pengaturan')">
                     <span>⚙️</span> Pengaturan Web
                 </button>
@@ -105,12 +105,12 @@
                 </button>
             </div>
 
-            <!-- TAB PENGATURAN WEB (BARU DITAMBAHKAN) -->
+            <!-- TAB PENGATURAN -->
             <div id="tab-pengaturan" class="tab-content block fade-in">
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
                     <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 p-4 rounded-xl mb-6 flex items-start gap-3">
                         <span class="text-xl">💡</span>
-                        <p class="text-sm">Merubah pengaturan di sini akan langsung merubah desain Website dan Google Sheets Anda. Pengunjung akan langsung melihat perubahannya tanpa perlu clear cache.</p>
+                        <p class="text-sm">Merubah pengaturan di sini akan mereset memori Cache di Google Sheets Anda. Pengunjung akan langsung melihat perubahannya.</p>
                     </div>
                     
                     <form id="form-pengaturan" onsubmit="event.preventDefault(); submitData('settings');">
@@ -120,18 +120,28 @@
                                 <input type="text" id="set-namaToko" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
                             </div>
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-2">Warna Utama (Hex Code)</label>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Warna Utama (Bisa 2 Warna = Gradient)</label>
                                 <div class="flex gap-2">
-                                    <input type="color" id="set-warnaColor" class="h-12 w-16 rounded cursor-pointer border border-gray-300">
-                                    <input type="text" id="set-warnaUtama" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                                    <input type="color" id="set-warnaColor1" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna 1">
+                                    <input type="color" id="set-warnaColor2" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna 2 (Opsional)">
+                                    <input type="text" id="set-warnaUtama" required placeholder="#4F46E5, #EC4899" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors text-sm">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="mb-6">
-                            <label class="block text-sm font-bold text-gray-700 mb-2">URL Gambar Logo</label>
-                            <input type="url" id="set-logoUrl" placeholder="https://..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
-                            <p class="text-xs text-gray-500 mt-1">Kosongkan jika hanya ingin menampilkan Nama Toko.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">URL Gambar Logo</label>
+                                <input type="url" id="set-logoUrl" placeholder="https://..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Warna Background (Bisa 2 Warna = Gradient)</label>
+                                <div class="flex gap-2">
+                                    <input type="color" id="set-bgWarnaColor1" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna Background 1">
+                                    <input type="color" id="set-bgWarnaColor2" class="h-12 w-12 rounded cursor-pointer border border-gray-300 flex-shrink-0" title="Warna Background 2 (Opsional)">
+                                    <input type="text" id="set-warnaBackground" required placeholder="#F9FAFB" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white transition-colors text-sm">
+                                </div>
+                            </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -152,6 +162,7 @@
                 </div>
             </div>
 
+            <!-- TAB PRODUK -->
             <div id="tab-produk" class="tab-content hidden fade-in">
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
                     <h2 class="text-2xl font-bold mb-8 text-gray-900 flex items-center gap-3">
@@ -211,6 +222,7 @@
                 </div>
             </div>
 
+            <!-- TAB ARTIKEL -->
             <div id="tab-artikel" class="tab-content hidden fade-in">
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
                     <h2 class="text-2xl font-bold mb-8 text-gray-900 flex items-center gap-3">
@@ -245,6 +257,7 @@
                 </div>
             </div>
 
+            <!-- TAB IMPORT EXCEL -->
             <div id="tab-import" class="tab-content hidden fade-in">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <!-- Export Data -->
@@ -305,12 +318,57 @@
         let quill; // Variabel global untuk Quill
 
         document.addEventListener("DOMContentLoaded", async function() {
-            // Sinkronisasi warna input color dengan text (Fitur Pengaturan Web)
-            const inputColor = document.getElementById('set-warnaColor');
+            
+            // --- LOGIKA GRADIENT (WARNA UTAMA) ---
+            const inputColor1 = document.getElementById('set-warnaColor1');
+            const inputColor2 = document.getElementById('set-warnaColor2');
             const inputText = document.getElementById('set-warnaUtama');
-            if (inputColor && inputText) {
-                inputColor.addEventListener('input', function(e) { inputText.value = e.target.value.toUpperCase(); });
-                inputText.addEventListener('input', function(e) { inputColor.value = e.target.value; });
+
+            if (inputColor1 && inputColor2 && inputText) {
+                inputColor1.addEventListener('input', function() {
+                    const vals = inputText.value.split(',').map(v => v.trim());
+                    if(vals.length > 1 && vals[1] !== '') {
+                        inputText.value = `${inputColor1.value.toUpperCase()}, ${vals[1]}`;
+                    } else {
+                        inputText.value = inputColor1.value.toUpperCase();
+                    }
+                });
+                inputColor2.addEventListener('input', function() {
+                    const vals = inputText.value.split(',').map(v => v.trim());
+                    const firstColor = (vals[0] && vals[0] !== '') ? vals[0] : inputColor1.value.toUpperCase();
+                    inputText.value = `${firstColor}, ${inputColor2.value.toUpperCase()}`;
+                });
+                inputText.addEventListener('input', function(e) {
+                    const vals = e.target.value.split(',').map(v => v.trim());
+                    if(vals[0] && /^#[0-9A-F]{6}$/i.test(vals[0])) inputColor1.value = vals[0];
+                    if(vals[1] && /^#[0-9A-F]{6}$/i.test(vals[1])) inputColor2.value = vals[1];
+                });
+            }
+
+            // --- LOGIKA GRADIENT (WARNA BACKGROUND) ---
+            const bgInputColor1 = document.getElementById('set-bgWarnaColor1');
+            const bgInputColor2 = document.getElementById('set-bgWarnaColor2');
+            const bgInputText = document.getElementById('set-warnaBackground');
+
+            if (bgInputColor1 && bgInputColor2 && bgInputText) {
+                bgInputColor1.addEventListener('input', function() {
+                    const vals = bgInputText.value.split(',').map(v => v.trim());
+                    if(vals.length > 1 && vals[1] !== '') {
+                        bgInputText.value = `${bgInputColor1.value.toUpperCase()}, ${vals[1]}`;
+                    } else {
+                        bgInputText.value = bgInputColor1.value.toUpperCase();
+                    }
+                });
+                bgInputColor2.addEventListener('input', function() {
+                    const vals = bgInputText.value.split(',').map(v => v.trim());
+                    const firstColor = (vals[0] && vals[0] !== '') ? vals[0] : bgInputColor1.value.toUpperCase();
+                    bgInputText.value = `${firstColor}, ${bgInputColor2.value.toUpperCase()}`;
+                });
+                bgInputText.addEventListener('input', function(e) {
+                    const vals = e.target.value.split(',').map(v => v.trim());
+                    if(vals[0] && /^#[0-9A-F]{6}$/i.test(vals[0])) bgInputColor1.value = vals[0];
+                    if(vals[1] && /^#[0-9A-F]{6}$/i.test(vals[1])) bgInputColor2.value = vals[1];
+                });
             }
 
             // 1. Cek status login
@@ -320,7 +378,7 @@
                 document.getElementById('dashboard-section').classList.add('fade-in');
             }
 
-            // 2. Fetch Logo & Judul dari Google Sheets (Otomatis)
+            // 2. Fetch Info dari Google Sheets (Otomatis)
             try {
                 const response = await fetch(SCRIPT_URL);
                 const data = await response.json();
@@ -335,26 +393,36 @@
                         logoImg.src = data.settings.logoUrl;
                         logoImg.classList.remove('hidden');
                         logoSvg.classList.add('hidden');
-                        // Hilangkan background ungu bulat agar logo tampil bersih
                         logoContainer.classList.remove('bg-indigo-100', 'shadow-inner'); 
                     }
-                    // Update Judul "Panel Admin" jadi "Admin NamaToko"
                     if (data.settings.namaToko) {
                         document.getElementById('login-title').innerText = "Admin " + data.settings.namaToko;
+                        if(document.getElementById('set-namaToko')) document.getElementById('set-namaToko').value = data.settings.namaToko;
                     }
-
-                    // --- ISI OTOMATIS FORM PENGATURAN WEB ---
-                    if(document.getElementById('set-namaToko')) document.getElementById('set-namaToko').value = data.settings.namaToko || '';
                     if(document.getElementById('set-logoUrl')) document.getElementById('set-logoUrl').value = data.settings.logoUrl || '';
-                    if(document.getElementById('set-warnaUtama')) {
-                        document.getElementById('set-warnaUtama').value = data.settings.warnaUtama || '#4F46E5';
-                        document.getElementById('set-warnaColor').value = data.settings.warnaUtama || '#4F46E5';
-                    }
                     if(document.getElementById('set-heroTitle')) document.getElementById('set-heroTitle').value = data.settings.heroTitle || '';
                     if(document.getElementById('set-waNumber')) document.getElementById('set-waNumber').value = data.settings.waNumber || '';
+                    
+                    // Isi Otomatis Warna Utama
+                    if(document.getElementById('set-warnaUtama')) {
+                        const wUtama = data.settings.warnaUtama || '#4F46E5';
+                        document.getElementById('set-warnaUtama').value = wUtama;
+                        const vals = wUtama.split(',').map(v => v.trim());
+                        if(vals[0] && /^#[0-9A-F]{6}$/i.test(vals[0])) document.getElementById('set-warnaColor1').value = vals[0];
+                        if(vals[1] && /^#[0-9A-F]{6}$/i.test(vals[1])) document.getElementById('set-warnaColor2').value = vals[1];
+                    }
+
+                    // Isi Otomatis Warna Background
+                    if(document.getElementById('set-warnaBackground')) {
+                        const wBg = data.settings.warnaBackground || '#F9FAFB';
+                        document.getElementById('set-warnaBackground').value = wBg;
+                        const valsBg = wBg.split(',').map(v => v.trim());
+                        if(valsBg[0] && /^#[0-9A-F]{6}$/i.test(valsBg[0])) document.getElementById('set-bgWarnaColor1').value = valsBg[0];
+                        if(valsBg[1] && /^#[0-9A-F]{6}$/i.test(valsBg[1])) document.getElementById('set-bgWarnaColor2').value = valsBg[1];
+                    }
                 }
             } catch (error) {
-                console.log("Gagal memuat logo & nama toko: ", error);
+                console.log("Gagal memuat info server: ", error);
             }
 
             // 3. Inisialisasi Quill Editor untuk Artikel
@@ -448,7 +516,6 @@
         async function submitData(type) {
             let payload = { action: '', data: {} };
             
-            // Logika deteksi ID Tombol berdasarkan tab yang aktif
             let btnId = '';
             if (type === 'settings') btnId = 'btn-submit-settings';
             else if (type === 'produk') btnId = 'btn-submit-produk';
@@ -460,13 +527,13 @@
             btn.innerHTML = '<span class="animate-pulse">Mengirim Data... ⏳</span>';
             btn.disabled = true;
 
-            // Logika Pembentukan Payload sesuai type
             if (type === 'settings') {
                 payload.action = 'update_settings';
                 payload.data = {
                     namaToko: document.getElementById('set-namaToko').value,
                     logoUrl: document.getElementById('set-logoUrl').value,
                     warnaUtama: document.getElementById('set-warnaUtama').value,
+                    warnaBackground: document.getElementById('set-warnaBackground').value,
                     heroTitle: document.getElementById('set-heroTitle').value,
                     waNumber: document.getElementById('set-waNumber').value
                 };
@@ -484,6 +551,7 @@
                 };
             } else if (type === 'artikel') {
                 const htmlContent = quill.root.innerHTML;
+                
                 if (quill.getText().trim().length === 0) {
                     showMessage('❌ Isi artikel tidak boleh kosong!', true);
                     btn.innerHTML = oriText;
@@ -512,19 +580,15 @@
                 const result = await response.json();
                 
                 if (result.status === 'success') {
-                    let msg = 'Data';
-                    if (type === 'settings') msg = 'Pengaturan Web';
-                    else if (type === 'produk') msg = 'Produk';
-                    else if (type === 'artikel') msg = 'Artikel';
-
+                    let msg = type === 'settings' ? 'Pengaturan Web' : (type === 'produk' ? 'Produk' : 'Artikel');
                     showMessage(`✅ ${msg} berhasil disimpan ke database!`);
                     
-                    // Kalau yang di-save adalah setting, reset data dan paksa reload
                     if(type === 'settings') {
-                        localStorage.removeItem('marketplace_data_cache'); // Hapus cache lokal
-                        setTimeout(() => window.location.reload(), 1500); // Reload biar logo berubah
+                        // Memaksa browser web utama sadar bahwa ada update
+                        localStorage.removeItem('marketplace_data_cache'); 
+                        // Langsung reload admin panel ini juga biar warnanya berasa efeknya
+                        setTimeout(() => window.location.reload(), 1500); 
                     } else {
-                        // Reset form kalau produk/artikel
                         document.getElementById(`form-${type}`).reset();
                         if(type === 'artikel') quill.setContents([]); 
                     }
