@@ -59,10 +59,20 @@
                     <a href="#blog-section" id="nav-blog" class="hover:text-gray-200 transition hidden">Artikel</a>
                 </nav>
 
-                <!-- Mobile Menu Button (Opsional untuk pengembangan selanjutnya) -->
-                <button class="md:hidden text-white focus:outline-none">
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
+            </div>
+
+            <!-- Mobile Menu Dropdown (Ditambahkan) -->
+            <div id="mobile-menu" class="hidden md:hidden bg-black/20 backdrop-blur-md px-6 pb-6 pt-2 border-t border-white/10">
+                <nav class="flex flex-col space-y-4 font-medium text-white">
+                    <a href="#" class="mobile-link hover:text-gray-200 transition block">Beranda</a>
+                    <a href="#product-list" class="mobile-link hover:text-gray-200 transition block">Katalog</a>
+                    <a href="#promo-section" class="mobile-link hover:text-gray-200 transition block">Promo</a>
+                    <a href="#blog-section" id="mobile-nav-blog" class="mobile-link hover:text-gray-200 transition hidden block">Artikel</a>
+                </nav>
             </div>
         </header>
 
@@ -270,7 +280,7 @@
         // ==========================================
         
         // URL WEB APP GOOGLE APPS SCRIPT
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNwl9USTq7SywZbFh0P1zHEOLaA9ewgl53AliV6-BAOVlK3rvEqmXbVKa0IMad8KaT/exec'; 
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx9cuwpB7AAAzXLNxsbUQItRby4BR_suT8iCpadbzYnYBauekLpQYkIj9up1C-EZcRK/exec'; 
 
         // Variable global
         let allProducts = [];
@@ -711,10 +721,12 @@
             const blogSection = document.getElementById('blog-section');
             const blogList = document.getElementById('blog-list');
             const navBlog = document.getElementById('nav-blog');
+            const mobileNavBlog = document.getElementById('mobile-nav-blog'); // Tambahan buat link mobile
 
             if(showBlog && articles && articles.length > 0) {
                 blogSection.classList.remove('hidden');
-                navBlog.classList.remove('hidden'); 
+                if(navBlog) navBlog.classList.remove('hidden'); 
+                if(mobileNavBlog) mobileNavBlog.classList.remove('hidden'); // Munculin di mobile
                 
                 blogList.innerHTML = articles.map((art, index) => `
                     <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-gray-100 flex flex-col">
@@ -733,7 +745,8 @@
                 `).join('');
             } else {
                 blogSection.classList.add('hidden');
-                navBlog.classList.add('hidden');
+                if(navBlog) navBlog.classList.add('hidden');
+                if(mobileNavBlog) mobileNavBlog.classList.add('hidden'); // Sembunyiin di mobile
             }
         }
 
@@ -780,6 +793,25 @@
             // Buka kembali scroll background
             document.body.style.overflow = 'auto';
         }
+
+        // ==========================================
+        // FUNGSI UNTUK MENU BURGER MOBILE
+        // ==========================================
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        // Toggle buka/tutup menu saat tombol burger diklik
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Otomatis tutup menu saat link di dalam menu diklik
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
 
     </script>
 </body>
