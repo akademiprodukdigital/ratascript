@@ -205,12 +205,28 @@
                         </div>
 
                         <!-- Social Media -->
-                        <h4 class="text-sm font-bold text-gray-700 mb-2">Link Sosial Media (Kosongkan jika tidak ada)</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                            <input type="url" id="set-linkFacebook" placeholder="URL Facebook" class="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white text-sm">
-                            <input type="url" id="set-linkInstagram" placeholder="URL Instagram" class="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white text-sm">
-                            <input type="url" id="set-linkTiktok" placeholder="URL TikTok" class="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white text-sm">
-                            <input type="url" id="set-linkYoutube" placeholder="URL YouTube" class="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50 focus:bg-white text-sm">
+                        <h4 class="text-sm font-bold text-gray-700 mb-2">Link Sosial Media (Dinamis)</h4>
+                        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6">
+                            <div id="sosmed-list-container" class="space-y-3 mb-4">
+                                <!-- List sosmed di-inject JS -->
+                            </div>
+                            <div class="flex flex-col md:flex-row gap-2">
+                                <select id="sosmed-platform" class="w-full md:w-1/3 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-white">
+                                    <option value="Facebook">Facebook</option>
+                                    <option value="Instagram">Instagram</option>
+                                    <option value="TikTok">TikTok</option>
+                                    <option value="YouTube">YouTube</option>
+                                    <option value="X (Twitter)">X (Twitter)</option>
+                                    <option value="Threads">Threads</option>
+                                    <option value="LinkedIn">LinkedIn</option>
+                                    <option value="Telegram">Telegram</option>
+                                    <option value="Website">Website</option>
+                                </select>
+                                <input type="url" id="sosmed-url" placeholder="https://..." class="w-full md:w-auto flex-grow px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-white">
+                                <button type="button" onclick="addSosmed()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-indigo-700 transition shadow-md whitespace-nowrap text-sm">
+                                    + Tambah
+                                </button>
+                            </div>
                         </div>
 
                         <!-- Link Legal -->
@@ -436,6 +452,47 @@
         let pageArtikel = 1;
         const limitArtikel = 10; // Jumlah artikel per halaman
 
+        // ========================================================
+        // FUNGSI BUILDER SOSIAL MEDIA DINAMIS
+        // ========================================================
+        let sosmedDataList = [];
+
+        function renderSosmedBuilder() {
+            const container = document.getElementById('sosmed-list-container');
+            if(sosmedDataList.length === 0) {
+                container.innerHTML = '<p class="text-xs text-gray-500 italic text-center py-2">Belum ada sosial media yang ditambahkan.</p>';
+                return;
+            }
+            container.innerHTML = sosmedDataList.map((s, index) => `
+                <div class="flex justify-between items-center bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <span class="font-bold text-sm text-indigo-600 w-24 flex-shrink-0">${s.platform}</span>
+                        <a href="${s.url}" target="_blank" class="text-xs text-gray-500 truncate hover:text-indigo-500 max-w-[150px] md:max-w-xs">${s.url}</a>
+                    </div>
+                    <button type="button" onclick="removeSosmed(${index})" class="text-red-500 hover:bg-red-50 p-1.5 rounded-md transition ml-2 flex-shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function addSosmed() {
+            const platform = document.getElementById('sosmed-platform').value;
+            const url = document.getElementById('sosmed-url').value;
+            
+            if(!url) { showMessage('⚠️ URL Sosmed wajib diisi!', true); return; }
+            
+            sosmedDataList.push({ platform: platform, url: url });
+            document.getElementById('sosmed-url').value = '';
+            renderSosmedBuilder();
+        }
+
+        function removeSosmed(index) {
+            sosmedDataList.splice(index, 1);
+            renderSosmedBuilder();
+        }
+        // ========================================================
+
         // Setup Event Listener Gradient Helper
         function bindGradientColor(inputColor1, inputColor2, inputText) {
             if (inputColor1 && inputColor2 && inputText) {
@@ -505,14 +562,22 @@
                     if(document.getElementById('set-heroBgImage')) document.getElementById('set-heroBgImage').value = data.settings.heroBgImage || '';
                     if(document.getElementById('set-waNumber')) document.getElementById('set-waNumber').value = data.settings.waNumber || '';
                     if(document.getElementById('set-footerDeskripsi')) document.getElementById('set-footerDeskripsi').value = data.settings.footerDeskripsi || '';
-                    if(document.getElementById('set-linkFacebook')) document.getElementById('set-linkFacebook').value = data.settings.linkFacebook || '';
-                    if(document.getElementById('set-linkInstagram')) document.getElementById('set-linkInstagram').value = data.settings.linkInstagram || '';
-                    if(document.getElementById('set-linkTiktok')) document.getElementById('set-linkTiktok').value = data.settings.linkTiktok || '';
-                    if(document.getElementById('set-linkYoutube')) document.getElementById('set-linkYoutube').value = data.settings.linkYoutube || '';
                     if(document.getElementById('set-linkSyarat')) document.getElementById('set-linkSyarat').value = data.settings.linkSyarat || '';
                     if(document.getElementById('set-linkPrivasi')) document.getElementById('set-linkPrivasi').value = data.settings.linkPrivasi || '';
                     if(document.getElementById('set-linkDisclaimer')) document.getElementById('set-linkDisclaimer').value = data.settings.linkDisclaimer || '';
                     
+                    // Inisialisasi data Sosmed dinamis dari backend
+                    if(data.settings.sosmedList) {
+                        try {
+                            sosmedDataList = JSON.parse(data.settings.sosmedList);
+                        } catch(e) {
+                            sosmedDataList = [];
+                        }
+                    } else {
+                        sosmedDataList = [];
+                    }
+                    renderSosmedBuilder();
+
                     // Helper isi color picker
                     function fillColors(textId, c1Id, c2Id, defaultColor) {
                         if(document.getElementById(textId)) {
@@ -875,13 +940,10 @@
                     heroFontSize: document.getElementById('set-heroFontSize').value,
                     heroBgImage: document.getElementById('set-heroBgImage').value,
                     waNumber: document.getElementById('set-waNumber').value,
-                    // Penambahan Footer & Links
+                    // Penambahan Footer & Links Dinamis
                     warnaFooter: document.getElementById('set-warnaFooter').value,
                     footerDeskripsi: document.getElementById('set-footerDeskripsi').value,
-                    linkFacebook: document.getElementById('set-linkFacebook').value,
-                    linkInstagram: document.getElementById('set-linkInstagram').value,
-                    linkTiktok: document.getElementById('set-linkTiktok').value,
-                    linkYoutube: document.getElementById('set-linkYoutube').value,
+                    sosmedList: JSON.stringify(sosmedDataList), // Mengirim array list sosmed sebagai JSON
                     linkSyarat: document.getElementById('set-linkSyarat').value,
                     linkPrivasi: document.getElementById('set-linkPrivasi').value,
                     linkDisclaimer: document.getElementById('set-linkDisclaimer').value
