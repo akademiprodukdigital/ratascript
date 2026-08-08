@@ -18,13 +18,16 @@
             background-repeat: no-repeat;
             position: relative;
         }
-        .hero-bg-overlay::before {
+        
+        /* Class terpisah untuk efek gelap/blur, dipanggil via JS */
+        .hero-bg-effect::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.6); /* Overlay gelap biar teks kebaca */
             z-index: 1;
         }
+        
         .hero-content {
             position: relative;
             z-index: 2;
@@ -176,20 +179,9 @@
                     </div>
                     <p id="footer-desc" class="text-gray-400 mb-6 max-w-md">Menyediakan berbagai macam tools digital, template, dan panduan untuk membantu meningkatkan produktivitas dan bisnis Anda ke level selanjutnya.</p>
                     
-                    <!-- Ikon Sosial Media (Otomatis hidden jika URL kosong di admin) -->
-                    <div class="flex gap-4">
-                        <a id="social-fb" href="#" target="_blank" class="hidden text-gray-400 hover:text-white transition">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                        </a>
-                        <a id="social-ig" href="#" target="_blank" class="hidden text-gray-400 hover:text-white transition">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                        </a>
-                        <a id="social-tiktok" href="#" target="_blank" class="hidden text-gray-400 hover:text-white transition">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1.04-.1z"/></svg>
-                        </a>
-                        <a id="social-yt" href="#" target="_blank" class="hidden text-gray-400 hover:text-white transition">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                        </a>
+                    <!-- Ikon Sosial Media (Otomatis Dinamis dari Admin) -->
+                    <div id="footer-sosmed-container" class="flex gap-4">
+                        <!-- Ikon sosmed di-inject via JS -->
                     </div>
                 </div>
                 
@@ -362,7 +354,7 @@
 
             setupDesign(globalSettings);
             setupHomepage(globalSettings);
-            setupFooter(globalSettings); // <--- Fitur Footer Dinamis
+            setupFooter(globalSettings); 
             renderPromoSection();
             setupFilters();
             renderCatalog();
@@ -395,8 +387,10 @@
             
             if (colors.length > 1 && colors[1] !== '') {
                 header.style.background = `linear-gradient(to right, ${colors[0]}, ${colors[1]})`;
+                document.getElementById('mobile-menu').style.background = `linear-gradient(to right, ${colors[0]}, ${colors[1]})`;
             } else {
                 header.style.background = colors[0];
+                document.getElementById('mobile-menu').style.backgroundColor = colors[0];
             }
             
             // === LOGIKA GRADIENT (WARNA BACKGROUND WEB) ===
@@ -477,14 +471,24 @@
                 heroTitleEl.style.fontSize = `${settings.heroFontSize}px`;
             }
 
-            // Gambar Background Hero
+            // Gambar Background Hero & Efek Overlay
             if (settings.heroBgImage && settings.heroBgImage.trim() !== '') {
                 heroSectionEl.classList.add('hero-bg-overlay');
                 heroSectionEl.style.backgroundImage = `url('${settings.heroBgImage}')`;
-                heroTitleEl.style.color = 'white';
-                heroSubtitleEl.style.color = '#e5e7eb'; // Abu-abu terang biar kontras
+                
+                // Cek toggle dari admin: pakai efek gelap/blur atau tidak?
+                if (settings.heroBgEffect && settings.heroBgEffect.toLowerCase() === 'ya') {
+                     heroSectionEl.classList.add('hero-bg-effect'); // Tambah gelap
+                     heroTitleEl.style.color = 'white';
+                     heroSubtitleEl.style.color = '#e5e7eb';
+                } else {
+                     heroSectionEl.classList.remove('hero-bg-effect'); // Biarkan terang/asli
+                     heroTitleEl.style.color = ''; // kembali ke default tailwind
+                     heroSubtitleEl.style.color = ''; 
+                }
             } else {
                 heroSectionEl.classList.remove('hero-bg-overlay');
+                heroSectionEl.classList.remove('hero-bg-effect');
                 heroSectionEl.style.backgroundImage = 'none';
                 heroTitleEl.style.color = ''; // kembali ke default tailwind
                 heroSubtitleEl.style.color = ''; 
@@ -532,20 +536,37 @@
             // Deskripsi Footer
             document.getElementById('footer-desc').innerText = settings.footerDeskripsi || 'Menyediakan berbagai macam tools digital untuk membantu meningkatkan produktivitas Anda.';
 
-            // Link Sosial Media (Munculin kalo ada linknya)
-            function setupSocmed(id, link) {
-                const el = document.getElementById(id);
-                if(link && link.trim() !== '') {
-                    el.href = link;
-                    el.classList.remove('hidden');
-                } else {
-                    el.classList.add('hidden');
+            // === LOGIKA SOSMED DINAMIS (GUDANG SVG) ===
+            const sosmedContainer = document.getElementById('footer-sosmed-container');
+            if (sosmedContainer) {
+                sosmedContainer.innerHTML = ''; 
+                let sosmedList = [];
+                try { sosmedList = settings.sosmedList ? JSON.parse(settings.sosmedList) : []; } catch(e) {}
+
+                // Kamus SVG Super Lengkap
+                const sosmedIcons = {
+                    'Facebook': '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',
+                    'Instagram': '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>',
+                    'TikTok': '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1.04-.1z"/></svg>',
+                    'YouTube': '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
+                    'X (Twitter)': '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.005 4.126H5.078z"/></svg>',
+                    'Threads': '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10c2.518 0 4.815-.929 6.572-2.464.22-.191.24-.523.045-.737-.195-.214-.528-.231-.75-.04C16.323 20.124 14.249 21 12 21 7.029 21 3 16.971 3 12S7.029 3 12 3s9 4.029 9 9v1c0 1.657-1.343 3-3 3-1.42 0-2.613-.984-2.919-2.316a4.981 4.981 0 01-3.081 1.034C8.791 14.718 7 12.926 7 10.702 7 8.476 8.791 6.685 11 6.685c1.787 0 3.327 1.157 3.84 2.76.136-.205.318-.387.534-.523C15.655 8.71 16 8.358 16 7.94c0-.518-.42-.94-.94-.94H12c-2.761 0-5 2.239-5 5 0 2.761 2.239 5 5 5 1.542 0 2.916-.707 3.84-1.802.138.824.846 1.455 1.701 1.455h.459c2.146 0 3.94-1.743 3.94-3.94v-1C22 6.477 17.523 2 12 2zM12 13.5c-1.54 0-2.8-1.26-2.8-2.8s1.26-2.8 2.8-2.8 2.8 1.26 2.8 2.8-1.26 2.8-2.8 2.8z"/></svg>',
+                    'LinkedIn': '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',
+                    'Telegram': '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.223-.548.223l.188-2.85 5.18-4.68c.223-.198-.054-.309-.346-.11l-6.4 4.02-2.76-.86c-.6-.187-.61-.6.126-.894l10.78-4.14c.49-.188.93.11.78.618z"/></svg>',
+                    'Website': '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>'
+                };
+
+                if (sosmedList.length > 0) {
+                    let htmlSosmed = '';
+                    sosmedList.forEach(s => {
+                        if (s.url && s.url.trim() !== '') {
+                            const iconSvg = sosmedIcons[s.platform] || sosmedIcons['Website'];
+                            htmlSosmed += `<a href="${s.url}" target="_blank" title="${s.platform}" class="text-gray-400 hover:text-white transition transform hover:scale-110">${iconSvg}</a>`;
+                        }
+                    });
+                    sosmedContainer.innerHTML = htmlSosmed;
                 }
             }
-            setupSocmed('social-fb', settings.linkFacebook);
-            setupSocmed('social-ig', settings.linkInstagram);
-            setupSocmed('social-tiktok', settings.linkTiktok);
-            setupSocmed('social-yt', settings.linkYoutube);
 
             // Link Legal (Sembunyikan kalau URL kosong atau cuma '#')
             function setupLegalLink(li_id, a_id, link) {
