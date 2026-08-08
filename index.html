@@ -447,6 +447,16 @@
             if(settings.logoUrl) {
                 logoImg.src = settings.logoUrl;
                 logoImg.classList.remove('hidden');
+                
+                // Update Favicon (Ikon Tab Browser) Otomatis
+                let linkFavicon = document.querySelector("link[rel~='icon']");
+                if (!linkFavicon) {
+                    linkFavicon = document.createElement('link');
+                    linkFavicon.rel = 'icon';
+                    document.head.appendChild(linkFavicon);
+                }
+                linkFavicon.href = settings.logoUrl;
+                
             } else {
                 logoImg.classList.add('hidden');
             }
