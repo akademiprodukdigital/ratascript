@@ -576,7 +576,6 @@
                     a.href = link;
                     li.style.display = 'block';
                 } else {
-                    // Kalau admin males ngisi link, linknya ngarah ke # tapi tetep tampil
                     a.href = '#';
                     li.style.display = 'block'; 
                 }
@@ -603,7 +602,6 @@
         }
 
         function createProductCardHTML(p, settings) {
-            // MENGGUNAKAN FUNGSI HELPER GRADIENT DI SINI
             const bgCSS = getBackgroundCSS(settings.warnaUtama);
             const primaryColor = getPrimaryColor(settings.warnaUtama);
 
@@ -657,30 +655,30 @@
             });
 
             const filterContainer = document.getElementById('category-filter');
+            // Menulis ulang isi filter secara aman
             filterContainer.innerHTML = categories.map(cat => 
-                `<button class="cat-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 text-gray-600 bg-white hover:bg-gray-50 transition-colors ${cat === 'Semua' ? 'active' : ''}" data-cat="${cat}">
+                `<button class="cat-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 text-gray-600 bg-white hover:bg-gray-50 transition-colors ${cat === currentCategory ? 'active' : ''}" data-cat="${cat}">
                     ${cat}
                 </button>`
             ).join('');
 
-            // PENTING: Remove listener lama biar ga numpuk pas auto-update
-            const newFilterContainer = filterContainer.cloneNode(true);
-            filterContainer.parentNode.replaceChild(newFilterContainer, filterContainer);
-
+            // Mencegah klik menyasar elemen yang salah dengan e.currentTarget
             document.querySelectorAll('.cat-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-                    e.target.classList.add('active');
-                    currentCategory = e.target.getAttribute('data-cat');
+                    e.currentTarget.classList.add('active'); // Ubah warna jadi aktif
+                    currentCategory = e.currentTarget.getAttribute('data-cat'); // Dapatkan kategori
                     currentPage = 1; 
-                    renderCatalog();
+                    renderCatalog(); // Panggil fungsi saring data
                 });
             });
 
+            // Prevent listener lama menumpuk di input search
             const searchInput = document.getElementById('searchInput');
             const newSearchInput = searchInput.cloneNode(true);
             searchInput.parentNode.replaceChild(newSearchInput, searchInput);
             
+            newSearchInput.value = searchQuery;
             newSearchInput.addEventListener('input', (e) => {
                 searchQuery = e.target.value.toLowerCase();
                 currentPage = 1; 
@@ -693,8 +691,18 @@
             const noResults = document.getElementById('no-results');
             
             const filteredProducts = allProducts.filter(p => {
-                const matchCategory = currentCategory === 'Semua' || p.kategori === currentCategory;
-                const matchSearch = p.judul.toLowerCase().includes(searchQuery) || p.deskripsi.toLowerCase().includes(searchQuery);
+                // BUG FIX: Fitur Anti-Crash. Konversi paksa ke String() untuk mencegah 
+                // error bawaan JS jika ada data produk di google sheets yang kosong atau berupa angka.
+                const catProduct = p.kategori ? String(p.kategori).trim() : '';
+                const catCurrent = currentCategory ? String(currentCategory).trim() : 'Semua';
+                const matchCategory = catCurrent === 'Semua' || catProduct === catCurrent;
+                
+                const title = p.judul ? String(p.judul).toLowerCase() : '';
+                const desc = p.deskripsi ? String(p.deskripsi).toLowerCase() : '';
+                const search = searchQuery ? String(searchQuery).toLowerCase() : '';
+                
+                const matchSearch = title.includes(search) || desc.includes(search);
+                
                 return matchCategory && matchSearch;
             });
 
