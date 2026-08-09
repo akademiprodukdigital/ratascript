@@ -252,6 +252,7 @@
     <!-- END MODAL POPUP ARTIKEL -->
 
     <script>
+        /* STREAMING_CHUNK:Inisialisasi script dan fungsi Helper */
         // ==========================================
         // FUNGSI HELPER UNTUK GRADIENT
         // ==========================================
@@ -282,6 +283,7 @@
         let globalSettings = {};
         let currentPage = 1;
 
+        /* STREAMING_CHUNK:Logika Fetch Data dari server Google Sheets */
         // FUNGSI CACHING DAN FETCHING DATA
         function fetchDataFromGoogle() {
             const cacheKey = 'marketplace_data_cache';
@@ -366,6 +368,7 @@
             document.getElementById('app').classList.remove('hidden');
         }
 
+        /* STREAMING_CHUNK:Logika Desain Global dan Variabel CSS */
         function setupDesign(settings) {
             // === LOGIKA FONT DINAMIS ===
             const fontName = settings.fontFamily || 'Inter';
@@ -433,6 +436,7 @@
             document.head.appendChild(style);
         }
 
+        /* STREAMING_CHUNK:Setup Komponen Homepage */
         function setupHomepage(settings) {
             // Header & Logo (Support HTML untuk nama brand)
             document.getElementById('brand-name').innerHTML = settings.namaToko || 'Toko';
@@ -519,6 +523,7 @@
             }
         }
 
+        /* STREAMING_CHUNK:Setup Footer dan Legal Links */
         function setupFooter(settings) {
             // Logo & Brand Footer (Support HTML)
             document.getElementById('footer-brand').innerHTML = settings.namaToko || 'Toko';
@@ -607,9 +612,14 @@
             }
         }
 
+        /* STREAMING_CHUNK:Logika Template HTML Produk */
         function createProductCardHTML(p, settings) {
             const bgCSS = getBackgroundCSS(settings.warnaUtama);
             const primaryColor = getPrimaryColor(settings.warnaUtama);
+            
+            // STREAMING_CHUNK:Gunakan teks dinamis dari Settings
+            const checkoutText = settings.btnCheckoutText || '⚡ Checkout Kilat';
+            const salesText = settings.btnSalesText || '📖 Lihat Sales Page';
 
             return `
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group border border-gray-100">
@@ -625,12 +635,13 @@
                             <div class="text-2xl font-black mb-4" style="color: ${primaryColor}">${p.harga}</div>
                             
                             <div class="space-y-2">
-                                <a href="${p.linkCheckout}" target="_blank" class="block w-full text-center text-white font-semibold py-3 px-4 rounded-xl transition-opacity hover:opacity-90 shadow-md flex items-center justify-center space-x-2" style="${bgCSS}">
-                                    <span>⚡ Checkout Kilat</span>
-                                </a>
-                                <a href="${p.linkSales}" target="_blank" class="block w-full text-center font-semibold py-2.5 px-4 rounded-xl transition-colors bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm">
-                                    📖 Lihat Sales Page
-                                </a>
+                                <!-- STREAMING_CHUNK:Gunakan Button murni untuk menyembunyikan link Affiliate dari hover preview browser -->
+                                <button onclick="window.open('${p.linkCheckout}', '_blank')" class="block w-full text-center text-white font-semibold py-3 px-4 rounded-xl transition-opacity hover:opacity-90 shadow-md flex items-center justify-center space-x-2" style="${bgCSS}">
+                                    <span>${checkoutText}</span>
+                                </button>
+                                <button onclick="window.open('${p.linkSales}', '_blank')" class="block w-full text-center font-semibold py-2.5 px-4 rounded-xl transition-colors bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm">
+                                    ${salesText}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -638,6 +649,7 @@
             `;
         }
 
+        /* STREAMING_CHUNK:Fungsi Render Komponen lainnya */
         function renderPromoSection() {
             const promoList = document.getElementById('promo-list');
             const promoSection = document.getElementById('promo-section');
