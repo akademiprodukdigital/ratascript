@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preview Marketplace Digital</title>
+    <title>Loading...</title> <!-- Akan otomatis ditimpa JS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Transisi halus saat warna/font dimuat */
@@ -437,6 +437,12 @@
             // Header & Logo (Support HTML untuk nama brand)
             document.getElementById('brand-name').innerHTML = settings.namaToko || 'Toko';
             
+            // --- UPDATE TITLE TAB BROWSER OTOMATIS ---
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = settings.namaToko || 'Toko';
+            document.title = tempDiv.textContent || tempDiv.innerText || 'Marketplace Digital';
+            // -----------------------------------------
+
             const logoImg = document.getElementById('logo-image');
             if(settings.logoUrl) {
                 logoImg.src = settings.logoUrl;
