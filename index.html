@@ -43,7 +43,7 @@
     </div>
 
     <!-- App Container (Disembunyikan sampai data dimuat) -->
-    <div id="app" class="hidden min-h-screen">
+    <div id="app" class="hidden min-h-screen flex flex-col">
         
         <header id="header" class="text-white shadow-lg transition-colors duration-300 sticky top-0 z-50">
             <div class="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -93,7 +93,7 @@
             </div>
         </section>
 
-        <!-- STREAMING_CHUNK: Layout Pencarian, Filter & Sorting seperti referensi Ratakan -->
+        <!-- PENCARIAN, FILTER, DAN SORTING SECTION -->
         <section class="container mx-auto px-6 py-8 max-w-7xl">
             <!-- Baris 1: Pencarian dan Filter Kategori -->
             <div class="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-6">
@@ -119,31 +119,20 @@
                     <span id="total-product-count" class="text-indigo-600 font-extrabold">0</span> Produk Ditemukan
                 </h2>
                 
-                <!-- Dropdown Urutkan Data -->
                 <div class="w-full sm:w-auto relative">
                     <select id="sortInput" class="w-full sm:w-auto appearance-none bg-white border border-gray-200 text-gray-700 py-2.5 pl-4 pr-10 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium cursor-pointer transition-colors hover:border-indigo-300">
                         <option value="terbaru">✨ Urutkan: Paling Baru</option>
                         <option value="termurah">💸 Harga: Rendah ke Tinggi</option>
                         <option value="termahal">💎 Harga: Tinggi ke Rendah</option>
                     </select>
-                    <!-- Ikon panah bawah kustom -->
+                    <!-- Ikon panah bawah -->
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                 </div>
             </div>
-
-            <!-- Section Promo (Hanya muncul jika ada produk promo) -->
-            <div id="promo-section" class="bg-indigo-50 p-6 rounded-2xl mb-8 hidden">
-                <div class="flex items-center gap-2 mb-6">
-                    <span class="text-2xl">🔥</span>
-                    <h2 class="text-xl font-bold text-gray-900">Produk Pilihan / Promo</h2>
-                </div>
-                <div id="promo-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <!-- Produk promo di-inject di sini -->
-                </div>
-            </div>
             
+            <!-- List Semua Produk Default (Hanya muncul jika tidak dicari/filter) -->
             <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 <!-- Produk akan di-inject ke sini via JavaScript -->
             </div>
@@ -159,8 +148,21 @@
             </div>
         </section>
 
-        <!-- Section Banner Khusus Atas -->
-        <section id="banner-section" class="container mx-auto px-6 py-4 max-w-7xl hidden">
+        <!-- Section Promo (Hanya muncul jika ada produk promo) -->
+        <section id="promo-section" class="bg-indigo-50 py-12 px-6 hidden">
+            <div class="container mx-auto max-w-7xl">
+                <div class="flex items-center gap-2 mb-8">
+                    <span class="text-2xl">🔥</span>
+                    <h2 class="text-2xl font-bold text-gray-900">Produk Pilihan / Promo</h2>
+                </div>
+                <div id="promo-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    <!-- Produk promo di-inject di sini -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Banner Khusus -->
+        <section id="banner-section" class="container mx-auto px-6 py-12 max-w-7xl hidden">
             <a href="#" id="banner-link" target="_blank" class="block w-full overflow-hidden rounded-2xl shadow-md hover:shadow-xl transition-shadow group">
                 <img id="banner-image" src="" alt="Promo Banner" class="w-full h-auto object-cover transform group-hover:scale-[1.01] transition-transform duration-500">
             </a>
@@ -268,7 +270,6 @@
     <!-- END MODAL POPUP ARTIKEL -->
 
     <script>
-        /* STREAMING_CHUNK: Menginisialisasi variabel dan helper functions */
         // ==========================================
         // FUNGSI HELPER UNTUK GRADIENT
         // ==========================================
@@ -300,7 +301,6 @@
         let globalSettings = {};
         let currentPage = 1;
 
-        /* STREAMING_CHUNK: Menyiapkan koneksi dan fetch data API */
         // FUNGSI CACHING DAN FETCHING DATA
         function fetchDataFromGoogle() {
             const cacheKey = 'marketplace_data_cache';
@@ -386,7 +386,6 @@
             document.getElementById('app').classList.remove('hidden');
         }
 
-        /* STREAMING_CHUNK: Setup warna UI dan desain utama */
         function setupDesign(settings) {
             // === LOGIKA FONT DINAMIS ===
             const fontName = settings.fontFamily || 'Inter';
@@ -454,7 +453,6 @@
             document.head.appendChild(style);
         }
 
-        /* STREAMING_CHUNK: Setup Homepage dan elemen detail text */
         function setupHomepage(settings) {
             // Header & Logo (Support HTML untuk nama brand)
             document.getElementById('brand-name').innerHTML = settings.namaToko || 'Toko';
@@ -541,7 +539,6 @@
             }
         }
 
-        /* STREAMING_CHUNK: Setup pengaturan Footer dan Links */
         function setupFooter(settings) {
             // Logo & Brand Footer (Support HTML)
             document.getElementById('footer-brand').innerHTML = settings.namaToko || 'Toko';
@@ -630,7 +627,6 @@
             }
         }
 
-        /* STREAMING_CHUNK: Merender Product Card menjadi elemen HTML */
         function createProductCardHTML(p, settings) {
             const bgCSS = getBackgroundCSS(settings.warnaUtama);
             const primaryColor = getPrimaryColor(settings.warnaUtama);
@@ -679,7 +675,7 @@
             }
         }
 
-        /* STREAMING_CHUNK: Helper merubah harga ke angka asli untuk disortir */
+        // Helper merubah harga ke angka asli untuk disortir
         function parsePriceString(priceStr) {
             if (!priceStr) return 0;
             // Hapus semua karakter kecuali angka (Buang 'Rp', titik, dll)
@@ -687,7 +683,6 @@
             return parseInt(numStr) || 0;
         }
 
-        /* STREAMING_CHUNK: Setup Interaksi Filter dan Search Dropdown */
         function setupFilters() {
             const categories = ['Semua'];
             allProducts.forEach(p => {
@@ -740,7 +735,6 @@
             });
         }
 
-        /* STREAMING_CHUNK: Rendering List Katalog sesuai Filter & Sortir */
         function renderCatalog() {
             const productList = document.getElementById('product-list');
             const noResults = document.getElementById('no-results');
@@ -821,7 +815,6 @@
             });
         }
 
-        /* STREAMING_CHUNK: Setup layout Blog/Artikel */
         function setupBlogSection(articles, settings) {
             const showBlog = settings.tampilkanBlog && settings.tampilkanBlog.toLowerCase() === 'ya';
             const blogSection = document.getElementById('blog-section');
