@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Akses Produk - iMersAFFLINK</title>
+    <meta name="description" content="Halaman akses unduhan produk iMersAFFLINK untuk lisensi Reseller Right." />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Scripts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Poppins"', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        ink: '#08162f',
+                        soft: '#f6f9fd',
+                        brand: {
+                            blue: '#4F46E5', /* Disesuaikan dengan brand iMersAFFLINK */
+                            cyan: '#06b6d4',
+                            mint: '#7ee6b8',
+                            navy: '#08162f',
+                            sky: '#dff6ff',
+                            green: '#dffcf0',
+                            pink: '#ec4899' /* Tambahan warna pink dari salespage */
+                        }
+                    },
+                    boxShadow: {
+                        soft: '0 16px 44px rgba(15,44,89,.05)',
+                        card: '0 20px 60px rgba(8,22,47,.08)'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        :root {
+            --blue: #4F46E5;
+            --pink: #ec4899;
+            --cyan: #06b6d4;
+            --mint: #7ee6b8;
+            --navy: #08162f;
+        }
+        body {
+            overflow-x: hidden;
+            background-color: #f8fafc;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: "Montserrat", sans-serif;
+        }
+        .bg-mesh {
+            background: radial-gradient(circle at 8% 12%, rgba(126,230,184,.42), transparent 25%),
+                        radial-gradient(circle at 85% 5%, rgba(79,70,229,.17), transparent 24%),
+                        radial-gradient(circle at 86% 48%, rgba(236,72,153,.13), transparent 27%),
+                        linear-gradient(180deg, #fbfeff 0%, #f4fbff 55%, #fff 100%);
+        }
+        .gradient-text {
+            background: linear-gradient(110deg, var(--blue), var(--pink) 70%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .btn-gradient {
+            background: linear-gradient(135deg, var(--blue), var(--pink) 80%);
+            box-shadow: 0 10px 25px rgba(79,70,229,.2);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            box-shadow: 0 15px 35px rgba(79,70,229,.3);
+            transform: translateY(-2px);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 44px rgba(15,44,89,.08);
+            border-color: #e0e7ff;
+        }
+        .card-gradient {
+            background: radial-gradient(circle at 90% 8%, rgba(236,72,153,.32), transparent 32%),
+                        linear-gradient(135deg, #08162f, #1e1b4b 56%, #312e81);
+        }
+    </style>
+</head>
+<body class="font-sans text-slate-800 antialiased selection:bg-brand-green selection:text-brand-navy bg-mesh min-h-screen flex flex-col items-center py-12 px-4 sm:px-6">
+
+    <header class="w-full max-w-3xl text-center flex flex-col items-center mb-10 mt-8 relative z-10">
+        <!-- Logo -->
+        <div class="flex items-center justify-center gap-3 mb-8">
+            <img src="https://imersnesia.com/wp-content/uploads/2026/08/icon-afflink.png" alt="iMersAFFLINK Logo" class="h-12 w-auto object-contain">
+            <span class="font-black text-3xl text-slate-800 tracking-tight">iMers<span class="text-brand-blue">AFFLINK</span></span>
+        </div>
+        
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 text-[11px] font-bold uppercase tracking-wider mb-5 shadow-sm">
+            <i data-lucide="check-circle-2" class="w-4 h-4"></i> Verified Purchase Access
+        </div>
+
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black gradient-text tracking-tight mb-4">Terima Kasih!</h1>
+        <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed">
+            Terima kasih sudah menjadi bagian dari <b class="text-brand-navy">Reseller Right Community</b>. Akses seluruh file, database, dan tutorial <b class="text-brand-blue">iMersAFFLINK</b> Anda dapat diunduh di bawah ini:
+        </p>
+    </header>
+
+    <main class="w-full max-w-3xl space-y-8 relative z-10">
+        
+        <!-- Banner Mockup -->
+        <div class="w-full rounded-[2rem] overflow-hidden border border-slate-200 shadow-soft bg-white p-2">
+            <img src="https://placehold.co/1200x600/4F46E5/FFFFFF?text=Welcome+to+iMersAFFLINK+Member+Area" alt="Banner Produk" class="w-full h-auto object-cover rounded-2xl opacity-90 hover:opacity-100 transition-opacity">
+        </div>
+
+        <div class="pt-4">
+            <div class="flex items-center gap-2 text-slate-800 font-black text-sm sm:text-base uppercase tracking-wider mb-5 pl-2">
+                <i data-lucide="folder-down" class="w-5 h-5 text-brand-blue"></i>
+                Akses File Utama
+            </div>
+
+            <div class="space-y-4">
+                <!-- Card 1: Source Code ZIP -->
+                <div class="card-hover bg-white rounded-2xl p-5 sm:p-6 border border-slate-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center border border-indigo-100 shrink-0 shadow-inner">
+                            <i data-lucide="file-archive" class="w-6 h-6 text-indigo-500"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base">File Source Code HTML (.zip)</h3>
+                            <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">Berisi template index.html, admin.html, dan script</p>
+                        </div>
+                    </div>
+                    <a href="#" target="_blank" class="w-full sm:w-auto px-6 py-3 bg-white border-2 border-indigo-100 text-indigo-600 hover:bg-indigo-50 text-xs font-bold rounded-xl transition-all text-center flex justify-center items-center gap-2 shrink-0">
+                        <i data-lucide="download" class="w-4 h-4"></i> Download ZIP
+                    </a>
+                </div>
+
+                <!-- Card 2: File Google Sheets -->
+                <div class="card-hover bg-white rounded-2xl p-5 sm:p-6 border border-slate-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center border border-emerald-100 shrink-0 shadow-inner">
+                            <i data-lucide="file-spreadsheet" class="w-6 h-6 text-emerald-500"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base">Template Google Sheets</h3>
+                            <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">Database Katalog & File Code.gs (App Script)</p>
+                        </div>
+                    </div>
+                    <a href="#" target="_blank" class="w-full sm:w-auto px-6 py-3 bg-white border-2 border-emerald-100 text-emerald-600 hover:bg-emerald-50 text-xs font-bold rounded-xl transition-all text-center flex justify-center items-center gap-2 shrink-0">
+                        <i data-lucide="copy" class="w-4 h-4"></i> Salin File
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-4">
+            <div class="flex items-center gap-2 text-slate-800 font-black text-sm sm:text-base uppercase tracking-wider mb-5 pl-2">
+                <i data-lucide="youtube" class="w-5 h-5 text-red-500"></i>
+                Panduan & Instalasi
+            </div>
+
+            <div class="space-y-4">
+                <!-- Card 3: Video Part 1 -->
+                <div class="card-hover bg-white rounded-2xl p-5 sm:p-6 border border-slate-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center border border-red-100 shrink-0 shadow-inner">
+                            <i data-lucide="play-square" class="w-6 h-6 text-red-500"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base">Eps 1: Setup Google Sheets</h3>
+                            <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">Cara copy template dan pasang script backend API</p>
+                        </div>
+                    </div>
+                    <a href="#" target="_blank" class="w-full sm:w-auto px-6 py-3 bg-red-500 text-white hover:bg-red-600 text-xs font-bold rounded-xl transition-all shadow-md text-center flex justify-center items-center gap-2 shrink-0">
+                        <i data-lucide="play" class="w-4 h-4"></i> Tonton
+                    </a>
+                </div>
+
+                <!-- Card 4: Video Part 2 -->
+                <div class="card-hover bg-white rounded-2xl p-5 sm:p-6 border border-slate-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center border border-red-100 shrink-0 shadow-inner">
+                            <i data-lucide="play-square" class="w-6 h-6 text-red-500"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base">Eps 2: Deploy Frontend Vercel</h3>
+                            <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">Cara menghubungkan HTML ke hosting gratis Vercel</p>
+                        </div>
+                    </div>
+                    <a href="#" target="_blank" class="w-full sm:w-auto px-6 py-3 bg-red-500 text-white hover:bg-red-600 text-xs font-bold rounded-xl transition-all shadow-md text-center flex justify-center items-center gap-2 shrink-0">
+                        <i data-lucide="play" class="w-4 h-4"></i> Tonton
+                    </a>
+                </div>
+
+                <!-- Card 5: Dokumen Notion -->
+                <div class="card-hover bg-white rounded-2xl p-5 sm:p-6 border border-slate-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center border border-slate-200 shrink-0 shadow-inner">
+                            <i data-lucide="book-open" class="w-6 h-6 text-slate-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base">Panduan Tertulis (Teks & Gambar)</h3>
+                            <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">Bagi yang lebih suka baca dokumentasi step-by-step</p>
+                        </div>
+                    </div>
+                    <a href="#" target="_blank" class="w-full sm:w-auto px-6 py-3 bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold rounded-xl transition-all text-center flex justify-center items-center gap-2 shrink-0">
+                        <i data-lucide="external-link" class="w-4 h-4"></i> Buka Notion
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-4">
+            <div class="flex items-center gap-2 text-slate-800 font-black text-sm sm:text-base uppercase tracking-wider mb-5 pl-2">
+                <i data-lucide="gift" class="w-5 h-5 text-brand-pink"></i>
+                Bonus Database (Excel)
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Bonus 1 -->
+                <a href="#" class="card-hover bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-pink-50 flex items-center justify-center border border-pink-100">
+                            <i data-lucide="table" class="w-5 h-5 text-pink-500"></i>
+                        </div>
+                        <span class="font-bold text-slate-800 text-sm group-hover:text-pink-600 transition">DB Ratakan</span>
+                    </div>
+                    <i data-lucide="download-cloud" class="w-5 h-5 text-slate-400 group-hover:text-pink-500 transition"></i>
+                </a>
+                
+                <!-- Bonus 2 -->
+                <a href="#" class="card-hover bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-pink-50 flex items-center justify-center border border-pink-100">
+                            <i data-lucide="table" class="w-5 h-5 text-pink-500"></i>
+                        </div>
+                        <span class="font-bold text-slate-800 text-sm group-hover:text-pink-600 transition">DB Levidio</span>
+                    </div>
+                    <i data-lucide="download-cloud" class="w-5 h-5 text-slate-400 group-hover:text-pink-500 transition"></i>
+                </a>
+
+                <!-- Bonus 3 -->
+                <a href="#" class="card-hover bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-pink-50 flex items-center justify-center border border-pink-100">
+                            <i data-lucide="table" class="w-5 h-5 text-pink-500"></i>
+                        </div>
+                        <span class="font-bold text-slate-800 text-sm group-hover:text-pink-600 transition">DB Akademi Digital</span>
+                    </div>
+                    <i data-lucide="download-cloud" class="w-5 h-5 text-slate-400 group-hover:text-pink-500 transition"></i>
+                </a>
+
+                <!-- Bonus 4 -->
+                <a href="#" class="card-hover bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-pink-50 flex items-center justify-center border border-pink-100">
+                            <i data-lucide="table" class="w-5 h-5 text-pink-500"></i>
+                        </div>
+                        <span class="font-bold text-slate-800 text-sm group-hover:text-pink-600 transition">DB AffiliateAJA</span>
+                    </div>
+                    <i data-lucide="download-cloud" class="w-5 h-5 text-slate-400 group-hover:text-pink-500 transition"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-red-50/80 rounded-3xl p-6 sm:p-8 border border-red-200 relative overflow-hidden shadow-sm mt-8">
+            <div class="absolute -left-10 -top-10 w-48 h-48 bg-red-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="relative z-10">
+                <div class="flex items-center gap-2 text-red-600 font-bold text-xs uppercase tracking-wider mb-3">
+                    <i data-lucide="alert-triangle" class="w-5 h-5"></i> Catatan Super Penting
+                </div>
+                <h3 class="font-black text-slate-800 text-lg sm:text-xl mb-4">Wajib Ubah URL API di File HTML!</h3>
+                <p class="text-sm text-slate-700 leading-relaxed mb-4">
+                    Agar web katalog bisa terhubung ke database Google Sheets Anda sendiri, Anda <b>WAJIB</b> mencari baris variabel SCRIPT URL di dalam file HTML dan menggantinya dengan <b>URL Web App Google Apps Script</b> milik Anda yang sudah di-deploy.
+                </p>
+                
+                <div class="bg-white p-4 rounded-xl border border-red-100 shadow-inner mb-5">
+                    <code class="text-[11px] sm:text-xs text-red-600 font-mono font-bold break-all">const SCRIPT_URL = 'URL WEB APP GOOGLE APPS SCRIPT ANDA DISINI';</code>
+                </div>
+
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Lokasi file yang harus diedit:</p>
+                <ul class="space-y-3">
+                    <li class="flex items-center gap-3 text-sm text-slate-700 font-medium">
+                        <i data-lucide="file-code" class="w-4 h-4 text-red-400"></i>
+                        <span>File <b>index.html</b> (Frontend Katalog)</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-sm text-slate-700 font-medium">
+                        <i data-lucide="file-code" class="w-4 h-4 text-red-400"></i>
+                        <span>File <b>admin.html</b> (Dashboard Admin Panel)</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-indigo-50/60 rounded-3xl p-6 sm:p-8 border border-indigo-200 relative overflow-hidden shadow-sm mt-8">
+            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="relative z-10">
+                <div class="flex items-center gap-2 text-indigo-600 font-bold text-xs uppercase tracking-wider mb-3">
+                    <i data-lucide="shield-check" class="w-5 h-5"></i> Aturan Lisensi (Reseller Right)
+                </div>
+                <h3 class="font-black text-slate-800 text-lg sm:text-xl mb-5">Wajib Dipatuhi Oleh Semua Reseller:</h3>
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-3 text-sm text-slate-700 leading-relaxed">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-indigo-500 shrink-0 mt-0.5"></i>
+                        <span><b>Jual Kembali</b> dengan mengikuti harga pusat (Harga Promo min. Rp 37.000).</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-slate-700 leading-relaxed">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-indigo-500 shrink-0 mt-0.5"></i>
+                        <span>Bisa digunakan sebagai <b>Jasa Pembuatan Web Katalog</b> untuk Klien Anda.</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-slate-700 leading-relaxed">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-indigo-500 shrink-0 mt-0.5"></i>
+                        <span><b>Hak Setara:</b> Anda dan Pembeli Anda mempunyai hak jual yang sama (Unlimited Resell).</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-slate-700 leading-relaxed">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5"></i>
+                        <span><b>Bebas Modifikasi Frontend:</b> Diperbolehkan mengganti warna, teks, logo, atau merombak desain file <code class="bg-indigo-100 px-1 rounded text-xs">index.html</code>.</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-slate-700 leading-relaxed">
+                        <i data-lucide="x-circle" class="w-5 h-5 text-red-500 shrink-0 mt-0.5"></i>
+                        <span><b>Dilarang Keras:</b> Rebranding nama produk iMersAFFLINK menjadi brand buatan Anda sendiri jika menjual source code-nya.</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-slate-700 leading-relaxed">
+                        <i data-lucide="x-circle" class="w-5 h-5 text-red-500 shrink-0 mt-0.5"></i>
+                        <span><b>Dilarang Keras:</b> Mengubah atau mengotak-atik file backend <code class="bg-red-100 text-red-600 font-bold px-1 rounded text-xs">Code.gs</code>. Merubah file ini akan menggugurkan hak free update.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-cyan-50/60 rounded-3xl p-6 sm:p-8 border border-cyan-200 relative overflow-hidden shadow-sm mt-8">
+            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="relative z-10">
+                <div class="flex items-center gap-2 text-cyan-600 font-bold text-xs uppercase tracking-wider mb-3">
+                    <i data-lucide="image" class="w-5 h-5"></i> Panduan Visual UI
+                </div>
+                <h3 class="font-black text-slate-800 text-lg sm:text-xl mb-5">Rekomendasi Ukuran Gambar Katalog:</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Banner -->
+                    <div class="bg-white p-5 rounded-2xl border border-cyan-100 shadow-sm flex flex-col h-full">
+                        <h4 class="font-bold text-slate-800 flex items-center gap-2 mb-4 pb-2 border-b border-cyan-50"><i data-lucide="monitor" class="w-4 h-4 text-cyan-500"></i> Banner Promo (Carousel)</h4>
+                        <ul class="space-y-3 flex-1">
+                            <li class="flex items-start gap-2 text-sm text-slate-700 leading-relaxed">
+                                <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-500 shrink-0 mt-0.5"></i>
+                                <span><b>Dimensi Ideal:</b> 1200 x 400 px atau 800 x 300 px.</span>
+                            </li>
+                            <li class="flex items-start gap-2 text-sm text-slate-700 leading-relaxed">
+                                <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-500 shrink-0 mt-0.5"></i>
+                                <span><b>Format Rasio:</b> Landscape memanjang agar pas di layar Desktop maupun Mobile.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Product -->
+                    <div class="bg-white p-5 rounded-2xl border border-cyan-100 shadow-sm flex flex-col h-full">
+                        <h4 class="font-bold text-slate-800 flex items-center gap-2 mb-4 pb-2 border-b border-cyan-50"><i data-lucide="box" class="w-4 h-4 text-cyan-500"></i> Gambar Thumbnail Produk</h4>
+                        <ul class="space-y-3 flex-1">
+                            <li class="flex items-start gap-2 text-sm text-slate-700 leading-relaxed">
+                                <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-500 shrink-0 mt-0.5"></i>
+                                <span><b>Format Rasio:</b> Square 1:1 (Kotak).</span>
+                            </li>
+                            <li class="flex items-start gap-2 text-sm text-slate-700 leading-relaxed">
+                                <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-500 shrink-0 mt-0.5"></i>
+                                <span><b>Dimensi Ideal:</b> 500 x 500 px.</span>
+                            </li>
+                            <li class="flex items-start gap-2 text-sm text-slate-700 leading-relaxed">
+                                <i data-lucide="alert-circle" class="w-4 h-4 text-amber-500 shrink-0 mt-0.5"></i>
+                                <span>Pastikan gambar telah dikompres via TinyPNG agar loading web tetap kencang!</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-gradient rounded-3xl p-8 relative overflow-hidden shadow-card text-white mt-8">
+            <div class="absolute -right-20 -top-20 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="relative z-10 text-center sm:text-left">
+                <div class="inline-flex items-center gap-2 text-pink-300 font-bold text-xs uppercase tracking-wider mb-4 px-3 py-1.5 bg-white/10 rounded-full border border-white/10">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i> Komunitas & Diskusi
+                </div>
+                <h3 class="font-black text-2xl sm:text-3xl mb-3">Grup Support Telegram iMersAFFLINK</h3>
+                <p class="text-sm text-slate-300 leading-relaxed mb-8 max-w-xl">
+                    Gabung ke komunitas pusat! Tanya jawab jika ada error saat instalasi, diskusi strategi jualan, dan dapatkan notifikasi langsung jika ada update source code terbaru dari kami.
+                </p>
+                <a href="#" target="_blank" class="inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-[#2AABEE] text-white hover:bg-[#229ED9] text-sm font-black rounded-xl shadow-lg transition-all transform hover:-translate-y-1 gap-2">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.896-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                    Join Grup Telegram Pusat
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-amber-50 rounded-3xl p-8 border border-amber-200 relative overflow-hidden shadow-sm mt-8">
+            <div class="relative z-10 text-center sm:text-left flex flex-col sm:flex-row items-center gap-6">
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shrink-0 border border-amber-200 shadow-sm text-amber-500">
+                    <i data-lucide="crown" class="w-8 h-8"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-black text-slate-800 text-lg sm:text-xl mb-1">Butuh Kustomisasi Penuh & Rebranding?</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed mb-4 sm:mb-0">
+                        Jika Anda seorang Developer yang ingin merombak backend database App Script atau mau ganti nama produk jadi brand Anda sendiri, segera Upgrade ke <b>Lisensi Whitelabel</b>.
+                    </p>
+                </div>
+                <a href="https://wa.me/6281234567890?text=Halo%20Admin,%20saya%20mau%20Upgrade%20Lisensi%20Whitelabel%20iMersAFFLINK" target="_blank" class="inline-flex items-center justify-center w-full sm:w-auto px-6 py-3.5 bg-amber-500 text-white hover:bg-amber-600 text-sm font-bold rounded-xl shadow-md transition-all gap-2 shrink-0">
+                    <i data-lucide="message-square" class="w-4 h-4"></i> Info Harga Whitelabel
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="w-full max-w-3xl mt-16 pt-8 border-t border-slate-200 text-center space-y-6 relative z-10">
+        <div>
+            <h4 class="font-bold text-slate-800 text-base mb-2">Siap Mulai Menebar Link?</h4>
+            <p class="text-sm text-slate-500 leading-relaxed mb-4 max-w-lg mx-auto">
+                Semoga <b>iMersAFFLINK</b> bisa mempermudah Anda membangun etalase produk yang profesional, loading cepat, dan bebas langganan hosting bulanan selamanya.
+            </p>
+            <p class="text-xs text-brand-blue font-bold bg-indigo-50 inline-block px-3 py-1 rounded-full border border-indigo-100">Selamat berkreasi & salam cuan! 🚀</p>
+        </div>
+
+        <div class="pt-6 pb-8">
+            <p class="font-black gradient-text text-base inline-block">iMersAFFLINK Team</p>
+            <p class="text-xs text-slate-400 mt-1">&copy; 2026 Hak Cipta Dilindungi.</p>
+        </div>
+    </footer>
+
+    <!-- Inisialisasi Ikon Lucide -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
