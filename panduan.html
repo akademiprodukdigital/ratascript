@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panduan & Dokumentasi - iMersAFFLINK</title>
+    <meta name="description" content="Panduan lengkap instalasi, deploy, dan penggunaan dashboard iMersAFFLINK." />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Scripts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Poppins"', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        ink: '#08162f',
+                        brand: {
+                            blue: '#4F46E5', /* Indigo 600 */
+                            pink: '#ec4899', /* Pink 500 */
+                            navy: '#08162f',
+                        }
+                    },
+                    boxShadow: {
+                        soft: '0 10px 40px rgba(15,44,89,.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        :root {
+            --blue: #4F46E5;
+            --pink: #ec4899;
+        }
+        body {
+            background-color: #f8fafc; /* slate-50 */
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: "Montserrat", sans-serif;
+        }
+        .gradient-text {
+            background: linear-gradient(110deg, var(--blue), var(--pink) 70%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .prose p { margin-bottom: 1rem; line-height: 1.7; }
+        .prose ul { margin-bottom: 1rem; padding-left: 1.5rem; list-style-type: disc; }
+        .prose li { margin-bottom: 0.5rem; }
+        
+        /* Sidebar active link styling */
+        .nav-link.active {
+            color: var(--blue);
+            font-weight: 700;
+            border-left-color: var(--blue);
+            background-color: #eef2ff; /* indigo-50 */
+        }
+    </style>
+</head>
+<body class="font-sans text-slate-800 antialiased selection:bg-brand-blue selection:text-white relative">
+
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <img src="https://imersnesia.com/wp-content/uploads/2026/08/icon-afflink.png" alt="Logo" class="h-8 w-auto">
+                    <span class="font-black text-xl text-slate-800 tracking-tight hidden sm:block">iMers<span class="text-brand-blue">AFFLINK</span> Docs</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="access_page.html" class="text-sm font-medium text-slate-500 hover:text-slate-800 transition">Kembali ke Akses</a>
+                    <a href="https://chat.whatsapp.com/KsX3lBdGTQG5Nz1PuLykEj" target="_blank" class="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg text-sm font-bold border border-indigo-100 hover:bg-indigo-100 transition flex items-center gap-2">
+                        <i data-lucide="help-circle" class="w-4 h-4"></i> Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col lg:flex-row gap-10 items-start">
+        
+        <!-- SIDEBAR NAV (Table of Contents) -->
+        <aside class="w-full lg:w-1/4 lg:sticky lg:top-24 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 shrink-0 hidden md:block">
+            <h4 class="font-black text-slate-800 uppercase tracking-wider text-xs mb-4 px-3">Daftar Isi</h4>
+            <nav class="flex flex-col space-y-1">
+                <a href="#intro" class="nav-link px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50 border-l-2 border-transparent hover:border-slate-300 rounded-r-lg transition">Pendahuluan</a>
+                <a href="#step-1" class="nav-link px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50 border-l-2 border-transparent hover:border-slate-300 rounded-r-lg transition">1. Setup Google Sheets</a>
+                <a href="#step-2" class="nav-link px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50 border-l-2 border-transparent hover:border-slate-300 rounded-r-lg transition">2. Deploy Apps Script (Backend)</a>
+                <a href="#step-3" class="nav-link px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50 border-l-2 border-transparent hover:border-slate-300 rounded-r-lg transition">3. Edit URL API (Frontend)</a>
+                <a href="#step-4" class="nav-link px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50 border-l-2 border-transparent hover:border-slate-300 rounded-r-lg transition">4. Deploy ke Vercel (Go Live)</a>
+                <a href="#dashboard-guide" class="nav-link px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50 border-l-2 border-transparent hover:border-slate-300 rounded-r-lg transition">5. Panduan Menu Dashboard</a>
+                <a href="#step-6" class="nav-link px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50 border-l-2 border-transparent hover:border-slate-300 rounded-r-lg transition">6. Support & Agency</a>
+            </nav>
+        </aside>
+
+        <!-- KONTEN UTAMA -->
+        <main class="w-full lg:w-3/4 max-w-4xl space-y-12">
+            
+            <section id="intro" class="scroll-mt-24">
+                <div class="mb-4 inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-xs font-bold uppercase tracking-wider">
+                    <i data-lucide="book-open" class="w-4 h-4"></i> Dokumentasi Resmi
+                </div>
+                <h1 class="text-3xl md:text-4xl font-black text-slate-800 tracking-tight mb-4">Panduan Instalasi & Penggunaan</h1>
+                <p class="text-slate-600 leading-relaxed text-lg mb-6">
+                    Selamat datang di dokumentasi iMersAFFLINK! Halaman ini akan memandu Anda secara bertahap dari cara setup database gratis menggunakan Google Sheets, meng-online-kan web menggunakan Vercel, hingga membedah fitur-fitur di dalam Dashboard Admin.
+                </p>
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 flex items-start gap-4">
+                    <i data-lucide="info" class="w-6 h-6 text-amber-500 shrink-0 mt-0.5"></i>
+                    <div>
+                        <h4 class="font-bold text-slate-800 mb-1">Sebelum Memulai</h4>
+                        <p class="text-sm text-slate-600">Pastikan Anda sudah mendownload file <b>Source Code HTML (.zip)</b> dari halaman akses dan sudah mengekstraknya di komputer/laptop Anda. Anda juga membutuhkan akun Gmail dan akun <a href="https://vercel.com" target="_blank" class="text-brand-blue hover:underline">Vercel.com</a> (gratis).</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="step-1" class="scroll-mt-24 border-t border-slate-200 pt-12">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-black text-xl shrink-0">1</div>
+                    <h2 class="text-2xl font-black text-slate-800">Setup Database Google Sheets</h2>
+                </div>
+                <div class="prose max-w-none text-slate-600">
+                    <p>Web ini tidak membutuhkan database MySQL (phpMyAdmin) yang mahal. Kita murni menggunakan Google Sheets sebagai tempat menampung produk.</p>
+                    <ul class="space-y-3">
+                        <li>Buka tautan Template Google Sheets yang sudah disediakan di Halaman Akses.</li>
+                        <li>Pastikan Anda sudah login ke akun Google (Gmail) Anda.</li>
+                        <li>Klik menu <b>File</b> > lalu pilih <b>Buat Salinan (Make a copy)</b>.</li>
+                        <li>Beri nama file sesuka Anda (Misal: <i>Database Affiliate Saya</i>), lalu klik tombol <b>Buat Salinan</b>.</li>
+                    </ul>
+                    <div class="bg-red-50 border border-red-200 rounded-xl p-4 mt-4 flex gap-3 text-sm">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 text-red-500 shrink-0"></i>
+                        <p class="text-slate-700 m-0"><b>Penting:</b> Jangan pernah mengubah nama Header (Baris 1 yang tebal) atau nama Sheet di bagian bawah (seperti <i>Produk</i>, <i>Kategori</i>, <i>Pengaturan</i>). Mengubahnya akan menyebabkan dashboard error karena script tidak dapat membaca kolom.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="step-2" class="scroll-mt-24 border-t border-slate-200 pt-12">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-black text-xl shrink-0">2</div>
+                    <h2 class="text-2xl font-black text-slate-800">Deploy Google Apps Script</h2>
+                </div>
+                <div class="prose max-w-none text-slate-600">
+                    <p>Setelah database di-copy, kita perlu mengaktifkan "mesin" (API) yang akan menghubungkan Google Sheets Anda ke Web Katalog.</p>
+                    <ul class="space-y-4">
+                        <li>Di file Google Sheets hasil copy-an Anda, klik menu <b>Ekstensi</b> yang ada di atas, lalu pilih <b>Apps Script</b>.</li>
+                        <li>Sebuah tab baru akan terbuka. Biarkan proses loading selesai. *Kode backend sudah tertanam di dalamnya secara otomatis.*</li>
+                        <li>Perhatikan tombol biru di pojok kanan atas bertuliskan <b>Terapkan (Deploy)</b>. Klik tombol tersebut, lalu pilih <b>Deployment Baru (New Deployment)</b>.</li>
+                        <li>Pada icon gear (pengaturan) pilih tipe <b>Aplikasi Web (Web App)</b>.</li>
+                        <li>Isi deskripsi (bebas, misal: "V1").</li>
+                        <li><b>PENTING:</b> Pada bagian <b>Yang memiliki akses (Who has access)</b>, Anda WAJIB memilih <b>Siapa saja (Anyone)</b>. Jika tidak, data produk Anda tidak akan muncul di website.</li>
+                        <li>Klik tombol <b>Terapkan (Deploy)</b>.</li>
+                        <li><i>(Jika diminta Otorisasi/Akses Akun, klik Izinkan > Lanjutkan > Buka URL (Tingkat Lanjut) / Allow > Advanced > Go to Untitled Project).</i></li>
+                        <li>Setelah sukses, akan muncul sebuah <b>URL Web App (URL Aplikasi Web)</b>. Salin (Copy) URL yang panjang tersebut. Kita akan memakainya di Langkah 3.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="step-3" class="scroll-mt-24 border-t border-slate-200 pt-12">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-black text-xl shrink-0">3</div>
+                    <h2 class="text-2xl font-black text-slate-800">Edit URL API di Frontend HTML</h2>
+                </div>
+                <div class="prose max-w-none text-slate-600">
+                    <p>Sekarang buka folder Source Code (hasil ekstrak ZIP) yang ada di komputer Anda. Anda membutuhkan aplikasi text editor ringan seperti <b>Notepad</b>, <b>Sublime Text</b>, atau <b>VS Code</b>.</p>
+                    <ol class="list-decimal pl-5 space-y-4">
+                        <li>Buka file <b>index.html</b> menggunakan text editor.</li>
+                        <li>Tekan <code>Ctrl + F</code> (atau Cmd + F di Mac) lalu cari tulisan <code>const SCRIPT_URL</code>.</li>
+                        <li>Ganti URL *dummy* bawaan kami dengan <b>URL Web App hasil Salinan Anda dari Langkah 2</b>. Pastikan URL tersebut tetap berada di dalam tanda kutip tunggal <code>'...'</code>.</li>
+                        <li>Save file (<code>Ctrl + S</code>).</li>
+                        <li>Ulangi langkah yang sama untuk file <b>admin.html</b>. Buka filenya, cari variabel yang sama, lalu timpa URL-nya. Save.</li>
+                    </ol>
+                    
+                    <div class="mt-6 bg-slate-900 rounded-xl p-5 shadow-inner border border-slate-800">
+                        <p class="text-xs text-slate-400 mb-2 uppercase tracking-wider font-bold">Contoh Kode yang Benar:</p>
+                        <code class="text-green-400 font-mono text-sm break-all">const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwXYZ123ABC_Contoh_URL_Anda_Panjang_Banget/exec';</code>
+                    </div>
+                </div>
+            </section>
+
+            <section id="step-4" class="scroll-mt-24 border-t border-slate-200 pt-12">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-black text-xl shrink-0">4</div>
+                    <h2 class="text-2xl font-black text-slate-800">Deploy Web ke Vercel (Go Live)</h2>
+                </div>
+                <div class="prose max-w-none text-slate-600">
+                    <p>File HTML Anda sudah siap! Saatnya kita *online*-kan agar bisa diakses seluruh dunia 24 jam nonstop tanpa perlu sewa hosting bulanan. Kita akan menggunakan Vercel (Gratis).</p>
+                    <ul class="space-y-3">
+                        <li>Buka website <a href="https://vercel.com" target="_blank" class="text-brand-blue font-bold">Vercel.com</a> dan buat akun (bisa *Sign up* menggunakan Gmail atau GitHub).</li>
+                        <li>Setelah masuk ke Dashboard Vercel, buat project baru (<b>Add New > Project</b>).</li>
+                        <li>Ada 2 cara upload file:
+                            <ul class="mt-2 space-y-2 list-circle pl-5">
+                                <li><b>Cara 1 (Termudah):</b> Tarik (Drag & Drop) 1 folder utuh Source Code iMersAFFLINK Anda ke area halaman Vercel yang disediakan.</li>
+                                <li><b>Cara 2 (Via GitHub):</b> Jika Anda punya akun GitHub, push folder Anda ke repo GitHub, lalu *import* repo tersebut dari dalam Vercel.</li>
+                            </ul>
+                        </li>
+                        <li>Beri nama *Project Name* Anda (misal: <code>katalog-shopee-saya</code>), lalu klik tombol <b>Deploy</b>.</li>
+                        <li>Tunggu proses 1-2 menit hingga muncul animasi kembang api. <b>Selamat! Website Katalog Anda sudah LIVE!</b></li>
+                    </ul>
+                    <p class="mt-4"><i>Note: Vercel akan memberikan domain gratis berakhiran <code>.vercel.app</code> (contoh: katalog-shopee-saya.vercel.app). Jika Anda punya domain custom berbayar (.com / .id), Anda bisa menambahkannya nanti di menu Settings > Domains pada Vercel.</i></p>
+                </div>
+            </section>
+
+            <section id="dashboard-guide" class="scroll-mt-24 border-t border-slate-200 pt-12">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 rounded-full bg-pink-500 text-white flex items-center justify-center font-black text-xl shrink-0"><i data-lucide="layout-dashboard" class="w-5 h-5"></i></div>
+                    <h2 class="text-2xl font-black text-slate-800">Panduan Fitur Dashboard Admin</h2>
+                </div>
+                
+                <p class="text-slate-600 text-lg mb-8">
+                    Untuk masuk ke panel admin, buka URL web Anda dan tambahkan <code>/admin.html</code> di belakangnya. (Contoh: <code>katalog-saya.vercel.app/admin.html</code>). 
+                    <br><b class="text-indigo-600">PIN Login Default: 123456</b> (Anda bisa mengubah PIN ini di database Google Sheets pada tab "Pengaturan").
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Fitur: Beranda -->
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="home" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-lg mb-2">Beranda (Overview)</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Menampilkan ringkasan total jumlah produk Anda, kategori yang aktif, serta banner promo yang sedang tayang.</p>
+                    </div>
+
+                    <!-- Fitur: Manajemen Produk -->
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="package" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-lg mb-2">Manajemen Produk</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Menu paling utama. Disini Anda bisa <b>Tambah</b>, <b>Edit</b>, atau <b>Hapus</b> produk. Anda diminta memasukkan Nama, Harga (Opsional), Kategori, Link URL Affiliate tujuan, dan Link URL Gambar Produk.</p>
+                    </div>
+
+                    <!-- Fitur: Kategori -->
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="layers" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-lg mb-2">Manajemen Kategori</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Mengatur Tab Filter (seperti: "Gadget", "Fashion", "Ecourse"). Buatlah kategori yang spesifik agar pembeli mudah menyaring (filter) katalog produk Anda.</p>
+                    </div>
+
+                    <!-- Fitur: Banner Promo -->
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                        <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="image" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-lg mb-2">Banner Slider</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Upload gambar (masukkan URL gambar/Imgur) untuk ditampilkan sebagai <i>carousel</i> promosi memanjang di bagian paling atas halaman depan web Anda.</p>
+                    </div>
+
+                    <!-- Fitur: Pengaturan Web -->
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                        <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="settings" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-lg mb-2">Pengaturan Web</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Fitur canggih untuk mengubah <b>Nama Web</b>, <b>Warna Tema Utama (Gradient)</b>, <b>Teks Custom Tombol</b> (misal defaultnya "Beli" bisa diganti "Order di Shopee"), serta merubah PIN Login Dashboard Anda.</p>
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="step-6" class="scroll-mt-24 border-t border-slate-200 pt-12">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-black text-xl shrink-0">6</div>
+                    <h2 class="text-2xl font-black text-slate-800">Support & Akses Agency</h2>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Grup Support -->
+                    <div class="bg-blue-50 rounded-2xl border border-blue-200 p-6 shadow-sm flex flex-col h-full">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center shrink-0">
+                                <i data-lucide="message-circle" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-lg">Grup Support Pusat</h3>
+                        </div>
+                        <p class="text-sm text-slate-700 leading-relaxed mb-6 flex-1">
+                            Jangan ragu untuk bertanya jika Anda mengalami kendala saat proses instalasi, kustomisasi web, atau sekadar ingin berdiskusi strategi jualan dengan member lain.
+                        </p>
+                        <a href="https://chat.whatsapp.com/KsX3lBdGTQG5Nz1PuLykEj" target="_blank" class="inline-flex justify-center items-center gap-2 w-full px-5 py-3 bg-blue-600 text-white hover:bg-blue-700 text-sm font-bold rounded-xl transition-all shadow-md">
+                            <i data-lucide="users" class="w-4 h-4"></i> Join Grup Diskusi
+                        </a>
+                    </div>
+
+                    <!-- Akses Agency -->
+                    <div class="bg-emerald-50 rounded-2xl border border-emerald-200 p-6 shadow-sm flex flex-col h-full">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-emerald-500 text-white rounded-xl flex items-center justify-center shrink-0">
+                                <i data-lucide="briefcase" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-lg">Akses Agency (Membership)</h3>
+                        </div>
+                        <p class="text-sm text-slate-700 leading-relaxed mb-6 flex-1">
+                            Khusus bagi Anda yang ingin menggunakan <b>Web Membership</b> yang telah kami sediakan secara <b>GRATIS</b>. Keuntungannya, setiap link checkout dari pembeli Anda akan <b>langsung masuk ditransfer ke rekening Anda pribadi</b>.
+                        </p>
+                        <a href="https://wa.me/6281234567890?text=Halo%20Admin,%20saya%20mau%20klaim%20Akses%20Agency%20Web%20Membership%20Gratis" target="_blank" class="inline-flex justify-center items-center gap-2 w-full px-5 py-3 bg-emerald-600 text-white hover:bg-emerald-700 text-sm font-bold rounded-xl transition-all shadow-md">
+                            <i data-lucide="shield-check" class="w-4 h-4"></i> Klaim Akses Agency
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="border-t border-slate-200 bg-white mt-12 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+            <img src="https://imersnesia.com/wp-content/uploads/2026/08/icon-afflink.png" alt="Logo" class="h-8 w-auto mb-4 grayscale opacity-60">
+            <p class="text-slate-500 text-sm">Dokumentasi Resmi <b>iMersAFFLINK</b>. Hak Cipta Dilindungi &copy; 2026.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Inisialisasi ikon
+        lucide.createIcons();
+
+        // Script untuk mendeteksi scroll dan memberikan kelas 'active' pada menu sidebar
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    // Deteksi jika user nge-scroll melewati sepertiga area section tsb
+                    if (scrollY >= (sectionTop - sectionHeight / 3)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
